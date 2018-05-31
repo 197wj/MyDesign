@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.user.AreaMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.user.Area">
+    <id column="AREA_ID" jdbcType="VARCHAR" property="areaId" />
+    <result column="AREA_CODE" jdbcType="VARCHAR" property="areaCode" />
+    <result column="FID" jdbcType="VARCHAR" property="fid" />
+    <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    <result column="FULLNAME" jdbcType="VARCHAR" property="fullname" />
+    <result column="LEVEL_FLG" jdbcType="CHAR" property="levelFlg" />
+    <result column="FLAG" jdbcType="CHAR" property="flag" />
+    <result column="IS_NODE" jdbcType="CHAR" property="isNode" />
+    <result column="ORGNAME" jdbcType="VARCHAR" property="orgname" />
+    <result column="SAR_AREA_CODE" jdbcType="VARCHAR" property="sarAreaCode" />
+    <result column="C1" jdbcType="VARCHAR" property="c1" />
+    <result column="C2" jdbcType="VARCHAR" property="c2" />
+    <result column="C3" jdbcType="VARCHAR" property="c3" />
+    <result column="C4" jdbcType="VARCHAR" property="c4" />
+    <result column="C5" jdbcType="VARCHAR" property="c5" />
+    <result column="C6" jdbcType="VARCHAR" property="c6" />
+    <result column="short_Org_Name" jdbcType="VARCHAR" property="shortOrgName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    AREA_ID, AREA_CODE, FID, AREANAME, FULLNAME, LEVEL_FLG, FLAG, IS_NODE, ORGNAME, SAR_AREA_CODE, 
+    C1, C2, C3, C4, C5, C6, short_Org_Name
+  </sql>
+  
+  <!-- 根据id查询区域信息 -->
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_area
+    where AREA_ID = #{areaId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据area信息查询区域信息 -->
+  <select id="selectByArea" parameterType="com.zhiliao.model.user.Area" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from sys_area
+    <where>
+      <if test="areaId != null">
+        AND AREA_id = #{areaId,jdbcType=VARCHAR}
+      </if>
+      <if test="areaCode != null">
+        AND AREA_CODE = #{areaCode,jdbcType=VARCHAR}
+      </if>
+      <if test="fid != null">
+        AND FID = #{fid,jdbcType=VARCHAR}
+      </if>
+      <if test="areaname != null">
+        AND AREANAME = #{areaname,jdbcType=VARCHAR}
+      </if>
+      <if test="fullname != null">
+        AND FULLNAME = #{fullname,jdbcType=VARCHAR}
+      </if>
+      <if test="levelFlg != null">
+        AND LEVEL_FLG = #{levelFlg,jdbcType=CHAR}
+      </if>
+      <if test="flag != null">
+        AND FLAG = #{flag,jdbcType=CHAR}
+      </if>
+      <if test="isNode != null">
+        AND IS_NODE = #{isNode,jdbcType=CHAR}
+      </if>
+      <if test="orgname != null">
+        AND ORGNAME = #{orgname,jdbcType=VARCHAR}
+      </if>
+      <if test="sarAreaCode != null">
+        AND SAR_AREA_CODE = #{sarAreaCode,jdbcType=VARCHAR}
+      </if>
+      <if test="c1 != null">
+        AND C1 = #{c1,jdbcType=VARCHAR}
+      </if>
+      <if test="c2 != null">
+        AND C2 = #{c2,jdbcType=VARCHAR}
+      </if>
+      <if test="c3 != null">
+        AND C3 = #{c3,jdbcType=VARCHAR}
+      </if>
+      <if test="c4 != null">
+        AND C4 = #{c4,jdbcType=VARCHAR}
+      </if>
+      <if test="c5 != null">
+        AND C5 = #{c5,jdbcType=VARCHAR}
+      </if>
+      <if test="c6 != null">
+        AND C6 = #{c6,jdbcType=VARCHAR}
+      </if>
+      <if test="shortOrgName != null">
+        AND short_Org_Name = #{shortOrgName,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  
+  
+  
+  
+ 	<!-- 增加取悦信息 -->
+  <insert id="insert" parameterType="com.zhiliao.model.user.Area">
+    insert into sys_area (AREA_ID, AREA_CODE, FID, 
+      AREANAME, FULLNAME, LEVEL_FLG, 
+      FLAG, IS_NODE, ORGNAME, SAR_AREA_CODE, 
+      C1, C2, C3, C4, 
+      C5, C6, short_Org_Name
+      )
+    values (#{areaId,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, #{fid,jdbcType=VARCHAR}, 
+      #{areaname,jdbcType=VARCHAR}, #{fullname,jdbcType=VARCHAR}, #{levelFlg,jdbcType=CHAR}, 
+      #{flag,jdbcType=CHAR}, #{isNode,jdbcType=CHAR}, #{orgname,jdbcType=VARCHAR}, #{sarAreaCode,jdbcType=VARCHAR}, 
+      #{c1,jdbcType=VARCHAR}, #{c2,jdbcType=VARCHAR}, #{c3,jdbcType=VARCHAR}, #{c4,jdbcType=VARCHAR}, 
+      #{c5,jdbcType=VARCHAR}, #{c6,jdbcType=VARCHAR}, #{shortOrgName,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <!-- 根据id修改区域信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.user.Area">
+    update sys_area
+    <set>
+      <if test="areaCode != null">
+        AREA_CODE = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fid != null">
+        FID = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="areaname != null">
+        AREANAME = #{areaname,jdbcType=VARCHAR},
+      </if>
+      <if test="fullname != null">
+        FULLNAME = #{fullname,jdbcType=VARCHAR},
+      </if>
+      <if test="levelFlg != null">
+        LEVEL_FLG = #{levelFlg,jdbcType=CHAR},
+      </if>
+      <if test="flag != null">
+        FLAG = #{flag,jdbcType=CHAR},
+      </if>
+      <if test="isNode != null">
+        IS_NODE = #{isNode,jdbcType=CHAR},
+      </if>
+      <if test="orgname != null">
+        ORGNAME = #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="sarAreaCode != null">
+        SAR_AREA_CODE = #{sarAreaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="c1 != null">
+        C1 = #{c1,jdbcType=VARCHAR},
+      </if>
+      <if test="c2 != null">
+        C2 = #{c2,jdbcType=VARCHAR},
+      </if>
+      <if test="c3 != null">
+        C3 = #{c3,jdbcType=VARCHAR},
+      </if>
+      <if test="c4 != null">
+        C4 = #{c4,jdbcType=VARCHAR},
+      </if>
+      <if test="c5 != null">
+        C5 = #{c5,jdbcType=VARCHAR},
+      </if>
+      <if test="c6 != null">
+        C6 = #{c6,jdbcType=VARCHAR},
+      </if>
+      <if test="shortOrgName != null">
+        short_Org_Name = #{shortOrgName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AREA_ID = #{areaId,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

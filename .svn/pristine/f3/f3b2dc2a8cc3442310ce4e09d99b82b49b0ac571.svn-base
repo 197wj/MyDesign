@@ -1,0 +1,223 @@
+﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>成绩数据修改</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 异常数据处理 <span class="c-gray en">&gt;</span> 成绩数据修改<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="text-c">
+		<div >
+		    <lable>学校</lable>
+			<select id="school">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div >
+		    <lable>年级</lable>
+			<select id="grade">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div >
+		    <lable>班级</lable>
+			<select id="class">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div >
+		    <lable>试卷</lable>
+			<select id="exam">
+				<option value="">请选择</option>
+			</select>
+		</div>
+	</div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20" >
+		<span  style="margin: 50px auto; display: block; clear: both; width: 150px; "><a href="javascript:;" id="delAll"  class="btn btn-danger radius">
+			立即更新</a>
+		</span>
+	</div>
+	
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+
+<script type="text/javascript">
+	$(function(){
+		getSchool();
+	})
+	
+	//根据学校查询班级和学生信息
+$(document).on("change","#school",function(){
+	
+	var schoolId = $("#school").val();
+	var gradeId = $("#grade").val();
+	var classId = $("#class").val();
+	$("#grade").empty();
+	$("#grade").append("<option lev='' value=''>请选择年级</option>");
+	$("#class").empty();
+	$("#class").append("<option lev='' value=''>请选择班级</option>");
+	getGrade();
+	//getClass(schoolId,gradeId);//获取班级
+})
+
+//根据年级查询班级
+$(document).on("change","#grade",function(){
+	var schoolId = $("#school").val();
+	var gradeId = $("#grade").val();
+	var classId = $("#class").val();
+	$("#class").empty();
+	$("#class").append("<option lev='' value=''>请选择班级</option>");
+	getClass(schoolId,gradeId);
+	getExam(gradeId)//获取试卷
+})
+	
+	//获取年级
+function getGrade(){
+	$.ajax({
+		url:'../grade/getGradeList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#grade").empty();
+				$("#grade").append("<option value='' selected>请选择年级</option>")
+				for(var i=0;i<data.length;i++){
+					$("#grade").append("<option value='"+data[i].gradeCode+"'>"+data[i].gradeName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取试卷信息
+function getExam(gradeId){
+	$.ajax({
+		url:'../contrast/getExams.action',
+		type:'get',
+		data:{'gradeId':gradeId},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#exam").empty();
+				$("#exam").append("<option value='' selected>请选择试卷</option>")
+				for(var i=0;i<data.length;i++){
+					$("#exam").append("<option value='"+data[i].examid+"'>"+data[i].exam+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+		
+}
+	
+//获取班级
+function getClass(schoolId,gradeCode){
+	$.ajax({
+		url:'../class/getClassList.action',
+		type:'get',
+		data:{'schoolId':schoolId,'gradeCode':gradeCode},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#class").empty();
+				$("#class").append("<option value='' selected>请选择班级</option>")
+				for(var i=0;i<data.length;i++){
+					$("#class").append("<option value='"+data[i].classId+"'>"+data[i].className+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+	
+</script>
+
+
+
+
+<script type="text/javascript">
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-查看*/
+function member_show(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-编辑*/
+function member_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+
+$("#delAll").click(function() {
+	var schoolId = $("#school").val();
+	var gradeId = $("#grade").val();
+	var classId = $("#class").val();
+	var examId = $("#exam").val();
+	updateOrders(schoolId,gradeId,classId,examId);
+})
+
+ //批量修改异常订单
+ function updateOrders(schoolId,gradeId,classId,examId){
+		 $.ajax({
+				url: '../contrast/getScore.action',
+				type: 'POST',
+				data:{'schoolId':schoolId,'gradeId':gradeId,'classId':classId,'examId':examId},
+				dataType: 'json',
+				//traditional:true,
+				success: function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							window.location.href="../contrast/scoreView.action";
+						});
+					}else{
+						layer.msg(data.msg,{icon:2,time:1000},function(){
+							window.location.href="../contrast/scoreView.action";
+						});
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						window.location.href="../contrast/scoreView.action";
+					});
+				}
+		     });
+
+	 }
+
+ 
+ 
+ 
+
+
+
+
+//获取学校
+function getSchool(){
+	$.ajax({
+		url:'../school/getSchoolList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#school").empty();
+				$("#school").append("<option value='' selected>请选择学校</option>")
+				for(var i=0;i<data.length;i++){
+					$("#school").append("<option value='"+data[i].schoolId+"'>"+data[i].schoolName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+</script> 
+</body>
+</html>

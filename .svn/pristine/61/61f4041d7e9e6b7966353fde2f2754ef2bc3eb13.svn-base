@@ -1,0 +1,24 @@
+package com.zhiliao.service.excel.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.excel.ExcelMapper;
+import com.zhiliao.model.excel.UserExcel;
+import com.zhiliao.service.excel.ExcelService;
+
+@Service
+public class ExcelServiceImpl implements ExcelService {
+
+	@Autowired
+	private ExcelMapper excelMapper;
+	
+	@Override
+	public List<UserExcel> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.excelMapper.selectList(map);
+	}
+}

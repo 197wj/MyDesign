@@ -1,0 +1,154 @@
+package com.zhiliao.model.php;
+
+public class SchCount {
+
+	private Integer gradeId;
+	
+	private String gradeName;
+	
+	private Integer classId;
+	
+	private String className;
+	
+	private String examId;
+	
+	private Integer week;
+	
+	private String teaName;
+	
+	private Integer openCount;//开通数
+	
+	private Integer referCount;//提交数
+	
+	private Integer grantCount;//提交数
+	
+	private Integer totalScore;//总分数
+	
+	private Float schoolAvg;
+	
+	private Float cityAvg;
+	
+	private Integer schoolRank;
+	
+	private Integer cityRank;
+
+	public Integer getOpenCount() {
+		return openCount;
+	}
+
+	public void setOpenCount(Integer openCount) {
+		this.openCount = openCount;
+	}
+
+	public String getExamId() {
+		return examId;
+	}
+
+	public void setExamId(String examId) {
+		this.examId = examId;
+	}
+
+	public Integer getWeek() {
+		return week;
+	}
+
+	public void setWeek(Integer week) {
+		this.week = week;
+	}
+
+	public Integer getReferCount() {
+		return referCount;
+	}
+
+	public void setReferCount(Integer referCount) {
+		this.referCount = referCount;
+	}
+
+	public Integer getGrantCount() {
+		return grantCount;
+	}
+
+	public void setGrantCount(Integer grantCount) {
+		this.grantCount = grantCount;
+	}
+
+	public Integer getGradeId() {
+		return gradeId;
+	}
+
+	public void setGradeId(Integer gradeId) {
+		this.gradeId = gradeId;
+	}
+
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
+	}
+
+	public Integer getClassId() {
+		return classId;
+	}
+
+	public void setClassId(Integer classId) {
+		this.classId = classId;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public String getTeaName() {
+		return teaName;
+	}
+
+	public void setTeaName(String teaName) {
+		this.teaName = teaName;
+	}
+
+	public Integer getTotalScore() {
+		return totalScore;
+	}
+
+	public void setTotalScore(Integer totalScore) {
+		this.totalScore = totalScore;
+	}
+
+	public Float getSchoolAvg() {
+		return schoolAvg;
+	}
+
+	public void setSchoolAvg(Float schoolAvg) {
+		this.schoolAvg = schoolAvg;
+	}
+
+	public Float getCityAvg() {
+		return cityAvg;
+	}
+
+	public void setCityAvg(Float cityAvg) {
+		this.cityAvg = cityAvg;
+	}
+
+	public Integer getSchoolRank() {
+		return schoolRank;
+	}
+
+	public void setSchoolRank(Integer schoolRank) {
+		this.schoolRank = schoolRank;
+	}
+
+	public Integer getCityRank() {
+		return cityRank;
+	}
+
+	public void setCityRank(Integer cityRank) {
+		this.cityRank = cityRank;
+	}
+}

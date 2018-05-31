@@ -1,0 +1,791 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>使用统计</title>
+<style>
+/* body{background:#f1f1f1;} */
+  .highcharts-credits{display:none;}
+  .highcharts-point{display:none;}
+  #container{margin-top：30px;}
+  .paiming{display:inline-block;margin-right:30px;}
+  .search_btn{border:1px solid #e0e0e0;}
+  .beijing_bei{background:#3bb4f2;}
+  .ziti_ziti{display:inline-block;height:35px;background:white;width:80px;text-align:center;line-height:35px;cursor:pointer;}
+  .ziti_ziti1{display:inline-block;height:35px;width:80px;text-align:center;line-height:35px;cursor:pointer;color:#fff;}
+  .bainkuang{border:1px solid #3bb4f2;padding:0;position:relative;}
+  #active{background:white;color:#000!important;}
+  #activv{background:#8bc34a;}
+  /* .qiehuan{position:relative;top:0;left:0;} */
+  thead,tbody{width:100%;}
+  h4{background:#3bb4f2;color:#fff;font-size:15px;padding-left:20px;margin-top:0;margin-bottom:15px;}
+  .biankuang{padding:0;border:1px solid #3bb4f2;float:left;}
+  .zhusi{display:inline-block;padding-left:20px;margin-bottom:20px;}
+  .xiang-ul{float:right;}
+  .xiang-ul li{float:left;height:22px;margin-right:15px;cursor:pointer;}
+  .xiang-ul li span{display:inline-block;width:40px;height:18px;background:#d1d1d1;float:left;margin-right:5px;margin-top:2px;}
+  .ziziziz{color:#8bc34a;}
+  .xiang-ul li p{display:inline-block;float:left;}
+  .panelheader{margin-bottom:30px;padding-left:15px;}
+  .shuru_kuang{float:right;}
+  .shuru_kuang p{display:inline-block;height:25px;width:40px;text-align:center;cursor:pointer;}
+  .shuru_kuang input{height:25px;border-radius:5px;padding-left:10px;}
+  .layui-layer-title{background:#3bb4f2!important;color:#fff!important;}
+</style>
+</head>
+<body>
+   <div class="page-container cl clearfix">
+	<div class="cl clearfix data_panel">
+	   <div class="banzhuren">           <!-- 班主任/教师 -->	  
+		<div class="col-sm-12 col-md-12 col-lg-12">
+		    <div class="biankuang" style="width:49.5%;float:left;height:385px;overflow:hidden;">
+		        <h4>平均分曲线图</h4>
+		        <div class="zhusi">高于市级平均分的次数：10</div>
+		        <ul class="xiang-ul pinhjunfen_ul">
+		           <li><span id="activv"></span><p class="ziziziz">综合</p></li>
+		           <li><span></span><p>数学</p></li>
+		           <li><span></span><p>英语</p></li>
+		        </ul>
+		        <div id="container" class="zhexiantu" style="width:100%;height:300px"></div>
+		        <div id="container5" class="zhexiantu" style="width:100%;height:300px"></div>
+		        <div id="container6" class="zhexiantu" style="width:100%;height:300px"></div>          
+	        </div>
+		    <div class="biankuang" style="margin-left:1%;width:49%;float:left;height:385px;overflow:hidden;">
+		        <h4>排名曲线图</h4>
+		        <div class="zhusi">
+		            <span class="paiming">学校总排名：5</span>
+		            <span class="paiming">市级总排名：10</span>
+                </div>
+                <ul class="xiang-ul paiming_ul">
+		           <li><span id="activv"></span><p class="ziziziz">数学</p></li>
+		           <li><span></span><p>英语</p></li>
+		        </ul>
+		        <div id="container1" class="zhexiantu_pai" style="width:100%;height:300px"></div>
+		        <div id="container7" class="zhexiantu_pai" style="width:100%;height:300px"></div>
+		    </div>
+		</div>
+		<div class="col-sm-12 col-md-12 col-lg-12 bainkuang" style="margin-top:50px;">
+		   <div class="beijing_bei">
+		      <span class="ziti_ziti">综合</span>
+		   </div>
+		    <table class="table table-border table-bg" style="margin-top:30px;">
+				  	<thead>
+				  		<tr class="text-c">
+				  		     <th>周测数</th>
+				  		     <th>英语提交数</th>
+				  		     <th>数学提交数</th>
+				  		     <th>综合平均分</th>
+				  		     <th>综合学校排名</th>
+				  		     <th>综合市级排名</th>
+				  		     <th>排名详情</th>
+				  		     <th>正确率详情</th>
+				  		 </tr>
+				  	</thead>
+				  	<tbody>
+				  	   <tr class="text-c">
+				  		    <td>第四周测</td>
+				  		    <td>68</td>
+				  		    <td>136</td>
+				  		    <td>93</td>
+				  		    <td>2</td>
+				  		    <td>10</td>
+				  		    <td><a class="btn btn-link" onclick='ranking_details(&#39;排名详情&#39;,&#39;../useCount/usCountView1.action&#39;,&#39;800&#39;,&#39;400&#39;)'>查看</a></td>
+				  		    <td><a class="btn btn-link"  onclick='ranking_detail(&#39;正确率&#39;,&#39;../useCount/usCountView1_1.action&#39;,&#39;800&#39;,&#39;400&#39;)'>查看</a></td>
+				  		</tr>
+				  	   <tr class="text-c">
+				  		    <td>第三周测</td>
+				  		    <td>68</td>
+				  		    <td>136</td>
+				  		    <td>93</td>
+				  		    <td>2</td>
+				  		    <td>10</td>
+				  		    <td><a class="btn btn-link">查看</a></td>
+				  		    <td><a class="btn btn-link">查看</a></td>
+				  		</tr>
+				  		<tr class="text-c">
+				  		    <td>第二周测</td>
+				  		    <td>68</td>
+				  		    <td>136</td>
+				  		    <td>93</td>
+				  		    <td>2</td>
+				  		    <td>10</td>
+				  		    <td><a class="btn btn-link">查看</a></td>
+				  		    <td><a class="btn btn-link">查看</a></td>
+				  		 </tr>
+				  		<tr class="text-c">
+				  		    <td>第一周测</td>
+				  		    <td>68</td>
+				  		    <td>136</td>
+				  		    <td>93</td>
+				  		    <td>2</td>
+				  		    <td>10</td>
+				  		    <td><a class="btn btn-link">查看</a></td>
+				  		    <td><a class="btn btn-link">查看</a></td>
+				  		 </tr>				  		 
+				  	</tbody>
+				</table>
+		   </div>
+		</div>
+		 <!-- <div class="xuexiao">	         学校管理员+  
+		   <div class="panelheader">请选择：
+					<select class="select long_s" size="1" name="demo1">
+					    <option value="" selected>五年级</option>
+					    <option value="1">一年级</option>
+					    <option value="2">二年级</option>
+					    <option value="3">三年级</option>
+					  </select>
+					<select class="select short_s" size="1" name="demo1">
+					    <option value="" selected>数学</option>
+					    <option value="2">英语</option>
+					  </select>
+					  <button class="btn search_btn">确定</button>
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-12">
+			    <div class="biankuang" style="width:49.5%;float:left;height:385px;overflow:hidden" >
+			        <h4>平均分分布图</h4>
+			        <div class="zhusi">高于市级平均分的次数：10</div>
+			        <div id="container2" style="width:100%;height:300px"></div>	            
+		        </div>
+			    <div class="biankuang"  style="margin-left:1%; width:49%;float:left;height:385px;overflow:hidden;">
+			        <h4>排名曲线图</h4>
+			        <div id="container3" style="width:100%;height:300px"></div>
+			    </div>
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-12 bainkuang" style="margin-top:50px;">
+			    <div class="beijing_bei">
+				      <span class="ziti_ziti1 dainji_qiehuan" id="active">综合</span>
+				      <span class="ziti_ziti1 dainji_qiehuan">数学</span>
+				</div>
+			    <table class="table table-border table-bg qiehuan"  style="margin-top:30px;">
+					  	<thead>
+					  		<tr class="text-c">
+					  		     <th>班级</th>
+					  		     <th>教师</th>
+					  		     <th>提交数</th>
+					  		     <th>综合学校平均分</th>
+					  		     <th>综合市级平均分</th>
+					  		     <th>综合学校排名</th>
+					  		     <th>综合市级排名</th>
+					  		     <th>详情</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody>
+					  	   <tr class="text-c">
+					  		    <td>五二班</td>
+					  		    <td>测试老师</td>
+					  		    <td>3680</td>
+					  		    <td>93</td>
+					  		    <td>98</td>
+					  		    <td>1</td>
+					  		    <td>2</td>
+					  		    <td><a class="btn btn-link">查看详情</a></td>
+					  		</tr>
+					  	   <tr class="text-c">
+					  		    <td>五二班</td>
+					  		    <td>王文华</td>
+					  		    <td>3680</td>
+					  		    <td>93</td>
+					  		    <td>98</td>
+					  		    <td>1</td>
+					  		    <td>2</td>
+					  		    <td><a class="btn btn-link">查看详情</a></td>
+					  		</tr>
+					  		<tr class="text-c">
+					  		    <td>五二班</td>
+					  		    <td>王文华</td>
+					  		    <td>3680</td>
+					  		    <td>93</td>
+					  		    <td>98</td>
+					  		    <td>1</td>
+					  		    <td>2</td>
+					  		    <td><a class="btn btn-link">查看详情</a></td>
+					  		 </tr>				  		 
+					  	</tbody>
+					</table>
+					<table class="table table-border table-bg qiehuan"  style="margin-top:30px;">
+					  	<thead>
+					  		<tr class="text-c">
+					  		     <th>班级</th>
+					  		     <th>教师</th>
+					  		     <th>提交数</th>
+					  		     <th>综合学校平均分</th>
+					  		     <th>综合市级平均分</th>
+					  		     <th>综合学校排名</th>
+					  		     <th>综合市级排名</th>
+					  		     <th>详情</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody>
+					  	   <tr class="text-c">
+					  		    <td>五二班</td>
+					  		    <td>王文华</td>
+					  		    <td>3680</td>
+					  		    <td>93</td>
+					  		    <td>98</td>
+					  		    <td>1</td>
+					  		    <td>2</td>
+					  		    <td><a class="btn btn-link">查看详情</a></td>
+					  		</tr>
+					  	   <tr class="text-c">
+					  		    <td>五二班</td>
+					  		    <td>王文华</td>
+					  		    <td>3680</td>
+					  		    <td>93</td>
+					  		    <td>98</td>
+					  		    <td>1</td>
+					  		    <td>2</td>
+					  		    <td><a class="btn btn-link">查看详情</a></td>
+					  		</tr>
+					  		<tr class="text-c">
+					  		    <td>五二班</td>
+					  		    <td>王文华</td>
+					  		    <td>3680</td>
+					  		    <td>93</td>
+					  		    <td>98</td>
+					  		    <td>1</td>
+					  		    <td>2</td>
+					  		    <td><a class="btn btn-link">查看详情</a></td>
+					  		 </tr>				  		 
+					  	</tbody>
+					</table>
+			   </div>
+		</div> -->
+		<!-- <div class="xuexiao">	         教研室/平台管理员+  
+		   <div class="panelheader">请选择：
+					<select class="select long_s" size="1" name="demo1">
+					    <option value="" selected>五年级</option>
+					    <option value="1">一年级</option>
+					    <option value="2">二年级</option>
+					    <option value="3">三年级</option>
+					  </select>
+					  <button class="btn search_btn">确定</button>
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-12">
+			    <div class="bainkuang" style="width:49.5%;float:left;height:385px;overflow:hidden;">
+			        <h4>成绩平均分分布图</h4>
+			        <div id="container4" style="width:100%;height:300px"></div>	            
+		        </div>
+			    <div class="bainkuang"  style="margin-left:1%; width:49%;float:left;height:385px;overflow:hidden;">
+			        <div class="beijing_bei">
+					      <span class="ziti_ziti">批改率</span>
+					</div>					
+			        <table class="table table-border table-bg" style="margin-top:30px;">
+					  	<thead>
+					  		<tr class="text-c">
+					  		     <th>周测数</th>
+					  		     <th>批改数</th>
+					  		     <th>总人数</th>
+					  		     <th>比例</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody>
+					  	   <tr class="text-c">
+					  		    <td>第四周测</td>
+					  		    <td>68</td>
+					  		    <td>136</td>
+					  		    <td>93%</td>
+					  		</tr>
+					  	   <tr class="text-c">
+					  		    <td>第三周测</td>
+					  		    <td>68</td>
+					  		    <td>136</td>
+					  		    <td>93%</td>
+					  		</tr>
+					  		<tr class="text-c">
+					  		    <td>第三周测</td>
+					  		    <td>68</td>
+					  		    <td>136</td>
+					  		    <td>93%</td>
+					  		</tr>
+					  		<tr class="text-c">
+					  		    <td>第三周测</td>
+					  		    <td>68</td>
+					  		    <td>136</td>
+					  		    <td>93%</td>
+					  		</tr>					  						  		 
+					  	</tbody>
+					</table>
+			    </div>
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-12 bainkuang" style="margin-top:50px;">
+			    <div class="beijing_bei">
+				      <span class="ziti_ziti1 jiajiaiaj" id="active">综合</span>
+				      <span class="ziti_ziti1 jiajiaiaj">数学</span>
+				      <span class="ziti_ziti1 jiajiaiaj">英语</span>
+				      <div class="shuru_kuang">
+						   <input type="text" placeholder="请输入学校名称">
+						   <p>确认</p>
+					  </div>
+				</div>
+				
+			    <table class="table table-border table-bg cscsh" style="margin-top:30px;">
+					  	<thead>
+					  		<tr class="text-c">
+					  		     <th>学校名称</th>
+					  		     <th>总提交数</th>
+					  		     <th>学校总平均分</th>
+					  		     <th>市级合平均分</th>
+					  		     <th>市级排名</th>
+					  		     <th>详情</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody>
+					  	   <tr class="text-c">
+					  		    <td>测试一</td>
+					  		    <td>4550</td>
+					  		    <td>97</td>
+					  		    <td>93</td>
+					  		    <td>10</td>
+					  		    <td><a class="btn btn-link">详情</a></td>
+					  		</tr>			  		 
+					  	</tbody>
+					</table>
+					<table class="table table-border table-bg cscsh" style="margin-top:30px;">
+					  	<thead>
+					  		<tr class="text-c">
+					  		     <th>学校名称</th>
+					  		     <th>总提交数</th>
+					  		     <th>学校总平均分</th>
+					  		     <th>市级合平均分</th>
+					  		     <th>市级排名</th>
+					  		     <th>详情</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody>
+					  	   <tr class="text-c">
+					  		    <td>测试二</td>
+					  		    <td>4550</td>
+					  		    <td>97</td>
+					  		    <td>93</td>
+					  		    <td>10</td>
+					  		    <td><a class="btn btn-link">详情</a></td>
+					  		</tr>			  		 
+					  	</tbody>
+					</table>
+					<table class="table table-border table-bg cscsh" style="margin-top:30px;">
+					  	<thead>
+					  		<tr class="text-c">
+					  		     <th>学校名称</th>
+					  		     <th>总提交数</th>
+					  		     <th>学校总平均分</th>
+					  		     <th>市级合平均分</th>
+					  		     <th>市级排名</th>
+					  		     <th>详情</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody>
+					  	   <tr class="text-c">
+					  		    <td>测试三</td>
+					  		    <td>4550</td>
+					  		    <td>97</td>
+					  		    <td>93</td>
+					  		    <td>10</td>
+					  		    <td><a class="btn btn-link">详情</a></td>
+					  		</tr>			  		 
+					  	</tbody>
+					</table>
+			   </div>
+		</div> -->
+	</div>
+   </div>
+
+<%@ include file="../common/_footer.jsp" %> 
+<script type="text/javascript">
+   $('.qiehuan').hide();
+    $('.qiehuan').eq(0).show();
+    $('.dainji_qiehuan').on('click',function(){
+    	var index=$('.dainji_qiehuan').index(this);
+    	$('.dainji_qiehuan').attr('id','')
+    	$('.dainji_qiehuan').eq(index).attr('id','active')
+    	$('.qiehuan').hide();
+    	$('.qiehuan').eq(index).show();
+    })
+    $('.cscsh').hide();
+    $('.cscsh').eq(0).show();
+    $('.jiajiaiaj').on('click',function(){
+    	var index=$('.jiajiaiaj').index(this);
+    	$('.jiajiaiaj').attr('id','')
+    	$('.jiajiaiaj').eq(index).attr('id','active')
+    	$('.cscsh').hide();
+    	$('.cscsh').eq(index).show();
+    })
+    /* 切换班主任角色平均分 */
+    $('.pinhjunfen_ul li').on('click',function(){
+    	var index=$('.pinhjunfen_ul li').index(this);
+    	$('.pinhjunfen_ul li span').attr('id','');
+    	$('.pinhjunfen_ul li span').eq(index).attr('id','activv');
+    	$('.pinhjunfen_ul li p').attr('class','');
+    	$('.pinhjunfen_ul li p').eq(index).attr('class','ziziziz');
+    	$('.zhexiantu').css('display','none');
+    	$('.zhexiantu').eq(index).css('display','block');
+    })    
+    /* 切换班主任角色排名 */
+    $('.paiming_ul li').on('click',function(){
+    	var index=$('.paiming_ul li').index(this);
+    	$('.paiming_ul li span').attr('id','');
+    	$('.paiming_ul li span').eq(index).attr('id','activv');
+    	$('.paiming_ul li p').attr('class','');
+    	$('.paiming_ul li p').eq(index).attr('class','ziziziz');
+    	$('.zhexiantu_pai').css('display','none');
+    	$('.zhexiantu_pai').eq(index).css('display','block');
+    })
+ /* 添加页面   老师排行*/ 
+ function ranking_details(title,url,w,h){
+    layer_show(title,url,w,h);
+ }   
+    /* 添加页面   老师正确率*/ 
+    function ranking_detail(title,url,w,h){
+       layer_show(title,url,w,h);
+    }    
+    
+    
+$(document).ready(function() { 			
+	var chart = new Highcharts.Chart('container', {
+	    title: {
+	        text: '',
+	        x: -20
+	    },
+	    subtitle: {
+	        text: '',
+	        x: -20
+	    },
+	    xAxis: {
+	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+	    },
+	    yAxis: {
+	        title: {
+	            text: ''
+	        },
+	        plotLines: [{
+	            value: 0,
+	            width: 1,
+	            color: '#808080'
+	        }]
+	    },
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	       verticalAlign: 'top', 
+	        borderWidth: 0
+	    },
+	    series: [{
+	        name: '市级',
+	        data: [17, 16, 19, 14, 18, 11, 15, 16, 13, 18, 13, 19, 13, 18, 13, 19]
+	    }, {
+	        name: '学校',
+	        data: [22,28,27, 21, 27, 22, 24, 24, 20, 24, 28, 25, 23, 28, 23, 29]
+	    }, {
+	        name: '综合',
+	        data: [39, 36, 35, 38, 33, 37, 38, 37, 34, 39, 39, 30, 33, 38, 33, 39]
+	    }]
+	});		
+});
+    $(document).ready(function() { 			
+    	var chart = new Highcharts.Chart('container5', {
+    	    title: {
+    	        text: '',
+    	        x: -20
+    	    },
+    	    subtitle: {
+    	        text: '',
+    	        x: -20
+    	    },
+    	    xAxis: {
+    	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+    	    },
+    	    yAxis: {
+    	        title: {
+    	            text: ''
+    	        },
+    	        plotLines: [{
+    	            value: 0,
+    	            width: 1,
+    	            color: '#808080'
+    	        }]
+    	    },
+    	    tooltip: {
+    	        valueSuffix: ''
+    	    },
+    	    legend: {
+    	        layout: 'vertical',
+    	        align: 'right',
+    	       verticalAlign: 'top', 
+    	        borderWidth: 0
+    	    },
+    	    series: [{
+    	        name: '市级',
+    	        data: [17, 16, 19, 14, 18, 11, 15, 16, 13, 18, 13, 19, 13, 18, 13, 19]
+    	    }, {
+    	        name: '学校',
+    	        data: [22,28,27, 21, 27, 22, 24, 24, 20, 24, 28, 25, 23, 28, 23, 29]
+    	    }, {
+    	        name: '数学',
+    	        data: [39, 36, 35, 38, 33, 37, 38, 37, 34, 39, 39, 30, 33, 38, 33, 39]
+    	    }]
+    	});		
+    });
+    $(document).ready(function() { 			
+    	var chart = new Highcharts.Chart('container6', {
+    	    title: {
+    	        text: '',
+    	        x: -20
+    	    },
+    	    subtitle: {
+    	        text: '',
+    	        x: -20
+    	    },
+    	    xAxis: {
+    	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+    	    },
+    	    yAxis: {
+    	        title: {
+    	            text: ''
+    	        },
+    	        plotLines: [{
+    	            value: 0,
+    	            width: 1,
+    	            color: '#808080'
+    	        }]
+    	    },
+    	    tooltip: {
+    	        valueSuffix: ''
+    	    },
+    	    legend: {
+    	        layout: 'vertical',
+    	        align: 'right',
+    	       verticalAlign: 'top', 
+    	        borderWidth: 0
+    	    },
+    	    series: [{
+    	        name: '市级',
+    	        data: [17, 16, 19, 14, 18, 11, 15, 16, 13, 18, 13, 19, 13, 18, 13, 19]
+    	    }, {
+    	        name: '学校',
+    	        data: [22,28,27, 21, 27, 22, 24, 24, 20, 24, 28, 25, 23, 28, 23, 29]
+    	    }, {
+    	        name: '英语',
+    	        data: [39, 36, 35, 38, 33, 37, 38, 37, 34, 39, 39, 30, 33, 38, 33, 39]
+    	    }]
+    	});		
+    }); 
+$(document).ready(function() { 			
+	var chart = new Highcharts.Chart('container1', {
+	    title: {
+	        text: '',
+	        x: -20
+	    },
+	    subtitle: {
+	        text: '',
+	        x: -20
+	    },
+	    xAxis: {
+	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+	    },
+	    yAxis: {
+	        title: {
+	            text: ''
+	        },
+	        plotLines: [{
+	            value: 0,
+	            width: 1,
+	            color: '#808080'
+	        }]
+	    },
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	       verticalAlign: 'top', 
+	        borderWidth: 0
+	    },
+	    series: [{	        
+	        name: '市级',
+	        data: [22,28,27, 21, 27, 22, 24, 24, 20, 24, 28, 25, 23, 28, 23, 29]
+	    }, {
+	        name: '校级',
+	        data: [49, 42, 40, 40, 41, 45, 47, 46, 44, 40, 45, 42, 46, 43, 48, 41]
+	    }, {
+	        name: '数学',
+	        data: [59, 56, 55, 50, 53, 57, 58, 57, 54, 59, 59, 50, 50, 58, 50,55]
+	    }]
+	});		
+});
+$(document).ready(function() { 			
+	var chart = new Highcharts.Chart('container7', {
+	    title: {
+	        text: '',
+	        x: -20
+	    },
+	    subtitle: {
+	        text: '',
+	        x: -20
+	    },
+	    xAxis: {
+	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+	    },
+	    yAxis: {
+	        title: {
+	            text: ''
+	        },
+	        plotLines: [{
+	            value: 0,
+	            width: 1,
+	            color: '#808080'
+	        }]
+	    },
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	       verticalAlign: 'top', 
+	        borderWidth: 0
+	    },
+	    series: [{	        
+	        name: '市级',
+	        data: [39, 36, 35, 38, 33, 37, 38, 37, 34, 39, 39, 30, 33, 38, 33, 39]
+	    }, {
+	        name: '校级',
+	        data: [49, 42, 40, 40, 41, 45, 47, 46, 44, 40, 45, 42, 46, 43, 48, 41]
+	    }, {
+	        name: '英语',
+	        data: [59, 56, 55, 50, 53, 57, 58, 57, 54, 59, 59, 50, 50, 58, 50,55]
+	    }]
+	});		
+});
+$(document).ready(function() { 			
+	var chart = new Highcharts.Chart('container2', {
+	    title: {
+	        text: '',
+	        x: -20
+	    },
+	    subtitle: {
+	        text: '',
+	        x: -20
+	    },
+	    xAxis: {
+	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+	    },
+	    yAxis: {
+	        title: {
+	            text: ''
+	        },
+	        plotLines: [{
+	            value: 0,
+	            width: 1,
+	            color: '#808080'
+	        }]
+	    },
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	       verticalAlign: 'top', 
+	        borderWidth: 0
+	    },
+	    series: [{	        
+	        name: '数学',
+	        data: [22,28,27, 21, 27, 22, 24, 24, 20, 24, 28, 25, 23, 28, 23, 29]
+	    }, {	     
+	        name: '市级',
+	        data: [49, 42, 40, 40, 41, 45, 47, 46, 44, 40, 45, 42, 46, 43, 48, 41]
+	    }, {
+	        name: '综合平均分',
+	        data: [59, 56, 55, 50, 53, 57, 58, 57, 54, 59, 59, 50, 50, 58, 50,55]
+	    }]
+	});		
+}); 
+$(document).ready(function() { 			
+	var chart = new Highcharts.Chart('container3', {
+	    title: {
+	        text: '',
+	        x: -20
+	    },
+	    subtitle: {
+	        text: '',
+	        x: -20
+	    },
+	    xAxis: {
+	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+	    },
+	    yAxis: {
+	        title: {
+	            text: ''
+	        },
+	        plotLines: [{
+	            value: 0,
+	            width: 1,
+	            color: '#808080'
+	        }]
+	    },
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	       verticalAlign: 'top', 
+	        borderWidth: 0
+	    },
+	    series: [{	        	        
+	        name: '市级',
+	        data: [49, 42, 40, 40, 41, 45, 47, 46, 44, 40, 45, 42, 46, 43, 48, 41]
+	    }]
+	});		
+});
+$(document).ready(function() { 			
+	var chart = new Highcharts.Chart('container4', {
+	    title: {
+	        text: '',
+	        x: -20
+	    },
+	    subtitle: {
+	        text: '',
+	        x: -20
+	    },
+	    xAxis: {
+	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+	    },
+	    yAxis: {
+	        title: {
+	            text: ''
+	        },
+	        plotLines: [{
+	            value: 0,
+	            width: 1,
+	            color: '#808080'
+	        }]
+	    },
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	       verticalAlign: 'top', 
+	        borderWidth: 0
+	    },
+	    series: [{	        
+	        name: '数学',
+	        data: [22,28,27, 21, 27, 22, 24, 24, 20, 24, 28, 25, 23, 28, 23, 29]
+	    }, {	     
+	        name: '英语',
+	        data: [49, 42, 40, 40, 41, 45, 47, 46, 44, 40, 45, 42, 46, 43, 48, 41]
+	    }, {
+	        name: '综合平均分',
+	        data: [59, 56, 55, 50, 53, 57, 58, 57, 54, 59, 59, 50, 50, 58, 50,55]
+	    }]
+	});		
+});
+</script>
+</body>
+</html>

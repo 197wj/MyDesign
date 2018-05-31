@@ -1,0 +1,117 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>添加App应用 </title>
+</head>
+<body>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-app-add">
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>类型：</label>
+		<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+			<div class="radio-box">
+				<input name="status" value="1" type="radio" id="status-1" checked>
+				<label for="status-1">教师端</label>
+			</div>
+			<div class="radio-box">
+				<input type="radio" value="2" id="status-2" name="status">
+				<label for="status-2">家长端</label>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>版本名称：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="" id="versionName" name="versionName">
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>版本号：</label>
+		<div class="formControls col-xs-8 col-sm-9"> 
+			<input type="text" class="input-text" value="" id="versionCode" name="versionCode">
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>版本描述：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="" id="description" name="description">
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>App应用上传：</label> 
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="file" name="file"></input>
+		</div>
+    </div>
+	
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input type="hidden" id="repeatSubmit" value="0">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	
+	</form>
+</article>
+
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">  
+
+$("#form-app-add").validate({
+	rules:{
+		versionName:{
+			required:true,
+			maxlength:15,
+		},
+		versionCode:{
+			required:true,
+			digits:true,
+		},
+		description:{
+			required:true,
+		},
+		file:{
+			required:true,
+		}
+	},
+	onkeyup:false,
+	focusCleanup:true,
+	success:"valid",
+	submitHandler:function(form){
+		if ($("#repeatSubmit").val() == 0) {
+			$("#repeatSubmit").val(1);
+			$(form).ajaxSubmit({
+				type: 'post',
+				url: "../app/addApp.action",
+				success: function(obj){
+					var data = eval('(' + obj + ')'); 
+					if (data.status==true) {
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							parent.window.location.href="../app/appView.action";
+							parent.layer.close(1);
+						});
+					} else {
+						layer.msg(data.msg,{icon:2,time:1000});
+						$("#repeatSubmit").val(0);
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						parent.window.location.href="../app/appView.action";
+					});
+				}
+			});
+		}
+	}
+});
+ </script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

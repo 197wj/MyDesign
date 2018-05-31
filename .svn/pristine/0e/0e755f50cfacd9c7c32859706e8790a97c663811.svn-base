@@ -1,0 +1,27 @@
+package com.zhiliao.service.product;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.product.Product;
+import com.zhiliao.service.BaseService;
+
+/**
+ * 产品的服务层
+ * @author 毕伟谦
+ *
+ */
+public interface ProductService extends BaseService<Product, Map<String, Object>>{
+	
+	public int deleteById(Integer productId);
+
+    public int insert(Product record);
+
+    public Product selectById(Integer productId);
+
+    public int updateById(Product record);
+    
+    public int deleteProList(List<Integer> list);
+    
+    public List<Product> selectList(Map<String, Object> map);
+}

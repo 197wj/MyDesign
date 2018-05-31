@@ -1,0 +1,18 @@
+package com.zhiliao.service.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.TbSchool;
+import com.zhiliao.service.BaseService;
+
+public interface TbSchoolService extends BaseService<TbSchool, Map<String, Object>> {
+
+	public int insert(TbSchool record);
+
+    public TbSchool selectById(Integer id);
+
+    public int updateById(TbSchool record);
+    
+    public List<TbSchool> selectList(Map<String, Object>map);
+}

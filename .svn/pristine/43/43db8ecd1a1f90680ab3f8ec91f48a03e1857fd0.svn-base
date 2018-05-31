@@ -1,0 +1,59 @@
+package com.zhiliao.dao.app;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.app.SysApp;
+
+public interface SysAppMapper {
+
+	/**
+	 * 获取最新版本
+	 * @Title: getNewVersion 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param @return 
+	 * @return SysApp
+	 */
+	public SysApp getNewVersion(Map<String, Object> map);	
+	
+	/**
+	 * 获取所有App升级版本包
+	 */
+	public List<SysApp> getList(Map<String,Object> map);
+	
+	/**
+	 * 获取App升级版本包总数
+	 */
+	public int getCount(Map<String,Object> map);
+	
+	/**
+	 * 通过Id获取App应用信息
+	 */
+	public SysApp getById(Integer updId);
+	
+	 
+    /**
+	 * 获取App应用信息
+	 */
+    public SysApp getByMap(Map<String,Object> map);
+    
+    /**
+     * 批量或者单条删除
+     */
+    public int deleteList(List<Integer> ids);
+	
+	
+	
+	
+    int deleteByPrimaryKey(Integer updId);
+
+    int insert(SysApp record);
+
+    int insertSelective(SysApp record);
+
+    SysApp selectByPrimaryKey(Integer updId);
+
+    int updateByPrimaryKeySelective(SysApp record);
+
+    int updateByPrimaryKey(SysApp record);
+}

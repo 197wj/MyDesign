@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.school.ClassMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.school.Class">
+    <id column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+    <result column="school_grade_id" jdbcType="INTEGER" property="schoolGradeId" />
+    <result column="teacher_id" jdbcType="INTEGER" property="teacherId" />
+    <result column="teacher_name" jdbcType="VARCHAR" property="teacherName" />
+    <result column="enter_school_year" jdbcType="VARCHAR" property="enterSchoolYear" />
+    <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="short_Class_Name" jdbcType="VARCHAR" property="shortClassName" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="class_photo" jdbcType="VARCHAR" property="classPhoto" />
+    <result column="import_status" jdbcType="VARCHAR" property="importStatus" />
+    <result column="is_open" jdbcType="CHAR" property="isOpen" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    class_id, school_id, class_name, grade_code, school_grade_id, teacher_id, teacher_name, 
+    enter_school_year, class_code, short_Class_Name, status, class_photo, import_status
+  </sql>
+  
+  <!-- 分页获取班级信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+    sc.*
+    from sys_class sc
+    left join sys_grade sg on sg.school_grade_id = sc.school_grade_id
+    <where>
+    	<if test="isOpen!=null">
+    		and sc.is_open = #{isOpen,jdbcType=CHAR}
+    	</if>
+    	<if test="className!=null">
+    		and sc.class_name like concat('%',#{className,jdbcType=VARCHAR},'%')
+    	</if>
+    	<if test="schoolId!=null">
+    		and sg.school_id = #{schoolId,jdbcType=INTEGER}
+    	</if>
+    	<if test="gradeCode!=null">
+    		and sg.grade_code = #{gradeCode,jdbcType=INTEGER}
+    	</if>
+    </where>
+    order by class_id
+  </select>
+  <!-- 分页获取班级数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select 
+    count(sc.class_id)
+    from sys_class sc
+    left join sys_grade sg on sg.school_grade_id = sc.school_grade_id
+    <where>
+    	<if test="isOpen!=null">
+    		and sc.is_open = #{isOpen,jdbcType=CHAR}
+    	</if>
+    	<if test="className!=null">
+    		and sc.class_name like concat('%',#{className,jdbcType=VARCHAR},'%')
+    	</if>
+    	<if test="schoolId!=null">
+    		and sg.school_id = #{schoolId,jdbcType=INTEGER}
+    	</if>
+    	<if test="gradeCode!=null">
+    		and sg.grade_code = #{gradeCode,jdbcType=INTEGER}
+    	</if>
+    </where>
+    order by class_id
+  </select>
+  
+  <!-- 根据id查询班级班级信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_class
+    where class_id = #{classId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据id修改班级信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.school.Class">
+    update sys_class
+    <set>
+      <if test="isOpen != null">
+        is_open = #{isOpen,jdbcType=CHAR},
+      </if>
+    </set>
+    where class_id = #{classId,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

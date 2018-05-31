@@ -1,0 +1,44 @@
+*{margin:0;padding:0;list-style-type:none;}
+a,img{border:0;}
+a{color:#333;text-decoration:none;}
+/* votebox */
+/*.votebox{margin:20px auto;width:600px;border:solid 1px #ddd;padding:30px 0;}*/
+.votebox h2{font-size:14px;color:#05345E;margin:0;text-align:center;}
+.votebox ul{height:18px;margin:20px 0 0 200px;}
+.votebox li{height:18px;line-height:18px;overflow:hidden;float:left;margin:0 20px 0 0;font-size:12px;}
+.votebox li span{display:inline-block;float:left;width:10px;height:10px;overflow:hidden;background:url("../../image/teacher/barbg.gif") repeat-x;margin:3px 3px 0 0;}
+.votebox li span.barline-01{border:1px solid #C2142C;background-position:0 0;}
+.votebox li span.barline-02{border:1px solid #EFA804;background-position:0 -10px;}
+.votebox li span.barline-03{border:1px solid #0A83E6;background-position:0 -20px;}
+.votebtn{height:32px;overflow:hidden;margin:30px auto 0 auto;width:205px;}
+.votebtn a{background:url("../../image/teacher/yellowbtn.gif") no-repeat;width:82px;height:32px;line-height:32px;overflow:hidden;text-align:center;font-size:14px;font-weight:800;display:inline-block;color:#fff;margin:0 10px;}
+.votebtn a:hover{color:#fff;text-decoration:none;}
+/* barbox */
+.barbox{/*height:1.4rem;line-height:1.4rem;*/overflow:hidden;/*padding:20px 0 0 2.4rem;*/}
+.barbox dt{float:left;font-size:16px;width:50px;text-align:right;margin-top: 5px;}
+.barbox dt a{color:#666666;}
+.barbox dd{float:left;}
+.barbox dd.last{color:#333;font-size:16px;margin-left: 20px;margin-top: 5px; font-family: 'dincond-blackregular';}
+/*@font-face { 
+	font-family: 'dincond-blackregular';
+    src: url('../../css/teacher/dincond-black-webfont.eot');
+    src: url('../../css/teacher/dincond-black-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../../css/teacher/dincond-black-webfont.woff2') format('woff2'),
+         url('../../css/teacher/dincond-black-webfont.woff') format('woff'),
+         url('../../css/teacher/dincond-black-webfont.ttf') format('truetype'),
+         url('../../css/teacher/dincond-black-webfont.svg#dincond-blackregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+	             
+}*/
+.barbox dd.barline{width:560px;background:#E3E3E3;height:20px;overflow:hidden;margin:8px 10px 0 20px;display:inline;border-bottom:solid 1px #F4F4F4;border-right:solid 1px #F4F4F4;border-radius:50px;}
+.barbox dd.barline div.charts{height:20px;overflow:hidden;background:url("../../image/teacher/barbg.gif") repeat-x;background-size: cover;}
+.barbox dd.barline div.charts.barred{background-position:0 0;border:1px solid #4AD537;background:#4AD537;background-size: cover;border-radius:50px;}
+.attr2{background-position:0 0;background:#FF4444!important;background-size: cover;border-radius: 10px;}
+.attr3{background-position:0 0;background:#fcc62e!important;background-size: cover;border-radius: 10px;}
+.barbox dd.barline div.charts.baryellow{background-position:0 -10px;border:1px solid #4AD537;}
+.barbox dd.barline div.charts.barblue{background-position:0 -20px;border:1px solid #4AD537;}
+.mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item{
+	border: 0!important;
+}
+ 

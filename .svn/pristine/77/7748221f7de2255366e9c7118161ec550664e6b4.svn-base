@@ -1,0 +1,184 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>Insert title here</title>
+<style type="text/css">
+  .paiming_ul{height:35px;background:#d1d1d1;}
+  .paiming_ul li{float:left;line-height:35px;width:100px;text-align:center;cursor:pointer;}
+  .active{background:#fff;color:#3bb4f2;border:1px solid #3bb4f2;} 
+</style>
+</head>
+<body>
+   <ul class="paiming_ul">
+      <li class="active">数学正确率</li>
+      <li>英语正确率</li>
+   </ul>
+   <div class="table_1">
+       <div id="section"> 
+   	  	<div class="fenxi-head">
+   	  		<div class="fenxi-head-yi">
+   	  			<span>最高分：92</span>
+   	  			<span class="fenxi-head-yi-span">最低分:42</span>
+   	  		</div>
+   	  		<ul class="fenxi-head-er">
+   	  			<li>
+   	  				<p class="fenxi-head-er-yi"></p>
+   	  				<span>优秀</span>
+   	  			</li>
+   	  			<li>
+   	  				<p class="fenxi-head-er-er"></p>
+   	  				<span>良好</span>
+   	  			</li>
+   	  			<li>
+   	  				<p class="fenxi-head-er-san"></p>
+   	  				<span>较差</span>
+   	  			</li>
+   	  		</ul>
+   	  	</div>
+   	  	<div class="fenxi-bie"></div>
+			<div class="biaoti">
+				<h1>一、选择题</h1>
+				<div>
+					<img src="../../image/teacher/13.png" alt="" />
+					<span>得分率</span>
+				</div>
+			</div>
+			<div class="votebox" >
+				<dl class="barbox">	
+					<dt>1</dt>
+		            <dd class="barline">
+			            <div divindex="0" id="chartSlide_0" w="" style="width:0px;" class="charts"></div>
+		            </dd>
+		            <dd class="last"><i>96</i>%</dd>
+	            </dl>
+	        </div>
+	        <div class="votebox" >
+				<dl class="barbox">	
+					<dt>2</dt>
+		            <dd class="barline">
+			            <div divindex="0" id="chartSlide_0" w="" style="width:0px;" class="charts"></div>
+		            </dd>
+		            <dd class="last"><i>75</i>%</dd>
+	            </dl>
+	        </div>
+	        <div class="fenxi-bie"></div>
+	        <div class="biaoti">
+				<h1>二、填空题</h1>
+				<div>
+					<img src="../../image/teacher/13.png" alt="" />
+					<span>得分率</span>
+				</div>
+			</div>
+			<div class="votebox" >
+				<dl class="barbox">	
+					<dt>1</dt>
+		            <dd class="barline">
+			            <div divindex="0" id="chartSlide_0" w="" style="width:0px;" class="charts"></div>
+		            </dd>
+		            <dd class="last"><i>96</i>%</dd>
+	            </dl>
+	        </div>
+	        <div class="votebox">
+				<dl class="barbox">	
+					<dt>2</dt>
+		            <dd class="barline">
+			            <div divindex="0" id="chartSlide_0" w="" style="width:0px;" class="charts"></div>
+		            </dd>
+		            <dd class="last"><i>75</i>%</dd>
+	            </dl>
+	        </div>
+   	  </div>
+   </div>
+   <div class="table_1">
+      <div id="section"> 
+   	  	<div class="fenxi-head">
+   	  		<div class="fenxi-head-yi">
+   	  			<span>最高分：92</span>
+   	  			<span class="fenxi-head-yi-span">最低分:42</span>
+   	  		</div>
+   	  		<ul class="fenxi-head-er">
+   	  			<li>
+   	  				<p class="fenxi-head-er-yi"></p>
+   	  				<span>优秀</span>
+   	  			</li>
+   	  			<li>
+   	  				<p class="fenxi-head-er-er"></p>
+   	  				<span>良好</span>
+   	  			</li>
+   	  			<li>
+   	  				<p class="fenxi-head-er-san"></p>
+   	  				<span>较差</span>
+   	  			</li>
+   	  		</ul>
+   	  	</div>
+   	  	<div class="fenxi-bie"></div>
+			<div class="biaoti">
+				<h1>一、选择题</h1>
+				<div>
+					<img src="../../image/teacher/13.png" alt="" />
+					<span>得分率</span>
+				</div>
+			</div>
+			<div class="votebox" >
+				<dl class="barbox">	
+					<dt>1</dt>
+		            <dd class="barline">
+			            <div divindex="0" id="chartSlide_0" w="" style="width:0px;" class="charts"></div>
+		            </dd>
+		            <dd class="last"><i>96</i>%</dd>
+	            </dl>
+	        </div>
+	        <div class="votebox" >
+				<dl class="barbox">	
+					<dt>2</dt>
+		            <dd class="barline">
+			            <div divindex="0" id="chartSlide_0" w="" style="width:0px;" class="charts"></div>
+		            </dd>
+		            <dd class="last"><i>75</i>%</dd>
+	            </dl>
+	        </div>
+	        <div class="fenxi-bie"></div>
+	        <div class="biaoti">
+				<h1>二、填空题</h1>
+				<div>
+					<img src="../../image/teacher/13.png" alt="" />
+					<span>得分率</span>
+				</div>
+			</div>
+			<div class="votebox" >
+				<dl class="barbox">	
+					<dt>1</dt>
+		            <dd class="barline">
+			            <div divindex="0" id="chartSlide_0" w="" style="width:0px;" class="charts"></div>
+		            </dd>
+		            <dd class="last"><i>85</i>%</dd>
+	            </dl>
+	        </div>
+	        <div class="votebox" >
+				<dl class="barbox">	
+					<dt>2</dt>
+		            <dd class="barline">
+			            <div divindex="0" id="chartSlide_0" w="" style="width:0px;" class="charts"></div>
+		            </dd>
+		            <dd class="last"><i>59</i>%</dd>
+	            </dl>
+	        </div>
+   	  </div>
+   </div>
+<%@ include file="../common/_footer.jsp" %>
+<script>
+  $('.table_1').hide();
+  $('.table_1').eq(0).show();
+  $('.paiming_ul li').on('click',function(){
+	  var index=$('.paiming_ul li').index(this);
+	  $('.paiming_ul li').attr('class','');
+	  $('.paiming_ul li').eq(index).attr('class','active');
+	  $('.table_1').hide();
+	  $('.table_1').eq(index).show();
+  })
+
+</script>
+</body>
+</html>

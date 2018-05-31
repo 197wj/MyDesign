@@ -1,0 +1,77 @@
+package com.zhiliao.model.excel;
+
+import java.util.List;
+
+public class UserExcel {
+
+	private String schoolName;
+	
+	private Integer schoolId;
+	
+	private String userName;
+	
+	private String userNo;
+	
+	private String gradeName;
+	
+	private String className;
+	
+	private List<Parent> parent;
+
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public Integer getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(Integer schoolId) {
+		this.schoolId = schoolId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserNo() {
+		return userNo;
+	}
+
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
+	}
+
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public List<Parent> getParent() {
+		return parent;
+	}
+
+	public void setParent(List<Parent> parent) {
+		this.parent = parent;
+	}
+	
+}

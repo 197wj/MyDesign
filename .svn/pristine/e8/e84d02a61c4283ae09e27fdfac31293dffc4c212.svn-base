@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.php.TeaCountMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.php.TeaCount">
+    <result column="examId" jdbcType="INTEGER" property="examId" />
+    <result column="classId" jdbcType="INTEGER" property="classId" />
+    <result column="referCount" jdbcType="INTEGER" property="referCount" />
+    <result column="grantCount" jdbcType="INTEGER" property="grantCount" />
+    <result column="schRank" jdbcType="INTEGER" property="schRank" />
+    <result column="totalScore" jdbcType="INTEGER" property="totalScore" />
+    <result column="cityRank" jdbcType="INTEGER" property="cityRank" />
+    <result column="week" jdbcType="INTEGER" property="week" />
+  </resultMap>
+  
+  <!-- 获取英语的信息 -->
+  <select id="getCountInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT xe.examid examId,xe.classid classId,xe.number week,xe.students referCount,xe.totalscore totalScore,count(xh.ehuserid) grantCount
+	FROM x2_examstatistics xe
+	LEFT JOIN x2_examhistory xh ON xh.ehexamid = xe.examid 
+	WHERE 
+		xe.classid = xh.ehclassid
+		AND classid = #{classId,jdbcType=INTEGER}
+		AND `subject` = #{subject,jdbcType=INTEGER}
+		GROUP BY xe.number
+		ORDER BY number
+  </select>
+  
+  <!-- 获取数学的细信息 -->
+  <select id="getScoreInfo" parameterType="java.util.Map" resultMap="BaseResultMap" >
+  	SELECT examid engExamId, classid classId,number week,students engCount,sum(totalscore) totalScore
+	FROM x2_examstatistics
+	<where>
+		schoolid <![CDATA[ <> ]]> 166
+		and schoolid <![CDATA[ <> ]]> 160
+		and `subject` = #{subject,jdbcType=INTEGER}
+		and gradeid = #{gradeId,jdbcType=INTEGER}
+		<if test="schoolId!=null">
+			and schoolid = #{schoolId,jdbcType=INTEGER}
+		</if>
+	</where>
+	ORDER BY number
+	group by classid
+  </select>
+  
+  <!-- 获取市级排名 -->
+  <select id="getCityRank" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT xe.examid examId,xe.classid classId,xe.number week,xe.students referCount,xe.totalscore totalScore
+	FROM x2_examstatistics xe
+	<where>
+		schoolid <![CDATA[ <> ]]> 166
+		and schoolid <![CDATA[ <> ]]> 160
+		<if test="schoolId!=null">
+			and schoolid = #{schoolId,jdbcType=INTEGER}
+		</if>
+		<if test="examId!=null">
+			and xe.examid = #{examId,jdbcType=INTEGER}
+		</if>
+	</where> 
+	GROUP BY classid 
+  </select>
+  
+  <!-- 获取市级排名(综合) -->
+  <select id="getCityRankZ" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT xe.examid examId,xe.classid classId,xe.number week,sum(xe.students) referCount,sum(xe.totalscore) totalScore
+	FROM x2_examstatistics xe
+	<where>
+		schoolid <![CDATA[ <> ]]> 166
+		and schoolid <![CDATA[ <> ]]> 160
+		<if test="schoolId!=null">
+			and schoolid = #{schoolId,jdbcType=INTEGER}
+		</if>
+		<if test="examId!=null">
+			and xe.examid = #{examId,jdbcType=INTEGER}
+		</if>
+		<if test="week!=null">
+			and xe.number = #{week,jdbcType=INTEGER}
+		</if>
+		
+	</where> 
+	GROUP BY classid 
+  </select>
+  	
+  <!-- 获取平均分 -->	
+  <select id="getAvgInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT xe.examid examId,xe.classid classId,xe.number week,sum(xe.students) referCount,sum(xe.totalscore) totalScore
+	FROM x2_examstatistics xe
+	<where>
+		classid = #{classId,jdbcType=INTEGER}
+		<if test="subject!=null">
+			AND `subject` = #{subject,jdbcType=INTEGER}
+		</if>
+	</where>
+	group by number
+	ORDER BY number
+  </select>
+  
+  
+  
+  
+  
+  
+</mapper>

@@ -1,0 +1,64 @@
+package com.zhiliao.controller.school;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.model.school.SchoolGrade;
+import com.zhiliao.service.school.SchoolGradeService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+/**
+ * 根据学校获取年级信息的控制层
+ * @ClassName: SchoolGradeController 
+ * @author 毕伟谦 
+ * @date 2018年1月30日 上午10:15:00 
+ *
+ */
+@Controller
+@RequestMapping("schoolGrade")
+public class SchoolGradeController {
+
+	@Autowired
+	private SchoolGradeService gradeService;
+	
+	
+	/**
+	 * 根据学校id获取年级信息
+	 * @Title: getGradeBySchoolId 
+	 * @param @param schoolId
+	 * @param @param isOpen
+	 * @return Map<String,Object>
+	 */
+	@RequestMapping("/getGradeBySchoolId.action")
+	@ResponseBody
+	public Map<String, Object> getGradeBySchoolId(@RequestParam(value="schoolId",required=true)Integer schoolId,
+												  @RequestParam(value="isOpen",required=false)Integer isOpen){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("schoolId", schoolId);
+		map.put("isOpen", isOpen);
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<SchoolGrade> list = this.gradeService.getGradeBySchoolId(map);
+		if(list.size()>0){
+			resultMap.put("data", list);
+			resultMap.put("status", true);
+			resultMap.put("msg", "获取成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "没有获取到数据");
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		return resultMap;
+	}
+	
+	
+	
+}

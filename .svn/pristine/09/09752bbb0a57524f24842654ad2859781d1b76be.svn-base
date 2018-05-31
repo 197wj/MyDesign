@@ -1,0 +1,17 @@
+package com.zhiliao.service.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.SchCount;
+
+public interface SchCountService {
+	
+	public List<SchCount> getCountInfo(Map<String, Object> map);
+	
+	public int getGrantCount(Map<String, Object> map);//获取试卷发放数
+	
+	public List<SchCount> getCityScore(Map<String , Object> map);//获取市级成绩
+	
+	public List<SchCount> getScoreInfo(Map<String, Object> map);
+}

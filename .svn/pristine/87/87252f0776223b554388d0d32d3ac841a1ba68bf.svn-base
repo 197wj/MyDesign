@@ -1,0 +1,32 @@
+package com.zhiliao.service.user;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.BaseService;
+
+public interface SysUserService extends BaseService<SysUser, Map<String, Object>> {
+
+	public SysUser selectById(Long userId);
+
+    public int updateById(SysUser record);
+    
+    public List<SysUser> selectList(Map<String, Object>map);
+    
+    public List<SysUser> selectTeacherList(Map<String, Object>map);//获取教师
+    
+    public SysUser login(String userNameString , String pwd);
+    
+    public SysUser getUserFromRequest(HttpServletRequest request);
+    
+    public List<SysUser> selectByIds(List<Integer>list);
+    
+    public int updateByIds(Map<String, Object>map);
+    
+    public SysUser getClassAdmin (Map<String, Object>map);//获取班主任信息
+    
+    public int getStudentCount(Map<String, Object>map);//获取班级学生的数量
+}

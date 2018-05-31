@@ -1,0 +1,266 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>销量结算页面</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页<span class="c-gray en">&gt;</span> 系统统计  <span class="c-gray en">&gt;</span> 销售统计 <span class="c-gray en">&gt;</span> 销量结算 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" id="yanshicontent" >
+	<div class="text-c">
+		<form class="Huiform" method="get" action="${path}/areaCount/saleCount.action" target="_self" id="pageForm">
+			<input type="hidden" id="mark" value="${mark}" name="mark">
+			<input type="hidden" id="haveOrder" value="${haveOrder}">
+			<input type="hidden" id="haveClass" value="${haveClass}">
+			
+			<!-- 区域 -->
+			<span class="select-box inline radius" id="xianSelect" >
+			<select id="areaSelect" class="select">
+				<option value="0">-所有区域-</option>
+				<c:forEach items="${AreaList}" var="area" varStatus="index">
+					<option value="${area.areaId}" id="${area.areaId}" class="1" 
+						<c:if test="${area.areaId==areaId}">selected="selected"</c:if>
+					>
+						${area.areaname}
+					</option>
+				</c:forEach>
+			</select>
+			</span>
+			<!-- 学校 -->
+			<span class="select-box inline radius" id="xiangSelect" >
+			<select id="schoolSelect"  class="select">
+				<option value="0">-所有学校-</option>
+				<c:forEach items="${SchoolList}" var="school" varStatus="index">
+					<option value="${school.schoolId}" id="${school.schoolId}" class="${school.areaId} 2" 
+						<c:if test="${school.schoolId==schoolId}">selected="selected"</c:if>
+					>
+						${school.schoolName}
+					</option>
+				</c:forEach>
+			</select>
+			</span>
+			<!-- 年级 -->
+			<span class="select-box inline radius">
+				<select id="gradeSelect" class="select">
+					<option value="0">-所有年级-</option>
+					<c:forEach items="${GradeList}" var="grade" varStatus="index">
+						<option value="${grade.schoolGradeId}" id="${grade.schoolGradeId}" class="${grade.schoolId} 3" 
+							<c:if test="${grade.schoolGradeId==schoolGradeId}">selected="selected"</c:if>
+						>
+							${grade.gradeName}
+						</option>
+					</c:forEach>
+				</select>
+			</span>
+			<!-- 班级 -->
+			<span class="select-box inline radius">
+				<select id="classSelect" class="select">
+					<option value="0">-所有班级-</option>
+					<c:forEach items="${ClassList}" var="class01" varStatus="index">
+						<option value="${class01.classId}" id="${class01.classId}" class="${class01.schoolGradeId} 4" 
+							<c:if test="${class01.classId==classId}">selected="selected"</c:if>
+						>
+							${class01.gradeCode}${class01.className}
+						</option>
+					</c:forEach>
+				</select>
+			</span>
+			<!-- 科目 -->
+			<span class="select-box inline radius">
+				<select id="subjectSelect" class="select">
+					<option value="0">-所有科目-</option>
+					<c:forEach items="${UcSubjectList}" var="UcSubject" varStatus="index">
+						<option value="${UcSubject.subjectCode}" id="${UcSubject.subjectCode}" class="${UcSubject.subjectCode} " 
+							<c:if test="${UcSubject.subjectCode==subjectCode}">selected="selected"</c:if>
+						>
+							${UcSubject.subjectName}
+						</option>
+					</c:forEach>
+				</select>
+			</span>
+			<input type="hidden" id="areaIdImport" value="${areaId}" name="areaId">
+			<input type="hidden" id="schoolIdImport" value="${schoolId}" name="schoolId">
+			<input type="hidden" id="schoolGradeIdImport" value="${schoolGradeId}" name="schoolGradeId">
+			<input type="hidden" id="classIdImport" value="${classId}" name="classId">
+			<input type="hidden" id="subjectCodeImport" value="${subjectCode}" name="subjectCode">
+			<input type="text" class="input-text radius" style="width:100px" placeholder="教师姓名" id="teacherNameInput" value="${teacherName}" name="teacherName" >
+			<button type="button" class="btn btn-success radius" onclick="getSearch()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+		</form>
+	</div>
+	<br>
+	<div id="contentShow" style="display: none;">
+		<div class="div-table" >
+			<table  class="table table-border table-bordered table-hover table-bg mt-20 " >
+				<thead>
+					<tr class="text-c">
+						<th width="10%">区域</th>
+						<th width="10%">学校</th>
+						<th width="10%">年级</th>
+						<th width="10%">班级</th>
+						<th width="10%">科目</th>
+						<th width="10%">任课老师</th>
+						<th width="10%">订购人数</th>
+						<th width="10%">订购总额</th>
+						<th width="10%">查看详情</th>
+					</tr>
+				</thead>
+				<tbody >
+					<c:if test="${haveOrderClassList001.size()>0}">
+						<c:forEach items="${haveOrderClassList001}" var="c" varStatus="index">
+							<c:forEach items="${c.subList}" var="s" varStatus="index01">
+								<tr class="text-c tableContent ">	
+									<td>${c.areaName}</td>
+									<td>${c.schoolName}</td>
+									<td>${c.gradeName}</td>
+									<td>${c.className}</td>
+									<td>${s.subjectName}</td>
+									<td>${s.teacherName}</td>
+									<td>${s.peopleSum}</td>
+									<td>${s.moneySum}</td>
+									<td><a href="${path}/areaCount/saleOrder.action?classId='+${c.classId}+'&subjectCode='+${s.subjectCode}+'&className='+${c.className}+'&subjectName='+${s.subjectName}+'&schoolName='+${c.schoolName}+'&gradeName='+${c.gradeName}+'"><i class="Hui-iconfont">&#xe720;</i>查看</a></td>
+								</tr>	
+							</c:forEach>
+						</c:forEach>
+					</c:if>
+				</tbody>
+			</table>
+		</div>
+		<div  style="text-align: right;"><p><span style="font-weight: 700;">查询结果：</span>班级总个数：${classNumSum }  &emsp;   订购总人数：${dinggouNumSum}   &emsp;  订购总金额：${moneySum} &emsp; </p></div>
+	</div>
+</div>
+ 
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+var mark=$("#mark").val();
+//alert(mark);
+if(mark==0){
+	$(".1").show();
+	$(".2").hide();
+	$(".3").hide();
+	$(".4").hide();
+	layer.msg('请先选择筛选条件',{icon:1,time:3000});
+	
+}else if(mark==1){
+	
+	var haveClass=$("#haveClass").val();
+	var haveOrder=$("#haveOrder").val();
+	if(haveClass==1){
+		$("#contentShow").hide();
+		layer.msg('该条件下没有班级',{icon:1,time:3000});
+	}else if(haveOrder==1){
+		layer.msg('该条件下没有订单',{icon:1,time:3000});
+	}else if(haveClass==0||haveOrder==0){
+		$("#contentShow").show();
+	}
+	
+	var areaId=$("#areaIdImport").val();
+	var schoolId=$("#schoolIdImport").val();
+	var schoolGradeId=$("#schoolGradeIdImport").val();
+	var classId=$("#classIdImport").val();
+	var subjectCode=$("#subjectCodeImport").val();
+	
+	$(".2").hide();
+	$(".3").hide();
+	$(".4").hide();
+	$("#schoolSelect ."+areaId).show();
+	$(".3").hide();
+	$(".4").hide();
+	$("#gradeSelect ."+schoolId).show();
+	$(".4").hide();
+	$("#classSelect ."+schoolGradeId).show();
+	
+	
+}
+
+
+
+//提交
+function getSearch(){
+	var areaSelect=$.trim($("#areaSelect").find("option:selected").val());
+	var schoolSelect=$.trim($("#schoolSelect").find("option:selected").val());
+	var gradeSelect=$.trim($("#gradeSelect").find("option:selected").val());
+	var classSelect=$.trim($("#classSelect").find("option:selected").val());
+	var subjectSelect=$.trim($("#subjectSelect").find("option:selected").val());
+	
+//	alert(areaSelect+" "+schoolSelect+" "+gradeSelect+" "+classSelect+" "+subjectSelect);
+	
+	$("#areaIdImport").val(areaSelect);
+	$("#schoolIdImport").val(schoolSelect);
+	$("#schoolGradeIdImport").val(gradeSelect);
+	$("#classIdImport").val(classSelect);
+	$("#subjectCodeImport").val(subjectSelect);
+	
+//	alert($("#areaIdImport").val()+" "+$("#schoolIdImport").val()+" "+$("#schoolGradeIdImport").val()+" "+$("#classIdImport").val()+" "+$("#subjectCodeImport").val());
+	
+// 	if(typeVal==0){
+// 		layer.msg('请先选择组织类型!',{icon:2,time:2000});
+// 		return false;
+// 	}else{
+// 		$("#assOrgTypeImport").val(typeVal);
+// 	}
+	
+	$("#pageForm").submit();
+};
+
+//回车按钮
+function keydownEvent() {
+     var e = window.event || arguments.callee.caller.arguments[0];
+     if (e && e.keyCode == 13 ) {
+    	 getSearch();
+     }
+};
+
+//选中区域
+$("#areaSelect").change(function(){
+	$("#schoolSelect").find("option:selected").removeAttr("selected");
+	$("#gradeSelect").find("option:selected").removeAttr("selected");
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".2").hide();
+	var areaSelect=$.trim($(this).find("option:selected").val());
+//	alert(areaSelect);
+	if(areaSelect==0){
+		$(".2").show();
+	}else{
+		$("."+areaSelect).show();
+	}
+	$(".3").hide();
+	$(".4").hide();
+	
+	
+});
+//选中学校
+$("#schoolSelect").change(function(){
+	$("#gradeSelect").find("option:selected").removeAttr("selected");
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".3").hide();
+	var schoolSelect=$.trim($(this).find("option:selected").val());
+//	alert(schoolSelect);
+	if(schoolSelect==0){
+		$(".3").show();
+	}else{
+		$("."+schoolSelect).show();
+	}
+	$(".4").hide();
+});
+//选中年级
+$("#gradeSelect").change(function(){
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".4").hide();
+	var gradeSelect=$.trim($(this).find("option:selected").val());
+//	alert(gradeSelect);
+	if(gradeSelect==0){
+		$(".3").show();
+	}else{
+		$("."+gradeSelect).show();
+	}
+});
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+package com.zhiliao.service.sys;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.sys.tbService;
+import com.zhiliao.service.BaseService;
+
+public interface TBServiceService extends BaseService<tbService, Map<String, Object>> {
+
+	/**
+	 * 
+	 * @Title: deleteById 
+	 * @Description: 根据id删除客服信息
+	 * @param @param id
+	 * @return int
+	 */
+    public int deleteById(Integer id);
+    
+    /**
+     * 批量删除客服信息
+     * @Title: deleteList 
+     * @param @param list
+     * @return int
+     */
+    public int deleteList(List<Integer> list);
+
+    /**
+	 * 
+	 * @Title: insert 
+	 * @Description: 增加客服信息
+	 * @return int
+	 */
+    public int insert(tbService record);
+
+    /**
+     * 
+     * @Title: selectById 
+     * @Description: 根据id获取客服信息
+     * @param @param id
+     * @return tbService
+     */
+    public tbService selectById(Integer id);
+    
+    /**
+     * 
+     * @Title: selectByAreaId 
+     * @Description: 根据区域信息获取客服信息
+     * @param @param id
+     * @param @return 
+     * @return tbService
+     */
+    public tbService selectByAreaId(Integer areaId);
+    /**
+     * 
+     * @Title: updateById 
+     * @Description:根据id修改客服信息 
+     * @param @param record
+     * @param @return 
+     * @return int
+     */
+    public int updateById(tbService record);
+}

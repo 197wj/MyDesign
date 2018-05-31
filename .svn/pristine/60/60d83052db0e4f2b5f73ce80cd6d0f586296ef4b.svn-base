@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.php.SchCountMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.php.SchCount">
+    <result column="gradeId" jdbcType="INTEGER" property="gradeId" />
+    <result column="classId" jdbcType="INTEGER" property="classId" />
+    <result column="examId" jdbcType="VARCHAR" property="examId" />
+    <result column="week" jdbcType="INTEGER" property="week" />
+    <result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+    <result column="className" jdbcType="VARCHAR" property="className" />
+    <result column="teaName" jdbcType="VARCHAR" property="teaName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="schoolRank" jdbcType="INTEGER" property="schoolRank" />
+    <result column="totalScore" jdbcType="INTEGER" property="totalScore" />
+    <result column="avgScore" jdbcType="FLOAT" property="avgScore" />
+    <result column="schoolAvg" jdbcType="FLOAT" property="schoolAvg" />
+    <result column="cityAvg" jdbcType="FLOAT" property="cityAvg" />
+    <result column="cityRank" jdbcType="INTEGER" property="cityRank" />
+  </resultMap>
+  
+  <!-- 获取英语的信息 -->
+  <select id="getCountInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT x2.number week,x2.gradeid gradeId,ug.grade_name gradeName,x2.classid classId ,sc.class_name className ,
+  	sum(x2.students) referCount,sum(x2.totalscore) totalScore 
+	FROM x2_examstatistics x2
+	LEFT JOIN tms_els_test.uc_grade ug ON ug.grade_code = x2.gradeid
+	LEFT JOIN tms_els_test.sys_class sc ON sc.class_id = x2.classid
+	<where>
+		<if test="schoolId!=null">
+			AND x2.schoolid = #{schoolId,jdbcType=INTEGER}
+		</if>
+		<if test="gradeId!=null">
+			and x2.gradeid = #{gradeId,jdbcType=INTEGER}
+		</if>
+		<if test="week!=null">
+			AND x2.number = #{week,jdbcType=INTEGER}
+		</if>
+	</where> 
+	
+	GROUP BY x2.number,x2.classid ,x2.gradeid
+	ORDER BY x2.gradeid
+  </select>
+  <!-- 获取发卷数 -->
+  <select id="getGrantCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	${sql}
+  	<!-- SELECT count(ehuserid)
+	FROM x2_examhistory_33 
+	<where>
+	<if test="number!=null">
+		and ehzhou = #{number,jdbcType=INTEGER}
+	</if>
+	<if test="examId!=null">
+		and ehexamid = #{examId,jdbcType=VARCHAR}
+	</if>
+	<if test="classId!=null">
+		AND ehclassid = #{classId,jdbcType=INTEGER}
+	</if>
+	</where> -->
+  </select>
+  
+  <!-- 获取市级成绩 --> 
+  <select id="getCityScore" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT x2.number week,x2.gradeid gradeId,ug.grade_name gradeName,
+  	sum(x2.students) referCount,sum(x2.totalscore) totalScore 
+	FROM x2_examstatistics x2
+	LEFT JOIN tms_els_test.uc_grade ug ON ug.grade_code = x2.gradeid
+	LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.schoolid
+	<where>
+		<if test="areaId!=null">
+			AND ss.area_id = #{areaId,jdbcType=VARCHAR}
+		</if>
+		<if test="number!=null">
+			and number = #{number,jdbcType=INTEGER}
+		</if>
+		<if test="subject!=null">
+			and subject = #{subject,jdbcType=INTEGER}
+		</if>
+	</where>
+	GROUP BY x2.number ,x2.gradeid
+	ORDER BY x2.gradeid
+  </select>
+  
+  
+  <!-- 获取数学/英语的细信息 -->
+  <select id="getScoreInfo" parameterType="java.util.Map" resultMap="BaseResultMap" >
+  	SELECT x2.examid examId,x2.number week,x2.gradeid gradeId,ug.grade_name gradeName,x2.classid classId ,sc.class_name className ,
+  		su.user_name teaName,x2.students referCount,x2.totalscore totalScore
+	FROM x2_examstatistics x2
+	LEFT JOIN tms_els_test.uc_grade ug ON ug.grade_code = x2.gradeid
+	LEFT JOIN tms_els_test.sys_class sc ON sc.class_id = x2.classid
+	LEFT JOIN tms_els_test.teacher_class tc ON tc.class_id = x2.classid
+	LEFT JOIN tms_els_test.sys_user su ON su.user_id = tc.teacher_id
+	LEFT JOIN tms_els_test.sys_userrole sur ON sur.userid = su.user_id
+	<where>
+		sur.ROLEID = 3 AND x2.`subject` = tc.subject_code
+		
+			AND x2.schoolid = #{schoolId,jdbcType=INTEGER}
+		
+		<if test="gradeId!=null">
+			and x2.gradeid = #{gradeId,jdbcType=INTEGER}
+		</if>
+		<if test="subject!=null">
+			AND x2.`subject` = #{subject,jdbcType=INTEGER}
+		</if>
+		<if test="week!=null">
+			AND x2.number = #{week,jdbcType=INTEGER}
+		</if>
+	</where>
+	GROUP BY x2.number,x2.classid ,x2.gradeid
+	ORDER BY x2.gradeid
+  </select>
+  	
+  <!-- 获取市级排名 -->
+  <select id="getCityRank" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT x2.number week,x2.gradeid gradeId,x2.classid classId ,
+  	sum(x2.students) referCount,sum(x2.totalscore) totalScore
+	FROM x2_examstatistics x2
+	LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.schoolid
+	<where>
+		<if test="areaId!=null">
+			AND ss.area_id = #{areaId,jdbcType=VARCHAR}
+		</if>
+		<if test="subject!=null">
+			AND x2.`subject` = #{subject,jdbcType=INTEGER}
+		</if>
+		<if test="week!=null">
+			AND x2.number = #{week,jdbcType=INTEGER}
+		</if>
+		<if test="gradeId!=null">
+			and x2.gradeid = #{gradeId,jdbcType=INTEGER}
+		</if>
+	</where> 
+	GROUP BY classid 
+  </select>
+  
+  <!-- 获取平均分 -->	
+  <select id="getAvgInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT x2.number week,x2.gradeid gradeId,
+  	sum(x2.students) referCount,sum(x2.totalscore) totalScore
+	FROM x2_examstatistics x2
+	<where>
+		x2.schoolid = #{schoolId,jdbcType=INTEGER}
+		and x2.gradeid = #{gradeId,jdbcType=INTEGER}
+		<if test="subject!=null">
+			AND `subject` = #{subject,jdbcType=INTEGER}
+		</if>
+	</where>
+	group by number
+	ORDER BY number
+  </select>
+  
+  <!-- 获取周提交率 -->
+  <select id="getRateGrade" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT x2.gradeid gradeId,
+	x2.number WEEK,
+	sum(x2.students) referCount,
+	sum(x2.totalscore) totalScore
+	FROM x2_examstatistics x2
+  	<where>
+  		x2.schoolid <![CDATA[ <> ]]> 176
+  		and x2.schoolid <![CDATA[ <> ]]> 166
+  		<if test="areaId!=null">
+  			and ss.area_id = #{areaId}
+  		</if>
+  		<if test="gradeId!=null">
+  			and x2.gradeid = #{gradeId}
+  		</if>
+  		<if test="subject!=null">
+  			and x2.`subject` = #{subject}
+  		</if>
+  		<if test="week!=null">
+  			and x2.number = #{week}
+  		</if>
+  		<if test="schoolId!=null">
+  			and x2.schoolid = #{schoolId}
+  		</if>
+  	</where>
+	GROUP BY x2.number
+	ORDER BY totalScore DESC
+  </select>
+  
+  
+  
+  
+  
+  
+  
+</mapper>

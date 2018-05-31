@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.php.PhpCountMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.php.PhpCount">
+    <result column="classSynthesizeScorre" jdbcType="FLOAT" property="classSynthesizeScorre" />
+    <result column="classSynthesizeSubmit" jdbcType="INTEGER" property="classSynthesizeSubmit" />
+    <result column="schoolSynthesizeScorre" jdbcType="FLOAT" property="schoolSynthesizeScorre" />
+    <result column="schoolSynthesizeSubmit" jdbcType="INTEGER" property="schoolSynthesizeSubmit" />
+    <result column="citySynthesizeScorre" jdbcType="FLOAT" property="citySynthesizeScorre" />
+    <result column="citySynthesizeSubmit" jdbcType="VARCHAR" property="citySynthesizeSubmit" />
+    <result column="week" jdbcType="INTEGER" property="week" />
+    <result column="book" jdbcType="INTEGER" property="book" />
+  </resultMap>
+  
+  <select id="">
+  	
+  </select>
+  	
+  
+  
+  
+  
+  
+</mapper>

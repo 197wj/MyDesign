@@ -1,0 +1,192 @@
+package com.zhiliao.model.school;
+
+import java.util.List;
+
+public class Class {
+    private Integer classId;
+
+    private Integer schoolId;
+
+    private String className;
+
+    private String gradeCode;
+
+    private Integer schoolGradeId;
+
+    private Integer teacherId;
+
+    private String teacherName;
+
+    private String enterSchoolYear;
+
+    private String classCode;
+
+    private String shortClassName;
+
+    private String status;
+
+    private String classPhoto;
+
+    private String importStatus;
+    
+    private String isOpen;
+    
+  //扩展字段
+    private String areaName;
+    private String schoolName;
+    private String gradeName;
+    private String subjectName;
+    private List<UcSubject> subList;
+  
+	public List<UcSubject> getSubList() {
+		return subList;
+	}
+
+	public void setSubList(List<UcSubject> subList) {
+		this.subList = subList;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	public String getIsOpen() {
+		return isOpen;
+	}
+
+	public void setIsOpen(String isOpen) {
+		this.isOpen = isOpen;
+	}
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className == null ? null : className.trim();
+    }
+
+    public String getGradeCode() {
+        return gradeCode;
+    }
+
+    public void setGradeCode(String gradeCode) {
+        this.gradeCode = gradeCode == null ? null : gradeCode.trim();
+    }
+
+    public Integer getSchoolGradeId() {
+        return schoolGradeId;
+    }
+
+    public void setSchoolGradeId(Integer schoolGradeId) {
+        this.schoolGradeId = schoolGradeId;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName == null ? null : teacherName.trim();
+    }
+
+    public String getEnterSchoolYear() {
+        return enterSchoolYear;
+    }
+
+    public void setEnterSchoolYear(String enterSchoolYear) {
+        this.enterSchoolYear = enterSchoolYear == null ? null : enterSchoolYear.trim();
+    }
+
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode == null ? null : classCode.trim();
+    }
+
+    public String getShortClassName() {
+        return shortClassName;
+    }
+
+    public void setShortClassName(String shortClassName) {
+        this.shortClassName = shortClassName == null ? null : shortClassName.trim();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+
+    public String getClassPhoto() {
+        return classPhoto;
+    }
+
+    public void setClassPhoto(String classPhoto) {
+        this.classPhoto = classPhoto == null ? null : classPhoto.trim();
+    }
+
+    public String getImportStatus() {
+        return importStatus;
+    }
+
+    public void setImportStatus(String importStatus) {
+        this.importStatus = importStatus == null ? null : importStatus.trim();
+    }
+}

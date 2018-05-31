@@ -1,0 +1,141 @@
+package com.zhiliao.controller.php;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.model.php.PlatCount;
+import com.zhiliao.service.order.OrderService;
+import com.zhiliao.service.php.PlatCountService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+@Controller
+@RequestMapping("platCount")
+public class platCountController {
+
+	@Autowired
+	private PlatCountService countService;
+	
+	@Autowired
+	private OrderService orderService;
+	/**
+	 * 跳转到教师统计页面
+	 * @return
+	 */
+	@RequestMapping("/platCount.action")
+	public String platCountView(HttpServletRequest request,
+								@RequestParam(value="gradeId",required=false)Integer gradeId){
+		request.getSession().setAttribute("gradeId", gradeId);
+		return "count/platCount";
+	}
+	
+	
+	
+	@RequestMapping("/getCountInfo.action")
+	@ResponseBody
+	public Map<String, Object> getCountInfo(@RequestParam(value="gradeId",required=false)Integer gradeId,
+											@RequestParam(value="week",required=false)Integer week,
+											@RequestParam(value="schoolName" ,required=false)String schoolName){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		map.clear();
+		map.put("subject", 12);
+		map.put("week", week);
+		map.put("gradeId", gradeId);
+		map.put("schoolName", schoolName);
+		List<PlatCount> engList = this.countService.getCountInfo(map);//获取英语统计数量
+		for(PlatCount count:engList){
+			map.clear();
+			map.put("subject", 12);
+			map.put("gradeId", gradeId);
+			map.put("number", count.getWeek());
+			map.put("schoolId", count.getSchoolId());
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		
+		
+		
+		
+		map.clear();
+		map.put("subject", 11);
+		map.put("gradeId", gradeId);
+		map.put("week", week);
+		map.put("schoolName", schoolName);
+		List<PlatCount> mathList = this.countService.getCountInfo(map);//获取数学统计数量
+		for(PlatCount count:mathList){
+			map.clear();
+			map.put("subject", 11);
+			map.put("gradeId", gradeId);
+			map.put("number", count.getWeek());
+			map.put("schoolId", count.getSchoolId());
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		
+		
+		
+		
+		
+		
+		map.clear();
+		map.put("week", week);
+		map.put("gradeId", gradeId);
+		map.put("schoolName", schoolName);
+		List<PlatCount> list = this.countService.getCountInfo(map);//获取全部
+		for(PlatCount count:list){
+			map.clear();
+			map.put("number", count.getWeek());
+			map.put("gradeId", gradeId);
+			map.put("schoolId", count.getSchoolId());
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		//获取英语的开通数量
+		for(PlatCount count:engList){
+			map.clear();
+			map.put("subject", 12);
+			map.put("schoolId", count.getSchoolId());
+			int rows = this.orderService.getOrderCount(map);
+			count.setOpenCount(rows);
+		}
+		//获取数学的开通数量
+		for(PlatCount count:mathList){
+			map.clear();
+			map.put("subject", 11);
+			map.put("schoolId", count.getSchoolId());
+			int rows = this.orderService.getOrderCount(map);
+			count.setOpenCount(rows);
+		}
+		
+		//获取综合的开通数量
+		for(PlatCount count:list){
+			map.clear();
+			map.put("schoolId", count.getSchoolId());
+			int rows = this.orderService.getOrderCount(map);
+			count.setOpenCount(rows);
+		}
+		resultMap.put("status", true);
+		resultMap.put("data", list);
+		resultMap.put("eng", engList);
+		resultMap.put("math", mathList);
+
+		return resultMap;
+	}
+	
+	
+	
+}

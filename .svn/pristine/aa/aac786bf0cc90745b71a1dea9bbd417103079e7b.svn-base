@@ -1,0 +1,117 @@
+package com.zhiliao.controller.excel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.zhiliao.model.excel.Parent;
+import com.zhiliao.model.excel.UserExcel;
+import com.zhiliao.service.excel.ExcelService;
+import com.zhiliao.util.ExcelUtil;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+/**
+ * 导出excel文件的控制层
+ * @author 毕伟谦
+ *
+ */
+@Controller
+@RequestMapping("excel")
+public class ExcelController {
+
+	@Autowired
+	private ExcelService excelService;
+	
+	@RequestMapping("/exportExcel.action")
+	public void exportExcel(HttpServletResponse response ){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Integer> schoolList = new ArrayList<Integer>();
+		schoolList.add(25);
+		schoolList.add(29);
+		schoolList.add(28);
+		schoolList.add(22);
+		schoolList.add(75);
+		schoolList.add(50);
+		schoolList.add(36);
+		schoolList.add(37);
+		map.put("schoolId", 37);
+		//map.put("list", schoolList);
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<UserExcel> list = this.excelService.selectList(map);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		//导出excel文件
+		//设置文件名称
+		String fileName = null;
+		//判断导出学校信息还是导出
+		String []title = null;
+		String [][]values = null;
+		String sheetName = null;
+		
+		title = new String[]{"学校Id","学校名称","学生姓名","学生学号","年级","班级","父亲姓名","父亲手机号","母亲姓名","母亲手机号","家长1","手机号"};
+		fileName = "学校学生信息汇总";
+		sheetName = "学生信息";
+		//学校Id 0,学校名称 1,学生姓名 2,学生学号3,年级4,班级5,父亲姓名6,父亲手机号7,母亲姓名8,母亲手机号9,家长1 10,手机号11
+		values = new String[list.size()][];
+		for(int i=0;i<list.size();i++){
+			values[i] = new String[title.length];
+			values[i][0] = list.get(i).getSchoolId()+"";
+			values[i][1] = list.get(i).getSchoolName()+"";
+			values[i][2] = list.get(i).getUserName()+"";
+			values[i][3] = list.get(i).getUserNo()+"";
+			values[i][4] = list.get(i).getGradeName()+"";
+			values[i][5] = list.get(i).getClassName()+"";
+			List<Parent> pList = list.get(i).getParent();
+			if(pList.size()>0){
+				int m = 0;
+				for (Parent parent:pList) {
+					if(m>2){
+						values[i][10] = parent.getpName();
+						values[i][11] = parent.getpPhone();
+					}else {
+						if(null!=parent.getpType()){
+							if("mother".equals(parent.getpType())){
+								values[i][8] = parent.getpName();
+								values[i][9] = parent.getpPhone();
+							}else if("father".equals(parent.getpType())){
+								values[i][6] = parent.getpName();
+								values[i][7] = parent.getpPhone();
+							}
+						}
+					}
+					m++;
+				}
+			}
+		}
+		
+		
+		HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, values, null);
+		 //将文件存到指定位置  
+		try {  
+      	
+			response.reset();
+	        response.setHeader("Content-disposition", "attachment;filename="+ new String(fileName.getBytes("utf-8"), "ISO8859-1")+".xls");
+	        response.setContentType("application/msexcel");  
+
+           ServletOutputStream os = response.getOutputStream();
+           
+           
+           wb.write(os);
+           
+           os.flush();  
+           os.close();
+
+		} catch (Exception e) {  
+           e.printStackTrace();  
+		}
+		
+		
+	}
+}

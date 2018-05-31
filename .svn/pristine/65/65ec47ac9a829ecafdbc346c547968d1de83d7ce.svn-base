@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.product.MealMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.product.Meal">
+    <id column="meal_id" jdbcType="INTEGER" property="mealId" />
+    <result column="meal_name" jdbcType="VARCHAR" property="mealName" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="meal_price" jdbcType="REAL" property="mealPrice" />
+    <result column="discount" jdbcType="REAL" property="discount" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
+    <result column="week" jdbcType="VARCHAR" property="week" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <collection property="term" resultMap="term"/>
+    <collection property="product" resultMap="product"/>
+  </resultMap>
+  <!-- 学期属性 -->
+  <resultMap id="term" type="com.zhiliao.model.param.TbTerm">
+    <id column="term_id" jdbcType="INTEGER" property="termId" />
+    <result column="term_year" jdbcType="VARCHAR" property="termYear" />
+    <result column="term" jdbcType="VARCHAR" property="term" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+  </resultMap>
+  <!-- 产品属性 -->
+  <resultMap id="product" type="com.zhiliao.model.product.Product">
+    <id column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="week_name" jdbcType="VARCHAR" property="weekName" />
+    <result column="term_id" jdbcType="INTEGER" property="termId" />
+    <result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+    <result column="grade_code" jdbcType="INTEGER" property="gradeCode" />
+    <result column="price" jdbcType="REAL" property="price" />
+    <result column="subjectName" jdbcType="VARCHAR" property="subjectName" />
+    <result column="subject_code" jdbcType="INTEGER" property="subjectCode" />
+    <result column="is_shelf" jdbcType="CHAR" property="isShelf" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <collection property="term" resultMap="term"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    meal_id, meal_name, product_id, meal_price, discount, subject, grade, week, is_delete, 
+    add_time, remark
+  </sql>
+  <!-- 分页获取套餐信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select meal.*,term.*,pro.* ,ug.grade_name  gradeName,us.subject_name  subjectName
+  	from tb_meal meal
+  	left join tb_product pro on meal.product_id = pro.product_id
+  	left join tms_els_test.uc_grade ug on ug.grade_code = pro.grade_code
+    left join tms_els_test.uc_subject us on us.subject_code = pro.subject_code
+  	left join tb_term term on pro.term_id = term.term_id
+  	<where>
+  		meal.is_delete = '0' and term.is_delete = '0' and pro.is_shelf ='0'
+  		<if test="grade!=null">
+    		and meal.grade = #{grade,jdbcType=VARCHAR}
+    	</if>
+    	<if test="subject!=null">
+    		and meal.subject = #{subject,jdbcType=VARCHAR}
+    	</if>
+  	</where>
+  	order by meal.add_time
+  </select>
+  
+  <!-- 分页获取套餐数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(meal.meal_id)
+  	from tb_meal meal
+  	left join db_assistant.tb_product pro on meal.product_id = pro.product_id
+  	left join tms_els_test.uc_grade ug on ug.grade_code = pro.grade_code
+    left join tms_els_test.uc_subject us on us.subject_code = pro.subject_code
+  	left join db_assistant.tb_term term on pro.term_id = term.term_id
+  	<where>
+  		meal.is_delete = '0' and term.is_delete = '0' and pro.is_shelf ='0'
+  		<if test="grade!=null">
+    		and meal.grade = #{grade,jdbcType=VARCHAR}
+    	</if>
+    	<if test="subject!=null">
+    		and meal.subject = #{subject,jdbcType=VARCHAR}
+    	</if>
+  	</where>
+  	order by meal.add_time
+  </select>
+  
+   <!-- 根据ids查询套餐信息 -->
+  <select id="selectListByIds" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select meal.*,term.*,pro.* ,ug.grade_name  gradeName,us.subject_name  subjectName
+  	from tb_meal meal
+  	left join tb_product pro on meal.product_id = pro.product_id
+  	left join tms_els_test.uc_grade ug on ug.grade_code = pro.grade_code
+    left join tms_els_test.uc_subject us on us.subject_code = pro.subject_code
+  	left join tb_term term on pro.term_id = term.term_id
+  	where
+  		meal.is_delete = '0' and term.is_delete = '0' and pro.is_shelf ='0' 
+  		and meal.grade = #{grade,jdbcType=VARCHAR}
+	  	and meal_id in
+	    <foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+	        #{idList}
+	    </foreach>
+  </select>
+  
+  
+  <!-- 根据id获取套餐信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select meal.*,term.*,pro.*,ug.grade_name  gradeName,us.subject_name  subjectName
+  	from tb_meal meal
+  	left join tb_product pro on meal.product_id = pro.product_id
+  	left join tms_els_test.uc_grade ug on ug.grade_code = pro.grade_code
+    left join tms_els_test.uc_subject us on us.subject_code = pro.subject_code
+  	left join tb_term term on pro.term_id = term.term_id
+    where meal.meal_id = #{mealId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据id删除套餐信息 -->
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from tb_meal
+    where meal_id = #{mealId,jdbcType=INTEGER}
+  </delete>
+  <!-- 增加套餐信息 -->
+  <insert id="insert" parameterType="com.zhiliao.model.product.Meal">
+    insert into tb_meal (meal_id, meal_name, product_id, 
+      meal_price, discount, subject, 
+      grade, week, is_delete, 
+      add_time, remark)
+    values (#{mealId,jdbcType=INTEGER}, #{mealName,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}, 
+      #{mealPrice,jdbcType=REAL}, #{discount,jdbcType=REAL}, #{subject,jdbcType=VARCHAR}, 
+      #{grade,jdbcType=VARCHAR}, #{week,jdbcType=VARCHAR}, #{isDelete,jdbcType=CHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 根据id修改套餐信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.product.Meal">
+    update tb_meal
+    <set>
+      <if test="mealName != null">
+        meal_name = #{mealName,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="mealPrice != null">
+        meal_price = #{mealPrice,jdbcType=REAL},
+      </if>
+      <if test="discount != null">
+        discount = #{discount,jdbcType=REAL},
+      </if>
+      <if test="subject != null">
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null">
+        grade = #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="week != null">
+        week = #{termId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=CHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where meal_id = #{mealId,jdbcType=INTEGER}
+  </update>
+  
+ 
+  
+  
+  <!-- 批量或者单条删除 -->
+  <update id="deleteMealList" parameterType="java.util.List">
+    update tb_meal 
+    set  is_delete = '1' 
+    where meal_id in
+    <foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+        #{idList}
+    </foreach>
+ </update>
+  
+</mapper>

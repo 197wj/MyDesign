@@ -1,0 +1,55 @@
+package com.zhiliao.model.param;
+
+import java.util.Date;
+
+public class TbTerm {
+    private Integer termId;
+
+    private String termYear;
+
+    private String term;
+
+    private Date addTime;
+
+    private String isDelete;
+
+    public Integer getTermId() {
+        return termId;
+    }
+
+    public void setTermId(Integer termId) {
+        this.termId = termId;
+    }
+
+    public String getTermYear() {
+        return termYear;
+    }
+
+    public void setTermYear(String termYear) {
+        this.termYear = termYear == null ? null : termYear.trim();
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term == null ? null : term.trim();
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete == null ? null : isDelete.trim();
+    }
+}

@@ -1,0 +1,73 @@
+package com.zhiliao.model.user;
+
+public class SysRole {
+    private Long roleid;
+
+    private String actorname;
+
+    private String vchar1;
+
+    private String vchar2;
+
+    private String modifyable;
+
+    private String isvisible;
+
+    private String isUseable;
+
+    public Long getRoleid() {
+        return roleid;
+    }
+
+    public void setRoleid(Long roleid) {
+        this.roleid = roleid;
+    }
+
+    public String getActorname() {
+        return actorname;
+    }
+
+    public void setActorname(String actorname) {
+        this.actorname = actorname == null ? null : actorname.trim();
+    }
+
+    public String getVchar1() {
+        return vchar1;
+    }
+
+    public void setVchar1(String vchar1) {
+        this.vchar1 = vchar1 == null ? null : vchar1.trim();
+    }
+
+    public String getVchar2() {
+        return vchar2;
+    }
+
+    public void setVchar2(String vchar2) {
+        this.vchar2 = vchar2 == null ? null : vchar2.trim();
+    }
+
+    public String getModifyable() {
+        return modifyable;
+    }
+
+    public void setModifyable(String modifyable) {
+        this.modifyable = modifyable == null ? null : modifyable.trim();
+    }
+
+    public String getIsvisible() {
+        return isvisible;
+    }
+
+    public void setIsvisible(String isvisible) {
+        this.isvisible = isvisible == null ? null : isvisible.trim();
+    }
+
+    public String getIsUseable() {
+        return isUseable;
+    }
+
+    public void setIsUseable(String isUseable) {
+        this.isUseable = isUseable == null ? null : isUseable.trim();
+    }
+}

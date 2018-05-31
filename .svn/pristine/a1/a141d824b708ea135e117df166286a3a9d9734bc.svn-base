@@ -1,0 +1,187 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>金额类型</title>
+<meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<style type="text/css">
+	.input-week{box-sizing: border-box;border: solid 1px #ddd;width: 45%;font-size: 14px;
+   				height: 31px;line-height: 1.42857;padding: 4px;}
+</style>
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		
+		<!-- 操作类型 -->
+		<!-- <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>操作类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input name="setType" type="radio" value="x1" id="x1" checked>
+					<label for="x1">视频收费</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="c1" value="c1" name="setType">
+					<label for="c1">包一个月收费</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="c2" value="c2" name="setType">
+					<label for="c2">包三个月收费</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="c3" value="c3" name="setType">
+					<label for="c3">包一学期收费</label>
+				</div>
+			</div>
+		</div> -->
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">操作类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="setType" id="setType">
+						<option value="x1" selected>视频收费</option>
+						<option value="c1" >一个月</option>
+						<option value="c2" >二个月</option>
+						<option value="c3" >三个月</option>
+						<option value="c4" >四个月</option>
+						<option value="c5" >五个月</option>
+						<option value="c6" >六个月</option>
+						<option value="c7" >一学期</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		
+		<!-- 金额 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>金额(单位:元)：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="money" name="money">
+			</div>
+		</div>
+		
+		<!-- 打折 -->
+		<div class="row cl hidden" id="monDis">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>折扣：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="1" placeholder="" id="dis" name="dis">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input type="text" class="input-text hidden" value="" placeholder="" id="discount" name="discount">
+				<input class="btn btn-primary radius" onclick="oneSubmit()" id="sub" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+function oneSubmit(){
+    $("#form-member-add").submit();
+    $("#sub").attr("disabled", true);
+} 
+//计算打折金额
+// $("#dis").blur(function(){
+// 	var dis = $("#dis").val();
+// 	var mon = $("#money").val();
+// 	var discount = dis*mon;
+// 	$("#discount").val(discount);
+// });
+
+//根据select的value值,隐藏折扣
+$(function(){
+	var type = $("#setType").val();
+	if(type.charAt(0)=='x'){
+		$("#monDis").addClass("hidden");
+	}
+	if(type.charAt(0)=='c'){
+		$("#monDis").removeClass("hidden");
+	}
+});
+$("#setType").change(function(){
+	var type = $("#setType").val();
+	if(type.charAt(0)=='x'){
+		$("#monDis").addClass("hidden");
+	}
+	if(type.charAt(0)=='c'){
+		$("#monDis").removeClass("hidden");
+	}
+});
+
+
+
+//获取区域信息
+function getArea(){
+	$.ajax({
+		url:'../area/getAreaList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#area").empty();
+				$("#area").append("<option value='' selected>请选择</option>")
+				for(var i=0;i<data.length;i++){
+					$("#area").append("<option value='"+data[i].areaId+"'>"+data[i].areaname+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+</script>
+
+<script type="text/javascript">
+
+	$("#form-member-add").validate({
+		rules:{
+			phone:{
+				required:true,
+			},
+			qq:{
+				required:true,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				url:'../set/addSet.action',
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							parent.window.location.href="../set/setView.action";
+							parent.layer.close(1);
+						});
+					}else{
+						layer.msg(data.msg,{icon:2,time:2000},function(){
+							parent.window.location.href="../set/setView.action";
+							parent.layer.close(1);
+						});
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						parent.window.location.href="../set/setView.action";
+					});
+				}
+			});
+		}
+	});
+
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

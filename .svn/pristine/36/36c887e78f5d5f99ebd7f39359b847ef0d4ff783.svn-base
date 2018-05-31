@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.count.CountMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.count.SchoolCount">
+    <result column="schoolId" jdbcType="INTEGER" property="schoolId" />
+    <result column="schoolName" jdbcType="VARCHAR" property="schoolName" />
+    <result column="MName" jdbcType="VARCHAR" property="MName" />
+    <result column="MCount" jdbcType="INTEGER" property="MCount" />
+    <result column="ECount" jdbcType="INTEGER" property="ECount" />
+    <result column="EName" jdbcType="VARCHAR" property="EName" />
+    <result column="total" jdbcType="INTEGER" property="total" />
+  </resultMap>
+  <!-- 统计开通班级的数量 -->
+  <select id="selectClassCount" parameterType="java.util.Map" resultType="integer">
+  	SELECT count(sc.class_id)
+	from sys_class sc
+	LEFT JOIN sys_grade sg ON  sg.school_grade_id = sc.school_grade_id
+	LEFT JOIN sys_school ss ON ss.school_id = sg.school_id
+	LEFT JOIN uc_grade ug ON ug.grade_code = sg.grade_code
+	<where>
+		ss.is_open='1' AND ug.is_open = '1'
+		<if test="schoolId!=null">
+			and ss.school_id = #{schoolId}
+		</if>
+		<if test="gradeCode!=null">
+			and ug.grade_code = #{gradeCode}
+		</if>
+	</where>
+  </select>
+  <!-- 获取各科的订购数 -->
+  <select id="selectSubjectCount" parameterType="java.util.Map" resultType="java.util.Map">
+  	SELECT sub.subject_name name,count(ord.order_id) count 
+	from tb_order ord 
+	LEFT JOIN tms_els_test2.uc_subject  sub ON sub.subject_code = ord.subject_code
+	WHERE sub.is_open = '1'
+	GROUP BY sub.subject_code
+  </select>
+  
+  <!-- 获取学校的订购和开通情况(数学) -->
+  <select id="getMathCount" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT ss.school_id schoolId,ss.school_name schoolName,COUNT(tord.order_id) MCount,us.subject_name MName
+	FROM sys_school ss
+	LEFT JOIN db_assistant.tb_order tord ON ss.school_id = tord.school_id
+	LEFT JOIN uc_subject us ON us.subject_code = tord.subject_code
+	WHERE ss.is_open='1' AND us.is_open = '1'
+	AND us.subject_code = 11
+	GROUP BY ss.school_id
+  </select>
+  
+  <select id="getEnglishCount" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT ss.school_id schoolId,ss.school_name schoolName,COUNT(tord.order_id) ECount,us.subject_name EName
+	FROM sys_school ss
+	LEFT JOIN db_assistant.tb_order tord ON ss.school_id = tord.school_id
+	LEFT JOIN uc_subject us ON us.subject_code = tord.subject_code
+	WHERE ss.is_open='1' AND us.is_open = '1'
+	AND us.subject_code = 12
+	GROUP BY ss.school_id
+  </select>
+  <!-- 获取学校的数量(开通和未开通的数量) -->
+  <select id="selectSchoolCount" parameterType="java.util.Map" resultType="integer">
+  	SELECT count(school_id)
+	FROM sys_school 
+	<where>
+		area_id = '32'
+		<if test="isOpen!=null and ''!=isOpen">
+			and is_open = #{isOpen}
+		</if>
+	</where>
+  </select>
+  
+
+</mapper>

@@ -1,0 +1,204 @@
+package com.zhiliao.controller.sys;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.dao.sys.tbServiceMapper;
+import com.zhiliao.model.common.Pagination;
+import com.zhiliao.model.sys.tbService;
+import com.zhiliao.service.sys.TBServiceService;
+
+/**
+ * 客服信息的控制层
+ * @ClassName: TbServiceController 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author 毕伟谦 
+ * @date 2017年12月14日 上午11:21:38 
+ *
+ */
+@Controller
+@RequestMapping("tbServer")
+public class TbServiceController {
+
+	@Autowired
+	private TBServiceService service;
+	
+	/**
+	 * 跳转到客服管理页面
+	 * @Title: serverView 
+	 * @return String
+	 */
+	@RequestMapping("/serverView.action")
+	public String serverView(){
+		return "sys/server-list";
+	}
+	
+	/**
+	 * 跳转到客服的增加页面
+	 * @return
+	 */
+	@RequestMapping(value="/addView.action")
+	public String addView(){
+		return "sys/server-add";
+	}
+	
+	/**
+	 * 跳转到客服信息的修改页面
+	 * @Title: updateView 
+	 * @param @param request
+	 * @param @param id
+	 * @return String
+	 */
+	@RequestMapping(value="/updateView.action")
+	public String updateView(HttpServletRequest request,
+			  @RequestParam(value="id",required=true) Integer id){
+		tbService record = this.service.selectById(id);
+		request.setAttribute("data", record);
+		return "sys/server-update";
+	}
+	
+	
+	
+	/**
+	 * 分页获取客服信息
+	 * @Title: getServerByPage 
+	 * @param @param page
+	 * @param @param rows
+	 * @param @param phone
+	 * @param @param qq
+	 * @return Map<String,Object>
+	 */
+	@RequestMapping(value="/getServerByPage.action")
+	@ResponseBody
+	public Map<String, Object> getServerByPage(@RequestParam(value = "page",defaultValue = "1") Integer page,
+            								   @RequestParam(value = "rows",defaultValue = "20") Integer rows,
+            								   @RequestParam(value = "phone",required=false) String phone,
+            								   @RequestParam(value = "qq",required=false) String qq){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		try {
+			List<Map<String, Object>> resultList = null;
+			int totalRecords = 0;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("phone", phone);
+			map.put("qq", qq);
+			//调用service方法,进行数据的查询
+			Pagination<Map<String, Object>> pagination;
+			//MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+			pagination = this.service.getPagingDatas(map, page, rows, "selectCount","selectList",tbServiceMapper.class);
+			resultList = pagination.getPageList();//返回数据
+			totalRecords = pagination.getTotalRecords();//返回行数	
+			if(totalRecords>0){
+				resultMap.put("rows", resultList);
+				resultMap.put("total", totalRecords);
+				resultMap.put("status", true);
+				resultMap.put("msg", "获取成功");
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "没有获取到数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		return resultMap;
+	}
+	
+	/**
+	 * 增加客服信息
+	 * @Title: addServer 
+	 * @param @param request
+	 * @param @param record
+	 * @return Map<String,Object>
+	 */
+	@RequestMapping(value="/addServer.action")
+	@ResponseBody
+	public Map<String, Object> addServer(HttpServletRequest request,tbService record){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		record.setAddTime(new Date());
+		record.setModifyTime(new Date());
+		record.setStatus("1");
+		int rows = this.service.insert(record);
+		if (rows > 0) {
+			resultMap.put("status", true);
+			resultMap.put("msg", "增加成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "增加失败");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 修改客服信息
+	 * @Title: updateServer 
+	 * @param @param request
+	 * @param @param record
+	 * @return Map<String,Object>
+	 */
+	@RequestMapping(value="/updateServer.action")
+	@ResponseBody
+	public Map<String, Object> updateServer(HttpServletRequest request,tbService record){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		record.setModifyTime(new Date());
+		int rows = this.service.updateById(record);
+		if (rows > 0) {
+			resultMap.put("status", true);
+			resultMap.put("msg", "修改成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "修改失败");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 批量或者单条删除客服信息
+	 * @Title: deleteList 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param @param request
+	 * @param @param ids
+	 * @param @return 
+	 * @return Map<String,Object>
+	 */
+	@RequestMapping(value="/deleteList.action")
+	@ResponseBody 
+	public Map<String, Object> deleteList(HttpServletRequest request,@RequestParam("ids") Integer[] ids){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		//将数组添加到list中
+        List<Integer> list = new ArrayList<Integer>();
+        for (Integer id : ids) {
+            list.add(id);
+        }
+		if(list.size()>0){
+			int rows = this.service.deleteList(list);
+			if(rows>0){
+				resultMap.put("msg", "删除成功!!");
+				resultMap.put("status", true);
+			}else {
+				resultMap.put("msg", "删除失败!!");
+				resultMap.put("status", false);
+			}
+		}else{
+			resultMap.put("msg", "参数不能为空!!");
+			resultMap.put("status", false);
+		}
+		return resultMap;
+	}
+	
+	
+	
+	
+	
+}

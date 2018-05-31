@@ -1,0 +1,26 @@
+package com.zhiliao.dao.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.Exams;
+
+public interface ExamsMapper {
+    int deleteByPrimaryKey(Integer examid);
+
+    int insert(Exams record);
+
+    int insertSelective(Exams record);
+
+    public Exams selectById(Integer examid);
+
+    int updateByPrimaryKeySelective(Exams record);
+
+    int updateByPrimaryKeyWithBLOBs(Exams record);
+
+    int updateByPrimaryKey(Exams record);
+    
+    public List<Exams> selectByGrade(Map<String, Object> map);
+    
+    
+}

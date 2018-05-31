@@ -1,0 +1,184 @@
+﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>学校开通详情管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 区域管理 <span class="c-gray en">&gt;</span> 学校开通详情管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="text-c">
+		<input type="text" class="input-text" style="width:250px" placeholder="输入学校" id="schoolName" name="" onkeydown="keydownEvent()">
+		<button type="button" class="btn btn-success radius" id="seach" name=""><i class="Hui-iconfont">&#xe665;</i> 搜学校</button>
+	</div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" id="delAll" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="member_add('学校开通','../school/schoolAddView.action','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 学校开通</a></span> <span class="r">共有数据：<strong id="count">0</strong> 条</span> </div>
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-hover table-bg table-sort">
+			<thead>
+				<tr class="text-c">
+					<th width="25"><input type="checkbox" name="" value=""></th>
+					<th width="80">ID</th>
+					<th width="150">学校名称</th>
+					<th width="100">年级名称</th>
+					<th width="100">开通科目</th>
+					<th width="100">查看详情</th>
+				</tr>
+			</thead>
+			<tbody id="schoolList">
+			</tbody>
+		</table>
+		<!-- 分页 -->
+		<div style="width:70%;white-spacing:nowrap;margin:0 auto;"> 
+			<div id="kkpager"></div> 
+		</div>
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+
+<script type="text/javascript">
+	$(function(){
+		loadSubject(1,20);
+	})
+	function loadSubject(page,rows,schoolName){
+		$.ajax({
+			url:'../school/getSchoolByPage.action',
+			type:'get',
+			data:{'page':page,'rows':rows,'schoolName':schoolName},
+			dataType:'json',
+			success:function(obj){
+				var data = obj.rows;
+				var count = obj.total;
+				$("#schoolList").empty();
+				$("#count").html(count);
+				kkpagerHtml(count,rows,page,schoolName);
+				if(data!=null){
+					for(var i = 0;i<data.length;i++){
+						schoolListHtml(data[i],obj.grade,obj.subject);
+					}
+				}
+			}
+		});
+	}
+	//回车按钮
+	function keydownEvent() {
+	     var e = window.event || arguments.callee.caller.arguments[0];
+	     if (e && e.keyCode == 13 ) {
+	     	document.getElementById("seach").click();
+	     }
+	};
+	/**
+	 * 点击搜索,
+	 */
+	 $("#seach").click(function(){
+		var schoolName = $("#schoolName").val().trim();
+		loadSubject(1,10,schoolName);
+	 });
+	
+	 /**
+	  * 学科列表Html
+	  */
+	 function schoolListHtml(info,grade,subject){
+		var html='';
+	 	html+='<tr class="text-c">';
+	 	html+='<td><input type="checkbox" value="'+info.schoolId+'" name="del"></td>';
+	 	html+='<td style="display:none">'+info.schoolId+'</td>';
+	 	html+='<td>'+info.schoolId+'</td>';
+	 	html+='<td>'+info.schoolName+'</td>';
+	 	if(grade!=null){
+	 		var gh="";
+	 		for(var j=0;j<grade.length;j++){
+	 			if(j==grade.length-1){
+	 				gh+=grade[j].gradeName
+	 			}else{
+	 				gh+=grade[j].gradeName+","
+	 			}
+	 		}
+	 		html+='<td>'+gh+'</td>';
+	 	}else{
+	 		html+='<td>  </td>';
+	 	}
+	 	
+	 	if(subject!=null){
+	 		var sh="";
+	 		for(var m=0;m<subject.length;m++){
+	 			if(m==subject.length-1){
+	 				sh+=subject[m].subjectName
+	 			}else{
+	 				sh+=subject[m].subjectName+","
+	 			}
+	 		}
+	 		html+='<td>'+sh+'</td>';
+	 	}else{
+	 		html+='<td> </td>';
+	 	}
+	 	
+	 	html+='<td class="td-manage">';
+	 	html+='<a title="查看详情" href="javascript:;" onclick="member_show(&#39;查看详情&#39;,&#39;../school/schoolInfoView.action?schoolId='+info.schoolId+'&#39;,&#39;id&#39;,&#39;1100&#39;,&#39;400&#39;)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe627;</i></a>';
+	 	html+='</td></tr>';
+	 	$("#schoolList").append(html);
+	 }
+	 /**
+	  * kkpager分页工具
+	  */
+	 function kkpagerHtml(sum,rows,current,schoolName){
+	     var totalPage = Math.ceil(sum/rows);//总页数总数据条数/每页显示数 向上取整  
+	     if(current == 0){  
+	        current = 1;  
+	     }  
+	     //初始化函数  
+	     kkpager.generPageHtml({  
+	         pno : current, //当前页数  
+	         total : totalPage,//总页数  
+	         totalRecords : sum, //总数据条数  
+	         mode:'click', //这里设置为click模式  
+	         isShowTotalRecords:true,
+	         //点击页码的函数，这里发送ajax请求后台  
+	         click:function(n){
+	        	 loadSubject(n,rows,schoolName);
+	         	this.selectPage(n); //手动条用selectPage进行页码选中切换 
+	         	return false;
+	        },   
+	 	},true);  
+	 }
+	 /**
+	  * 将时间long类型转换为String类型
+	  */
+	  function formatterDateTime(val){
+	     var date = new Date(val);
+	     var y = date.getFullYear();  
+	     var m = date.getMonth() + 1;  
+	     m = m < 10 ? ('0' + m) : m;  
+	     var d = date.getDate();  
+	     d = d < 10 ? ('0' + d) : d;  
+	     var h = date.getHours();  
+	     h = h < 10 ? ('0' + h) : h;  
+	     
+	     var minute = date.getMinutes();  
+	     minute = minute < 10 ? ('0' + minute) : minute; 
+	     var second = date.getSeconds();
+	     second = second < 10 ? ('0' + second) : second; 
+	     return y + '-' + m + '-' + d+' '+ h+':'+minute+':'+second;  
+	 }
+	
+</script>
+
+
+
+
+<script type="text/javascript">
+
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-查看*/
+function member_show(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+
+
+</script> 
+</body>
+</html>

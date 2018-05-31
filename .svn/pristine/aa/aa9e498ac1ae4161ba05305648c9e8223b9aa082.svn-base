@@ -1,0 +1,23 @@
+package com.zhiliao.dao.contrast;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.order.Order;
+import com.zhiliao.model.php.ExamVo;
+import com.zhiliao.model.php.Examhistory;
+import com.zhiliao.model.user.SysUser;
+
+public interface ContrastMapper {
+
+	
+	public List<SysUser> selectList(Map<String, Object> map);
+	
+	public int updateByUserId(Order order);
+	
+	public int updateByUser(Examhistory examhistory);
+	
+	public List<ExamVo> selectTotal(Map<String, Object> map);
+	
+	public int updateByClassId(ExamVo examVo);
+}

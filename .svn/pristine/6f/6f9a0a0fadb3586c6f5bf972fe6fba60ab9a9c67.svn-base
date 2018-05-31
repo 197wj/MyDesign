@@ -1,0 +1,47 @@
+package com.zhiliao.service.school.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.school.UcSubjectMapper;
+import com.zhiliao.model.school.UcSubject;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.school.UcSubjectService;
+
+@Service 
+public class UcSubjectServiceImpl extends BaseServiceImpl<UcSubject, Map<String, Object>> implements UcSubjectService  {
+
+	@Autowired
+	private UcSubjectMapper ucSubjectMapper;
+	
+	@Override
+	public UcSubject selectById(String subjectCode) {
+		// TODO Auto-generated method stub
+		UcSubject ucSubject = this.ucSubjectMapper.selectById(subjectCode);
+		return ucSubject;
+	}
+	
+	@Override
+	public int updateById(UcSubject record) {
+		// TODO Auto-generated method stub
+		int rows = this.ucSubjectMapper.updateById(record);
+		return rows;
+	}
+	
+	@Override
+	public List<UcSubject> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<UcSubject> list = this.ucSubjectMapper.selectList(map);
+		return list;
+	}
+
+	@Override
+	public List<UcSubject> getListByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.ucSubjectMapper.getListByMap( map);
+	}
+	
+}

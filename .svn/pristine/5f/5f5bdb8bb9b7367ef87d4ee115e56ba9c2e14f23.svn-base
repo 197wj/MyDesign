@@ -1,0 +1,217 @@
+package com.zhiliao.controller.product;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.aop.SysLog;
+import com.zhiliao.dao.product.MealMapper;
+import com.zhiliao.model.common.Pagination;
+import com.zhiliao.model.product.Meal;
+import com.zhiliao.service.product.MealService;
+/**
+ * 套餐的控制层
+ * @author 毕伟谦
+ *
+ */
+@Controller
+@RequestMapping(value="/meal")
+public class MealController {
+
+	@Autowired
+	private MealService mealService;
+	
+	/**
+	 * 跳转到套餐的管理首页
+	 * @return
+	 */
+	@RequestMapping(value="/mealView.action")
+	public String mealView(){
+		return "product/meal-list";
+	}
+	/**
+	 * 跳转到增加页面
+	 * @return
+	 */
+	@RequestMapping(value="/mealAddView.action")
+	public String mealAddView(){
+		return "product/meal-add";
+	}
+	
+	/**
+	 * 跳转到详情页
+	 * @param request
+	 * @param mealId
+	 * @return
+	 */
+	@RequestMapping(value="/mealContentView.action")
+	public String mealContentView(HttpServletRequest request,
+								  @RequestParam(value="mealId",required=true) Integer mealId){
+		Meal meal = this.mealService.selectById(mealId);
+		request.setAttribute("data", meal);
+		return "product/meal-info";
+	}
+	
+	
+	/**
+	 * 分页获取套餐
+	 * @return
+	 */
+	@RequestMapping(value="/getMealByPage.action")
+	@ResponseBody
+	public Map<String, Object> getMealByPage(@RequestParam(value = "page",defaultValue = "1") Integer page,
+            								 @RequestParam(value = "rows",defaultValue = "10") Integer rows,
+            								 @RequestParam(value = "grade",required=false ) String grade,
+            								 @RequestParam(value = "subject",required = false ) String subject){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		try {
+			List<Map<String, Object>> resultList = null;
+			int totalRecords = 0;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("grade", grade);
+			map.put("subjectName", subject);
+			
+			//调用service方法,进行数据的查询
+			Pagination<Map<String, Object>> pagination;
+			//MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+			pagination = this.mealService.getPagingDatas(map, page, rows, "selectCount","selectList",MealMapper.class);
+			resultList = pagination.getPageList();//返回数据
+			totalRecords = pagination.getTotalRecords();//返回行数	
+			if(totalRecords>0){
+				resultMap.put("rows", resultList);
+				resultMap.put("total", totalRecords);
+				resultMap.put("status", true);
+				resultMap.put("msg", "获取成功");
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "没有获取到数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 增加套餐信息
+	 * @param request
+	 * @param param
+	 * @return
+	 */
+	@SysLog(operObject="套餐",operPath="meal/addMeal.action",operType="增加套餐")
+	@RequestMapping(value="/addMeal.action")
+	@ResponseBody
+	public Map<String, Object> addMeal(HttpServletRequest request,Meal meal){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		meal.setIsDelete("0");
+		meal.setAddTime(new Date());
+		String week = meal.getWeek();
+		int count = week.split(",").length;
+		meal.setMealPrice(2.5F*count);
+		int rows = this.mealService.insert(meal);
+		if (rows > 0) {
+			resultMap.put("status", true);
+			resultMap.put("msg", "增加成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "增加失败");
+		}
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 修改套餐信息
+	 * @param request
+	 * @param param
+	 * @return
+	 */
+	@SysLog(operObject="套餐",operPath="meal/updateMeal.action",operType="修改套餐")
+	@RequestMapping(value="/updateMeal.action")
+	@ResponseBody
+	public Map<String, Object> updateMeal(HttpServletRequest request,Meal meal){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		int rows = this.mealService.updateById(meal);
+		if (rows > 0) {
+			resultMap.put("status", true);
+			resultMap.put("msg", "修改成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "修改失败");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 批量删除或单条删除产品
+	 * @param request
+	 * @param ids
+	 * @return Map<String, Object>
+	 */
+	@SysLog(operObject="套餐",operPath="meal/deleteMealList.action",operType="删除套餐")
+	@RequestMapping(value="/deleteMealList.action")
+	@ResponseBody 
+	public Map<String, Object> deleteMealList(HttpServletRequest request,@RequestParam("ids") Integer[] ids){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		//将数组添加到list中
+        List<Integer> list = new ArrayList<Integer>();
+        for (Integer id : ids) {
+            list.add(id);
+        }
+		if(list.size()>0){
+			int rows = this.mealService.deleteMealList(list);
+			if(rows>0){
+				resultMap.put("msg", "删除成功!!");
+				resultMap.put("status", true);
+			}else {
+				resultMap.put("msg", "删除失败!!");
+				resultMap.put("status", false);
+			}
+		}else{
+			resultMap.put("msg", "参数不能为空!!");
+			resultMap.put("status", false);
+		}
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 获取所有套餐
+	 * @return
+	 */
+	@RequestMapping(value="/getMealList.action")
+	@ResponseBody
+	public Map<String, Object> getMealList(@RequestParam(value="grade",required=false)Integer grade ,
+			                               @RequestParam(value="subject",required=false)Integer subject){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("grade", grade);
+		map.put("subject", subject);
+		List<Meal> list = this.mealService.selectList(map);
+		if (list.size()>0) {
+			resultMap.put("data", list);
+			resultMap.put("status", true);
+			resultMap.put("msg", "获取成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "没有获取到数据");
+		}
+		return resultMap;
+	}
+	
+	
+	
+	
+}

@@ -1,0 +1,470 @@
+﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>用户管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户管理 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="text-c">
+	
+		<div>
+			<lable>县区</lable>
+			<select id="area">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div >
+		    <lable>学校</lable>
+			<select id="school">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div >
+		    <lable>年级</lable>
+			<select id="grade">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div >
+		    <lable>班级</lable>
+			<select id="class">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		
+		<div >
+			<input type="text" class="input-text" style="width:250px" placeholder="姓名/学号" id="userNo" name="" onkeydown="keydownEvent()">
+			<button type="button" class="btn btn-success radius" id="seach" name=""><i class="Hui-iconfont">&#xe665;</i>搜学生</button>
+		</div>
+		
+	</div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" id="delAll"  class="btn btn-danger radius"><i class="Hui-iconfont">&#xe600;</i> 批量开通</a></span></div>
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-hover table-bg table-sort">
+			<thead>
+				<tr class="text-c">
+					<th width="25"><input type="checkbox" name="" value=""></th>
+					<th width="80">ID</th>
+					<th width="100">学校</th>
+					<th width="50">年级</th>
+					<th width="50">班级</th>
+					<th width="50">姓名</th>
+					<th width="80">学籍号</th>
+					<th width="50">英语状态 <!-- <select id="math"><option value=""></option><option value="">未开通</option></select> --></th>
+					<th width="50">数学状态 <!-- <select id="eng"><option value=""></option><option value="">未开通</option></select> --></th>
+					<th width="50">语文状态 <!-- <select id="eng"><option value=""></option><option value="">未开通</option></select> --></th>
+					<th width="50">订单详情</th>
+				</tr>
+			</thead>
+			<tbody id="userList">
+			</tbody>
+		</table>
+		<!-- 分页 -->
+		<div style="width:70%;white-spacing:nowrap;margin:0 auto;"> 
+			<div id="kkpager"></div> 
+		</div>
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+
+<script type="text/javascript">
+	$(function(){
+		//获取县区
+		getArea();
+		
+		//加载学生的信息
+		loadList(1,300);
+	})
+	function loadList(page,rows,areaId,schoolId,gradeId,classId,userNo){
+		$.ajax({
+			url:'../user/getUserByPage.action',
+			type:'get',
+			data:{'page':page,'rows':rows,'areaId':areaId,'schoolId':schoolId,'gradeId':gradeId,'classId':classId,'userNo':userNo},
+			dataType:'json',
+			success:function(obj){
+				var data = obj.rows;
+				var count = obj.total;
+				$("#userList").empty();
+				$("#count").html(count);
+				kkpagerHtml(count,rows,page,areaId,schoolId,gradeId,classId,userNo);
+				if(data!=null){
+					for(var i = 0;i<data.length;i++){
+						listHtml(data[i]);
+					}
+				}
+			}
+		});
+	}
+	//回车按钮
+	function keydownEvent() {
+	     var e = window.event || arguments.callee.caller.arguments[0];
+	     if (e && e.keyCode == 13 ) {
+	     	document.getElementById("seach").click();
+	     }
+	};
+	/**
+	 * 点击搜索,
+	 */
+ 	$("#seach").click(function(){
+ 		var areaId = $("#area").val();
+ 		var schoolId = $("#school").val();
+ 		var gradeId = $("#grade").val();
+ 		var classId = $("#class").val();
+ 		var userNo = $("#userNo").val().trim();
+ 		loadList(1,300,areaId,schoolId,gradeId,classId,userNo);
+ 	 }); 
+	
+	 /**
+	  * 学科列表Html
+	  */
+	 function listHtml(info){
+		 var orders = info.orders;
+		 var math = "" ;
+		 var ength = "";
+		 var chinese = "";
+		 if(orders.length > 0){
+			 for(var i=0;i<orders.length;i++){
+// 				 if(i==orders.length-1){
+					if(orders[i].subjectCode==11){
+						math = ""+orders[i].typeName;
+					}else if(math==""){
+						math = "未开通";
+					}
+					if(orders[i].subjectCode==12){
+						ength = ""+orders[i].typeName;
+					}else if(ength==""){
+						ength = "未开通";
+					}
+					if(orders[i].subjectCode==10){
+						chinese = ""+orders[i].typeName;
+					}else if(ength==""){
+						chinese = "未开通";
+					}
+// 				 }else{
+// 					 if(orders[i].subjectCode==11){
+// 							math = ""+orders[i].typeName;
+// 						}
+// 						if(orders[i].subjectCode==12){
+// 							ength = ""+orders[i].typeName;
+// 						}
+// 				 }
+			 }
+		 }else{
+			 math = "未开通";
+			 ength = "未开通";
+			 chinese = "未开通";
+		 }
+		var type = info.type;
+		var grade = info.grade;
+		var school = info.school;
+		var sysClass = info.sysClass;
+	 	var html='';
+	 	html+='<tr class="text-c">';
+	 	html+='<td><input type="checkbox" value="'+info.userId+'" name="del"></td>';
+	 	html+='<td style="display:none">'+info.userId+'</td>';
+	 	html+='<td>'+info.userId+'</td>';
+	 	//学校信息
+	 	if(school!=null){
+	 		html+='<td>'+school.schoolName+'</td>';
+	 	}else{
+	 		html+='<td>没有数据</td>';
+	 	}
+	 	//年级信息
+	 	if(grade!=null){
+	 		html+='<td>'+grade.gradeName+'</td>';
+	 	}else{
+	 		html+='<td>没有数据</td>';
+	 	}
+	 	//班级信息
+	 	if(sysClass!=null){
+	 		html+='<td>'+sysClass.className+'</td>';
+	 	}else{
+	 		html+='<td>没有数据</td>';
+	 	}
+	 	html+='<td>'+info.userName+'</td>';
+	 	html+='<td>'+info.userAccount+'</td>';
+	 	//if(subName!=""){
+	 	html+='<td class="td-status"><span class="label label-success radius">'+ength+'</span></td>';
+	 	html+='<td class="td-status"><span class="label label-success radius">'+math+'</span></td>';
+	 	html+='<td class="td-status"><span class="label label-success radius">'+chinese+'</span></td>';
+	 	//}else{
+	 		//html+='<td class="td-status"><span class="label label-defaunt radius">未开通</span></td>';
+	 	//}
+	 	html+='<td class="td-manage">';
+	 	html+='<a title="查看详情" href="javascript:;" onclick="member_show(&#39;查看详情&#39;,&#39;../user/userInfoView.action?userId='+info.userId+'&#39;,&#39;id&#39;,&#39;1100&#39;,&#39;400&#39;)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe627;</i></a>';
+	 	html+='</td></tr>';
+	 	$("#userList").append(html);
+	 }
+	 /**
+	  * kkpager分页工具
+	  */
+	 function kkpagerHtml(sum,rows,current,areaId,schoolId,gradeId,classId,userNo){
+	     var totalPage = Math.ceil(sum/rows);//总页数总数据条数/每页显示数 向上取整  
+	     if(current == 0){  
+	        current = 1;  
+	     }  
+	     //初始化函数  
+	     kkpager.generPageHtml({  
+	         pno : current, //当前页数  
+	         total : totalPage,//总页数  
+	         totalRecords : sum, //总数据条数  
+	         mode:'click', //这里设置为click模式  
+	         isShowTotalRecords:true,
+	         //点击页码的函数，这里发送ajax请求后台  
+	         click:function(n){
+	        	 loadList(n,rows,areaId,schoolId,gradeId,classId,userNo);
+	         	this.selectPage(n); //手动条用selectPage进行页码选中切换 
+	         	return false;
+	        },   
+	 	},true);  
+	 }
+	 /**
+	  * 将时间long类型转换为String类型
+	  */
+	  function formatterDateTime(val){
+	     var date = new Date(val);
+	     var y = date.getFullYear();  
+	     var m = date.getMonth() + 1;  
+	     m = m < 10 ? ('0' + m) : m;  
+	     var d = date.getDate();  
+	     d = d < 10 ? ('0' + d) : d;  
+	     var h = date.getHours();  
+	     h = h < 10 ? ('0' + h) : h;  
+	     
+	     var minute = date.getMinutes();  
+	     minute = minute < 10 ? ('0' + minute) : minute; 
+	     var second = date.getSeconds();
+	     second = second < 10 ? ('0' + second) : second; 
+	     return y + '-' + m + '-' + d+' '+ h+':'+minute+':'+second;  
+	 }
+</script>
+
+<script type="text/javascript">
+
+//根据区域查询班级和学生信息
+$(document).on("change","#area",function(){
+	var areaId = $("#area").val();
+	var schoolId = $("#school").val();
+	var gradeId = $("#grade").val();
+	var classId = $("#class").val();
+	$("#school").empty();
+	$("#school").append("<option lev='' value=''>请选择学校</option>");
+	$("#grade").empty();
+	$("#grade").append("<option lev='' value=''>请选择年级</option>");
+	$("#class").empty();
+	$("#class").append("<option lev='' value=''>请选择班级</option>");
+	getSchool(areaId);//获取学校
+	loadList(1,300,areaId,schoolId,gradeId,classId);
+})
+
+
+//根据学校查询班级和学生信息
+$(document).on("change","#school",function(){
+	var areaId = $("#area").val();
+	var schoolId = $("#school").val();
+	var gradeId = $("#grade").val();
+	var classId = $("#class").val();
+	$("#grade").empty();
+	$("#grade").append("<option lev='' value=''>请选择年级</option>");
+	$("#class").empty();
+	$("#class").append("<option lev='' value=''>请选择班级</option>");
+	
+	getGrade();//获取年级
+	//getClass(schoolId,gradeId);//获取班级
+	loadList(1,300,areaId,schoolId,gradeId,classId);
+})
+
+//根据年级查询班级
+$(document).on("change","#grade",function(){
+	var areaId = $("#area").val();
+	var schoolId = $("#school").val();
+	var gradeId = $("#grade").val();
+	var classId = $("#class").val();
+	$("#class").empty();
+	$("#class").append("<option lev='' value=''>请选择班级</option>");
+	getClass(schoolId,gradeId);
+	loadList(1,300,areaId,schoolId,gradeId,classId);
+})
+//根据班级查询学生
+$(document).on("change","#class",function(){
+	var areaId = $("#area").val();
+	var schoolId = $("#school").val();
+	var gradeId = $("#grade").val();
+	var classId = $("#class").val();
+	loadList(1,300,areaId,schoolId,gradeId,classId);
+	
+})
+//获取区域信息
+function getArea(){
+	$.ajax({
+		url:'../area/getAreaList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#area").empty();
+				$("#area").append("<option value='' selected>请选择</option>")
+				for(var i=0;i<data.length;i++){
+					$("#area").append("<option value='"+data[i].areaId+"'>"+data[i].areaname+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取学校
+function getSchool(areaId){
+	$.ajax({
+		url:'../school/getSchoolList.action',
+		type:'get',
+		data:{'areaId':areaId},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#school").empty();
+				$("#school").append("<option value='' selected>请选择学校</option>")
+				for(var i=0;i<data.length;i++){
+					$("#school").append("<option value='"+data[i].schoolId+"'>"+data[i].schoolName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取年级
+function getGrade(){
+	$.ajax({
+		url:'../grade/getGradeList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#grade").empty();
+				$("#grade").append("<option value='' selected>请选择年级</option>")
+				for(var i=0;i<data.length;i++){
+					$("#grade").append("<option value='"+data[i].gradeCode+"'>"+data[i].gradeName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取班级
+function getClass(schoolId,gradeCode){
+	$.ajax({
+		url:'../class/getClassList.action',
+		type:'get',
+		data:{'schoolId':schoolId,'gradeCode':gradeCode},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#class").empty();
+				$("#class").append("<option value='' selected>请选择班级</option>")
+				for(var i=0;i<data.length;i++){
+					$("#class").append("<option value='"+data[i].classId+"'>"+data[i].className+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+
+</script>
+
+
+<script type="text/javascript">
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-查看*/
+function member_show(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-编辑*/
+function member_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+
+/**
+ * 批量开通
+ */
+ $("#delAll").click(function(){
+	 var id = document.getElementsByName("del");
+	 var ids = [];
+	 for (var i=0;i<id.length;i++) {
+		 if (id[i].checked == true) {
+			 ids.push(id[i].value);
+		 };
+	 }
+	 //调用删除方法
+	 openList(ids.join(","));
+ });
+ /**
+  * 批量开通和单个开通
+  */
+ function openList(ids){
+	 var schoolId = $("#school").val();
+	 var gradeId = $("#grade").val();
+	var classId = $("#class").val();
+	 if(schoolId==''||schoolId==null){
+		 layer.msg("请选择学校",{icon:7,time:1000});
+	 }else if(gradeId==''||gradeId==null){
+		 layer.msg("请选择年级",{icon:7,time:1000});
+	 //}else if(classId==''||classId==null){
+		 //layer.msg("请选择班级",{icon:7,time:1000});
+	 }else if (ids == "") {
+ 		layer.msg("至少选中一条信息",{icon:7,time:1000});
+ 	 } else {
+ 		//layer.confirm('开通用户，确认要开通吗?',function(index){
+ 			
+		layer_show("批量开通","../order/orderAddView.action?ids="+ids+"&schoolId="+schoolId+"&gradeId="+gradeId+"&classId="+classId+"","800","400");
+ 			
+ 			
+ 			/* $.ajax({
+ 				url: '../order/addListOrder.action',
+ 				type: 'POST',
+ 				data:{'ids':ids,'schoolId':schoolId,'gradeId':gradeId,'classId':classId},
+ 				dataType: 'json',
+ 				traditional:true,
+ 				success: function(data){
+ 					if(data.status==true){
+ 						layer.msg(data.msg,{icon:1,time:1000},function(){
+ 							window.location.href="../user/userView.action";
+ 						});
+ 					}else{
+ 						layer.msg(data.msg,{icon:2,time:1000});
+ 					}
+ 				},
+ 				error: function(XmlHttpRequest, textStatus, errorThrown){
+ 					layer.alert("系统出错",{icon:2},function(){
+ 						window.location.href="../user/userView.action";
+ 					});
+ 				}
+ 		     }); */
+ 		//});
+ 	}
+ }
+
+
+
+
+
+
+
+</script> 
+</body>
+</html>

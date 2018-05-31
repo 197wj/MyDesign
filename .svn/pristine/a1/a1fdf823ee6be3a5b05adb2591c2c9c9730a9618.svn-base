@@ -1,0 +1,81 @@
+package com.zhiliao.service.user.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.user.SysUserMapper;
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.user.SysUserService;
+@Service
+public class SysUserServiceImpl extends BaseServiceImpl<SysUser, Map<String, Object>> implements SysUserService {
+
+	@Autowired
+	private SysUserMapper  sysUserMapper;
+	
+	@Override
+	public SysUser selectById(Long userId) {
+		// TODO Auto-generated method stub
+		SysUser sysUser = this.sysUserMapper.selectById(userId);
+		return sysUser;
+	}
+
+	@Override
+	public int updateById(SysUser record) {
+		// TODO Auto-generated method stub
+		int rows = this.sysUserMapper.updateById(record);
+		return rows;
+	}
+	
+	@Override
+	public List<SysUser> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SysUser> list = this.sysUserMapper.selectList(map);
+		return list;
+	}
+	
+	@Override
+	public List<SysUser> selectTeacherList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SysUser> list = this.sysUserMapper.selectTeacherList(map);
+		return list;
+	}
+
+	@Override
+	public SysUser login(String userName, String pwd) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userAccount", userName);
+		map.put("userPwd", pwd);
+		SysUser user = this.sysUserMapper.login(map);
+		return user;
+	}
+	/**
+	 * 从session中获取用户信息
+	 */
+	@Override
+    public SysUser getUserFromRequest(HttpServletRequest request) {
+        SysUser user  = (SysUser) request.getSession().getAttribute("user");
+        return user;
+    }
+	
+	@Override
+	public List<SysUser> selectByIds(List<Integer> list) {
+		// TODO Auto-generated method stub
+		List<SysUser> users = this.sysUserMapper.selectByIds(list);
+		return users;
+	}
+	
+	@Override
+	public int updateByIds(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		int rows = this.sysUserMapper.updateByIds(map);
+		return rows;
+	}
+}

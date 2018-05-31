@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.design.dao.sys.SysReportDao">
+
+	<!--   日报表：获取指定时间段内指定农田的三项日均值   -->
+	<select id="dayReportFarmland" parameterType="java.util.Map"
+		resultType="com.design.model.vo.SysReportVO">
+		SELECT
+		farmland_id AS farmlandId,
+		DATE_FORMAT(test_time,'%Y-%m-%d') AS testTime,
+		AVG(farmland_moisture) AS avgFarmlandMoisture,
+		AVG(air_moisture) AS avgAirMoisture,
+		AVG(air_temp) AS avgAirTemp
+		FROM
+		`sys_farmland`
+		WHERE
+		farmland_id=#{farmlandId,jdbcType=INTEGER}
+		AND
+		DATE_FORMAT(test_time,'%Y-%m-%d')&gt;=DATE_FORMAT(#{startTime},'%Y-%m-%d')
+		AND
+		DATE_FORMAT(test_time,'%Y-%m-%d')&lt;=DATE_FORMAT(#{endTime},'%Y-%m-%d')
+		GROUP BY
+		DATE_FORMAT(test_time,'%Y-%m-%d')
+		ORDER BY
+		DATE_FORMAT(test_time,'%Y-%m-%d')
+	</select>
+
+	<!-- 月报表 -->
+	<select id="monthReportFarmland" parameterType="java.util.Map"
+		resultType="com.design.model.vo.SysReportVO">
+		SELECT
+		farmland_id AS farmlandId,
+		DATE_FORMAT(test_time, '%Y-%m-%u') AS testTime,
+		AVG(farmland_moisture) AS avgFarmlandMoisture,
+		AVG(air_moisture) AS avgAirMoisture,
+		AVG(air_temp) AS avgAirTemp
+		FROM
+		`sys_farmland`
+		WHERE
+		farmland_id = #{farmlandId,jdbcType=INTEGER}
+		AND
+		DATE_FORMAT(test_time, '%Y-%m') = DATE_FORMAT(#{monthTime}, '%Y-%m')
+		GROUP BY
+		DATE_FORMAT(test_time, '%Y-%m-%u')
+		ORDER BY
+		DATE_FORMAT(test_time, '%Y-%m-%u');
+	</select>
+
+
+	<!--  年报表：输入年份，返回farmland_id和十二个月的每月的三个平均数   -->
+	<select id="yearReportFarmland" parameterType="java.util.Map"
+		resultType="com.design.model.vo.SysReportVO">
+		SELECT
+		farmland_id AS farmlandId,
+		DATE_FORMAT(test_time,'%Y-%m') AS yearMonth,
+		AVG(farmland_moisture) AS avgFarmlandMoisture,
+		AVG(air_moisture) AS avgAirMoisture,
+		AVG(air_temp) AS avgAirTemp
+		FROM
+		`sys_farmland`
+		WHERE
+		farmland_id=#{farmlandId,jdbcType=INTEGER}
+		AND
+		DATE_FORMAT(test_time,'%Y')=DATE_FORMAT(#{yearTime},'%Y')
+		GROUP BY
+		yearMonth
+		ORDER BY DATE_FORMAT(test_time,'%Y-%m');
+	</select>
+	
+	<!-- 预测报表 -->
+	<select id="forecastFm1" resultType="com.design.model.vo.SysForecastVO">
+	SELECT
+		a.beforeday	 AS beforeDay,
+		a.avg_fm AS avgFm,
+		b.forecast_fm AS forecastFm
+	FROM (
+		SELECT
+			AVG(a.avg_fm) AS forecast_fm
+		FROM (
+			SELECT
+				farmland_id,
+				DATE_FORMAT(test_time, '%Y-%m-%d') AS beforeday,
+				AVG(farmland_moisture) AS avg_fm
+			FROM
+				sys_farmland
+			WHERE
+				DATE_FORMAT(test_time, '%Y-%m-%d') &gt; date_sub(CURRENT_DATE, interval 7 day)
+			AND
+				DATE_FORMAT(test_time, '%Y-%m-%d') &lt; NOW()
+			AND 
+				farmland_id=1
+			GROUP BY
+				DATE_FORMAT(test_time, '%Y-%m-%d')
+		) AS a
+	GROUP BY a.farmland_id) AS b, 
+		(SELECT
+			farmland_id,
+			DATE_FORMAT(test_time, '%Y-%m-%d') AS beforeday,
+			AVG(farmland_moisture) AS avg_fm
+		FROM
+			sys_farmland
+		WHERE
+			DATE_FORMAT(test_time, '%Y-%m-%d') &gt; date_sub(CURRENT_DATE, interval 7 day)
+		AND
+			DATE_FORMAT(test_time, '%Y-%m-%d') &lt; NOW()
+		AND 
+			farmland_id=1
+		GROUP BY
+			DATE_FORMAT(test_time, '%Y-%m-%d')
+		) AS a
+	</select>
+	
+		<!-- 预测报表 -->
+	<select id="forecastFm2" resultType="com.design.model.vo.SysForecastVO">
+	SELECT
+		a.beforeday	 AS beforeDay,
+		a.avg_fm AS avgFm,
+		b.forecast_fm AS forecastFm
+	FROM (
+		SELECT
+			AVG(a.avg_fm) AS forecast_fm
+		FROM (
+			SELECT
+				farmland_id,
+				DATE_FORMAT(test_time, '%Y-%m-%d') AS beforeday,
+				AVG(farmland_moisture) AS avg_fm
+			FROM
+				sys_farmland
+			WHERE
+				DATE_FORMAT(test_time, '%Y-%m-%d') &gt; date_sub(CURRENT_DATE, interval 7 day)
+			AND
+				DATE_FORMAT(test_time, '%Y-%m-%d') &lt; NOW()
+			AND 
+				farmland_id=2
+			GROUP BY
+				DATE_FORMAT(test_time, '%Y-%m-%d')
+		) AS a
+	GROUP BY a.farmland_id) AS b, 
+		(SELECT
+			farmland_id,
+			DATE_FORMAT(test_time, '%Y-%m-%d') AS beforeday,
+			AVG(farmland_moisture) AS avg_fm
+		FROM
+			sys_farmland
+		WHERE
+			DATE_FORMAT(test_time, '%Y-%m-%d') &gt; date_sub(CURRENT_DATE, interval 7 day)
+		AND
+			DATE_FORMAT(test_time, '%Y-%m-%d') &lt; NOW()
+		AND 
+			farmland_id=2
+		GROUP BY
+			DATE_FORMAT(test_time, '%Y-%m-%d')
+		) AS a
+	</select>
+	
+		<!-- 预测报表 -->
+	<select id="forecastFm3" resultType="com.design.model.vo.SysForecastVO">
+	SELECT
+		a.beforeday	 AS beforeDay,
+		a.avg_fm AS avgFm,
+		b.forecast_fm AS forecastFm
+	FROM (
+		SELECT
+			AVG(a.avg_fm) AS forecast_fm
+		FROM (
+			SELECT
+				farmland_id,
+				DATE_FORMAT(test_time, '%Y-%m-%d') AS beforeday,
+				AVG(farmland_moisture) AS avg_fm
+			FROM
+				sys_farmland
+			WHERE
+				DATE_FORMAT(test_time, '%Y-%m-%d') &gt; date_sub(CURRENT_DATE, interval 7 day)
+			AND
+				DATE_FORMAT(test_time, '%Y-%m-%d') &lt; NOW()
+			AND 
+				farmland_id=3
+			GROUP BY
+				DATE_FORMAT(test_time, '%Y-%m-%d')
+		) AS a
+	GROUP BY a.farmland_id) AS b, 
+		(SELECT
+			farmland_id,
+			DATE_FORMAT(test_time, '%Y-%m-%d') AS beforeday,
+			AVG(farmland_moisture) AS avg_fm
+		FROM
+			sys_farmland
+		WHERE
+			DATE_FORMAT(test_time, '%Y-%m-%d') &gt; date_sub(CURRENT_DATE, interval 7 day)
+		AND
+			DATE_FORMAT(test_time, '%Y-%m-%d') &lt; NOW()
+		AND 
+			farmland_id=3
+		GROUP BY
+			DATE_FORMAT(test_time, '%Y-%m-%d')
+		) AS a
+	</select>
+
+</mapper>

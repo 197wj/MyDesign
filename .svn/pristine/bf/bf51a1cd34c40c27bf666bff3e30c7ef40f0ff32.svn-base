@@ -1,0 +1,13 @@
+package com.zhiliao.service.sys;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.sys.Invoice;
+import com.zhiliao.service.BaseService;
+
+public interface InvoiceService extends BaseService<Invoice,  Map<String, Object>>{
+
+	List<Invoice> getListByMap(Map<String, Object> map);
+
+}

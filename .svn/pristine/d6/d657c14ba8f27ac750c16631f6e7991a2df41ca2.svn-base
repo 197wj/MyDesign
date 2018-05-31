@@ -1,0 +1,22 @@
+package com.zhiliao.service.param;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.param.TbTerm;
+import com.zhiliao.service.BaseService;
+
+public interface TbTermService extends BaseService<TbTerm, Map<String, Object>> {
+	
+	public int deleteById(Integer termId);
+
+    public int insert(TbTerm record);
+
+    public TbTerm selectById(Integer termId);
+
+    public int updateById(TbTerm record);
+    
+    public int deleteTermList(List<Integer> list);
+    
+    public List<TbTerm> selectList(Map<String, Object> map);
+}

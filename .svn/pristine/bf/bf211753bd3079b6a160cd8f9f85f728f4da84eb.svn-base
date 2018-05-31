@@ -1,0 +1,61 @@
+package com.zhiliao.service.sys.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.sys.tbServiceMapper;
+import com.zhiliao.model.sys.tbService;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.sys.TBServiceService;
+@Service
+public class TBServiceServiceImpl extends BaseServiceImpl<tbService, Map<String, Object>> implements TBServiceService {
+
+	@Autowired
+	private tbServiceMapper mapper;
+	
+	@Override
+	public int deleteById(Integer id) {
+		// TODO Auto-generated method stub
+		int rows = this.mapper.deleteById(id);
+		return rows;
+	}
+
+	@Override
+	public int insert(tbService record) {
+		// TODO Auto-generated method stub
+		int rows = this.mapper.insert(record);
+		return rows;
+	}
+
+	@Override
+	public tbService selectById(Integer id) {
+		// TODO Auto-generated method stub
+		tbService recore = this.mapper.selectById(id);
+		return recore;
+	}
+
+	@Override
+	public tbService selectByAreaId(Integer areaId) {
+		// TODO Auto-generated method stub
+		tbService recore = this.mapper.selectByAreaId(areaId);
+		return recore;
+	}
+
+	@Override
+	public int updateById(tbService record) {
+		// TODO Auto-generated method stub
+		int rows = this.mapper.updateById(record);
+		return rows;
+	}
+	
+	@Override
+	public int deleteList(List<Integer> list) {
+		// TODO Auto-generated method stub
+		int rows = this.mapper.deleteList(list);
+		return rows;
+	}
+
+}

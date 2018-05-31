@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+	<!-- 自动扫描 -->
+	<context:component-scan base-package="com.zhiliao" />
+	<!-- 引入配置文件 -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:jdbc.properties" />
+	</bean>
+
+	<!-- 主数据源 -->
+	<bean id="dataSourceMaster" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${master.driver}" />
+		<property name="url" value="${master.url}" />
+		<property name="username" value="${master.username}" />
+		<property name="password" value="${master.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${maxIdle}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${maxWait}"></property>
+	</bean>
+
+	<!-- 副数据源 -->
+	<bean id="dataSourceVice" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${vice.driver}" />
+		<property name="url" value="${vice.url}" />
+		<property name="username" value="${vice.username}" />
+		<property name="password" value="${vice.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${maxIdle}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${maxWait}"></property>
+	</bean>
+	
+	<!-- 组卷系统数据库 -->
+	<bean id="dataSourcePHP" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${php.driver}" />
+		<property name="url" value="${php.url}" />
+		<property name="username" value="${php.username}" />
+		<property name="password" value="${php.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${maxIdle}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${maxWait}"></property>
+	</bean>
+	
+	
+
+
+	<bean id="multipleDataSource" class="com.zhiliao.util.dbdriver.MultipleDataSource">
+		<property name="defaultTargetDataSource" ref="dataSourceMaster" />
+		<property name="targetDataSources">
+			<map>
+				<entry key="MasterDataSource" value-ref="dataSourceMaster" />
+				<entry key="ViceDataSource" value-ref="dataSourceVice" />
+				<entry key="PHPDataSource" value-ref="dataSourcePHP" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- 而像这种使用接口实现的方式 是使用sqlsessionTemplate来进行操作的，他提供了一些方法 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="multipleDataSource" />
+		<!-- 实体类映射文件路径 -->
+		<property name="mapperLocations" value="classpath:mapper/*/*/*.xml" />
+		<property name="plugins">
+			<list>
+				<bean class="com.zhiliao.util.common.interceptor.PaginationInterceptor">
+					<property name="dialect">
+						<bean class="com.zhiliao.util.common.dialect.MySql5Dialect"></bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.zhiliao.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<!-- 6、声明式事务管理 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="multipleDataSource" />
+	</bean>
+
+</beans>  

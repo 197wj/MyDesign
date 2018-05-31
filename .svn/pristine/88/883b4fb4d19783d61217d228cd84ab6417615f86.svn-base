@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.school.SchoolMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.school.School">
+    <id column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="sec_id" jdbcType="INTEGER" property="secId" />
+    <result column="school_code" jdbcType="VARCHAR" property="schoolCode" />
+    <result column="school_name" jdbcType="VARCHAR" property="schoolName" />
+    <result column="school_shortname" jdbcType="VARCHAR" property="schoolShortname" />
+    <result column="school_abbname" jdbcType="VARCHAR" property="schoolAbbname" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="school_type" jdbcType="VARCHAR" property="schoolType" />
+    <result column="school_profile" jdbcType="VARCHAR" property="schoolProfile" />
+    <result column="is_recomm" jdbcType="INTEGER" property="isRecomm" />
+    <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
+    <result column="school_home" jdbcType="VARCHAR" property="schoolHome" />
+    <result column="school_section_id" jdbcType="INTEGER" property="schoolSectionId" />
+    <result column="school_photo" jdbcType="VARCHAR" property="schoolPhoto" />
+    <result column="school_sort" jdbcType="INTEGER" property="schoolSort" />
+    <result column="year_section" jdbcType="INTEGER" property="yearSection" />
+    <result column="school_kind" jdbcType="INTEGER" property="schoolKind" />
+    <result column="school_belong" jdbcType="INTEGER" property="schoolBelong" />
+    <result column="school_city" jdbcType="INTEGER" property="schoolCity" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="school_country" jdbcType="INTEGER" property="schoolCountry" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="shcool_attrType" jdbcType="INTEGER" property="shcoolAttrtype" />
+    <result column="is_open" jdbcType="CHAR" property="isOpen" />
+    <result column="charge_type" jdbcType="CHAR" property="chargeType" />
+    <result column="meal_id" jdbcType="VARCHAR" property="mealId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    school_id, area_id, sec_id, school_code, school_name, school_shortname, school_abbname, 
+    create_time, school_type, school_profile, is_recomm, is_enable, school_home, school_section_id, 
+    school_photo, school_sort, year_section, school_kind, school_belong, school_city, 
+    school_country, shcool_attrType,is_open,charge_type,meal_id
+  </sql>
+  
+  <!-- 分页获取学校信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />,sr1.name city,sr2.name country
+    from sys_school ss
+    left join sys_regions sr1 on sr1.id = ss.school_city
+    left join sys_regions sr2 on sr2.id = ss.school_country
+    <where>
+    	<if test="isOpen!=null">
+    		and is_open = #{isOpen,jdbcType=CHAR}
+    	</if>
+    	<if test="areaId!=null">
+    		and area_id = #{areaId,jdbcType=CHAR}
+    	</if>
+    	<if test="schoolName!=null">
+    		and school_name like concat('%',#{schoolName,jdbcType=VARCHAR},'%')
+    	</if>
+    </where>
+    order by school_id
+  </select>
+  <!-- 分页获取学校数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select 
+    count(ss.school_id)
+    from sys_school ss
+    left join sys_regions sr1 on sr1.id = ss.school_city
+    left join sys_regions sr2 on sr2.id = ss.school_country
+    <where>
+    	<if test="isOpen!=null">
+    		and is_open = #{isOpen,jdbcType=CHAR}
+    	</if>
+    	<if test="areaId!=null">
+    		and area_id = #{areaId,jdbcType=CHAR}
+    	</if>
+    	<if test="schoolName!=null">
+    		and school_name like concat('%',#{schoolName,jdbcType=VARCHAR},'%')
+    	</if>
+    </where>
+    order by school_id
+  </select>
+  
+  
+  <!-- 根据id查询学校信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_school
+    where school_id = #{schoolId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据id修改学校信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.school.School">
+    update sys_school
+    <set>
+      <if test="isOpen != null">
+        is_open = #{isOpen,jdbcType=CHAR},
+      </if>
+      <if test="chargeType != null">
+        charge_type = #{chargeType,jdbcType=CHAR},
+      </if>
+      <if test="mealId != null">
+        meal_id = #{mealId,jdbcType=CHAR},
+      </if>
+    </set>
+    where school_id = #{schoolId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 根据map获取集合yuanhuawei -->
+  <select id="getListByMap" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_school
+  </select>
+  
+</mapper>

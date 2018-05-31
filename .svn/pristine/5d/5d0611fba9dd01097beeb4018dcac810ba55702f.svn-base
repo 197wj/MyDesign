@@ -1,0 +1,61 @@
+package com.zhiliao.service.param.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.param.TbTermMapper;
+import com.zhiliao.model.param.TbTerm;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.param.TbTermService;
+@Service
+public class TbTermServiceImpl extends BaseServiceImpl<TbTerm, Map<String, Object>> implements TbTermService {
+
+	@Autowired
+	private TbTermMapper tbTermMapper;
+	
+	@Override
+	public int deleteById(Integer termId) {
+		// TODO Auto-generated method stub
+		int rows = this.tbTermMapper.deleteById(termId);
+		return rows;
+	}
+
+	@Override
+	public int insert(TbTerm record) {
+		// TODO Auto-generated method stub
+		int rows = this.tbTermMapper.insert(record);
+		return rows;
+	}
+
+	@Override
+	public TbTerm selectById(Integer termId) {
+		// TODO Auto-generated method stub
+		TbTerm tbTerm = this.tbTermMapper.selectById(termId);
+		return tbTerm;
+	}
+
+	@Override
+	public int updateById(TbTerm record) {
+		// TODO Auto-generated method stub
+		int rows = this.tbTermMapper.updateById(record);
+		return rows;
+	}
+	
+	@Override
+	public int deleteTermList(List<Integer> list) {
+		// TODO Auto-generated method stub
+		int rows = this.tbTermMapper.deleteTermList(list);
+		return rows;
+	}
+	
+	@Override
+	public List<TbTerm> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TbTerm> list = this.tbTermMapper.selectList(map);
+		return list;
+	}
+
+}

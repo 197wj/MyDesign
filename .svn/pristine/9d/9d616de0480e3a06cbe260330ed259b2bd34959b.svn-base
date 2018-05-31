@@ -1,0 +1,235 @@
+package com.zhiliao.util.excel.core;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellRangeAddress;
+
+import com.zhiliao.model.php.PhpKnows;
+
+/**
+ * 
+ * 常用 抽象方法实现
+ * 
+ * @author 神盾局
+ * @date 2016年8月9日 下午2:33:17
+ * 
+ * @param <T>
+ */
+public abstract class AbstractExcelUtils<T> extends AbstractExcelUtil<T> {
+
+
+
+	@Override
+	public List<T> importExcel(String sheetName, InputStream input) {
+		List<T> list = null;
+        try {
+			HSSFWorkbook workbook = new HSSFWorkbook(input);  
+			HSSFSheet sheet = workbook.getSheet(sheetName);  
+			if (!sheetName.trim().equals("")) {  
+			    sheet = workbook.getSheet(sheetName);// 如果指定sheet名,则取指定sheet中的内容.  
+			}  
+			if (sheet == null) {  
+			    sheet = workbook.getSheetAt(0); // 如果传入的sheet名不存在则默认指向第1个sheet.  
+			}		
+			list = dispatch(sheet);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        return list;  
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean exportExcel(List<T> list, String sheetName, OutputStream output) {
+		//此处 对类型进行转换
+        List<T> ilist = new ArrayList<>();
+        for (T t : list) {
+            ilist.add(t);
+        }
+        List<T>[] lists = new ArrayList[1];  
+        lists[0] = ilist;  
+
+        String[] sheetNames = new String[1];  
+        sheetNames[0] = sheetName;  
+        return exportExcel(lists, sheetNames, output);  
+	}
+
+	@Override
+	public boolean exportExcel(List<T>[] lists, String[] sheetNames, OutputStream output) {
+		if (lists.length != sheetNames.length) {
+			System.out.println("数组长度不一致");
+			return false;
+		}
+
+		// 创建excel工作簿
+		HSSFWorkbook wb = ExcelTool.createWorkbook();
+		// 创建第一个sheet（页），命名为 new sheet
+		for (int ii = 0; ii < lists.length; ii++) {
+			List<T> list = lists[ii];
+			// 产生工作表对象			
+			HSSFSheet sheet = ExcelTool.createSheet(ii, sheetNames[ii]);
+			// 创建表头
+			createHeader(wb, sheet);
+			// 写入数据
+			int rowStart = 1;
+			for (T t : list) {
+				createRow(t, sheet);
+				rowStart = mergedRegio(t, sheet, rowStart);
+			}
+			
+		}
+		try {
+			output.flush();
+			wb.write(output);
+			output.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Output is closed ");
+			return false;
+		}
+
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public boolean exportExcel(String schoolName, String graName,
+			String subjectName, List<Long> userIds, List<List<PhpKnows>> lists,
+			List<String> sheetNames, OutputStream output) {
+		if (lists.size() != sheetNames.size()) {
+			System.out.println("数组长度不一致");
+			return false;
+		}
+		String text = "诊断说明："+
+			    "本知识点诊断报告是以家长在线批改结果为依据精心制作而成；测试总分：指家长批改试卷中该知识点的总分数；所得分数：指学生在本知识点上的答对得分；掌握度：指学生对该知识点的掌握情况。"+
+			    "掌握度越高该知识点掌握越好，反之亦然！学生可根据掌握度有针对性的进行期末复习！ 预祝同学们期末取得好成绩，加油！";
+		// 创建excel工作簿
+		HSSFWorkbook wb = ExcelTool.createWorkbook();
+		// 创建第一个sheet（页），命名为 new sheet
+		for (int ii = 0; ii < lists.size(); ii++) {
+			ExcelTool.setNum(4);//将行出制0,去除上次导出的的数量(去掉上次导出而留下的空白单元格)
+			List<PhpKnows> list = lists.get(ii);
+			// 产生工作表对象			
+			HSSFSheet sheet = ExcelTool.createSheet(ii, sheetNames.get(ii));
+			
+			HSSFRow row = sheet.createRow(0);
+			// 第四步，创建单元格，并设置值表头 设置表头居中
+			HSSFCellStyle style = wb.createCellStyle();
+			style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+			style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);    //设置垂直居中  
+			style.setAlignment(HSSFCellStyle.ALIGN_CENTER);   //设置水平居中  
+			style.setWrapText(true);                          //设置自动换行
+			HSSFFont headerFont = (HSSFFont) wb.createFont(); //创建字体样式  
+			headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD); // 字体加粗  
+			headerFont.setFontName("Times New Roman");  //设置字体类型  
+			headerFont.setFontHeightInPoints((short) 18);    //设置字体大小  
+			style.setFont(headerFont);    //为标题样式设置字体样式
+			
+			//建议样式(3,0)
+			HSSFCellStyle style3 = wb.createCellStyle();
+			style3.setAlignment(HSSFCellStyle.ALIGN_LEFT); // 创建一个居中格式
+			style3.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);    //设置垂直居中  
+			style3.setAlignment(HSSFCellStyle.ALIGN_LEFT);   //设置水平居中  
+			style3.setWrapText(true);                          //设置自动换行
+			HSSFFont headerFont1 = (HSSFFont) wb.createFont(); //创建字体样式  
+			headerFont1.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD); // 字体加粗  
+			headerFont1.setFontName("微软雅黑");  //设置字体类型  
+			headerFont1.setFontHeightInPoints((short) 11);    //设置字体大小  
+			style3.setFont(headerFont1);    //为标题样式设置字体样式
+			
+			//设置excel内容的样式
+			HSSFCellStyle cell_Style = (HSSFCellStyle) wb .createCellStyle();// 设置字体样式  
+			cell_Style.setAlignment(HSSFCellStyle.ALIGN_CENTER);  
+			cell_Style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 垂直对齐居中  
+			cell_Style.setWrapText(true); // 设置为自动换行  
+			HSSFFont cell_Font = (HSSFFont) wb.createFont();  
+			cell_Font.setFontName("宋体");  
+			cell_Font.setFontHeightInPoints((short) 12);  
+			cell_Style.setFont(cell_Font); 
+			
+			//设置excel内容(3,1)
+			HSSFCellStyle style31 = wb.createCellStyle();
+			style31.setAlignment(HSSFCellStyle.ALIGN_LEFT); // 创建一个居中格式
+			style31.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);    //设置垂直居中  
+			style31.setAlignment(HSSFCellStyle.ALIGN_LEFT);   //设置水平居中  
+			style31.setWrapText(true);                          //设置自动换行
+			
+			// 创建标题
+			//第0行
+			HSSFCell cellt = row.createCell(0);
+			row.setHeightInPoints(50);
+			sheet.addMergedRegion(new CellRangeAddress(0, (short) 0, 0, (short)4));
+			cellt = row.createCell(0);
+			cellt.setCellValue("2017-2018年上学期“周周清”知识点诊断报告");
+			cellt.setCellStyle(style);
+			//第一行
+			HSSFRow rowt = sheet.createRow(1);
+			HSSFCell cellt1 = rowt.createCell(0);
+			cellt1.setCellValue("所属学校");
+			sheet.setColumnWidth(1, 6134);//设置cell宽度
+			sheet.setColumnWidth(2, 2530);//设置cell宽度
+			sheet.setColumnWidth(3, 3000);//设置cell宽度
+			rowt.createCell(1).setCellValue(schoolName);
+			rowt.createCell(2).setCellValue("年级班级");
+			HSSFCell cellt4 = rowt.createCell(3);
+			cellt4.setCellValue(graName);
+			//第二行
+			HSSFRow rowt2 = sheet.createRow(2);
+			HSSFCell cellt21 = rowt2.createCell(0);
+			cellt21.setCellValue("学生ID");
+			HSSFCell cell31 =rowt2.createCell(1);
+			cell31.setCellValue(userIds.get(ii));
+			cell31.setCellStyle(style31);
+			rowt2.createCell(2).setCellValue("姓名科目");
+			HSSFCell cellt24 = rowt2.createCell(3);
+			cellt24.setCellValue(sheetNames.get(ii)+" ("+subjectName+")");
+			
+			//第三行
+			HSSFRow rowt3 = sheet.createRow(3);
+			HSSFCell cellt31 = rowt3.createCell(0);
+			rowt3.setHeightInPoints(100);
+			sheet.addMergedRegion(new CellRangeAddress(3, (short) 3, 0,(short)4));
+			cellt31 = rowt3.createCell(0);
+			cellt31.setCellValue(text);
+			cellt31.setCellStyle(style3);
+			
+			
+			
+			// 创建表头
+			createHeader(wb, sheet);
+			// 写入数据
+			int rowStart = 5;
+			for (PhpKnows t : list) {
+				createRow(t, sheet);
+				rowStart = mergedRegio(t, sheet, rowStart);
+			}
+			
+		}
+		try {
+			output.flush();
+			wb.write(output);
+			output.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Output is closed ");
+			return false;
+		}
+		
+	}
+	
+	
+	
+}

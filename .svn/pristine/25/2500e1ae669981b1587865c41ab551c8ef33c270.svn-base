@@ -1,0 +1,75 @@
+package com.zhiliao.model.count;
+
+public class SchoolCount {
+
+	private Integer schoolId;
+	
+	private String schoolName;
+	
+	private String MName;
+	
+	private Integer MCount;
+	
+	private String EName;
+	
+	private Integer ECount;
+	
+	private Integer total;
+
+	public String getMName() {
+		return MName;
+	}
+
+	public void setMName(String mName) {
+		MName = mName;
+	}
+
+	public String getEName() {
+		return EName;
+	}
+
+	public void setEName(String eName) {
+		EName = eName;
+	}
+
+	public Integer getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(Integer schoolId) {
+		this.schoolId = schoolId;
+	}
+
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public Integer getMCount() {
+		return MCount;
+	}
+
+	public void setMCount(Integer mCount) {
+		MCount = mCount;
+	}
+
+	public Integer getECount() {
+		return ECount;
+	}
+
+	public void setECount(Integer eCount) {
+		ECount = eCount;
+	}
+
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+	
+}

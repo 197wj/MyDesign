@@ -1,0 +1,157 @@
+﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>学校开通管理</title>
+</head>
+<body>
+<form action="" method="post" class="form form-horizontal" id="form-member-add">
+	<div class="page-container">
+		<div id="mealList">
+			<c:forEach var="grade" items="${data}">
+			<!-- 语文套餐 -->
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">${grade.gradeName}语文：</label>
+					<div class="formControls col-xs-8 col-sm-9"> 
+						<span class="select-box">
+							<select class="select" size="1" name="meal_${grade.gradeId}_10" id="meal_${grade.gradeId}_10">
+								<option value="" selected>请选择套餐</option>
+								
+							</select>
+						</span>
+					</div>
+				</div>
+				<!-- 数学套餐 -->
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">${grade.gradeName}数学：</label>
+					<div class="formControls col-xs-8 col-sm-9"> 
+						<span class="select-box">
+							<select class="select" size="1" name="meal_${grade.gradeId}_11" id="meal_${grade.gradeId}_11">
+								<option value="" selected>请选择套餐</option>
+								
+							</select>
+						</span>
+					</div>
+				</div>
+				<!-- 英语套餐 -->
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">${grade.gradeName}英语：</label>
+					<div class="formControls col-xs-8 col-sm-9"> 
+						<span class="select-box">
+							<select class="select" size="1" name="meal_${grade.gradeId}_12" id="meal_${grade.gradeId}_12">
+								<option value="" selected>请选择套餐</option>
+								
+							</select>
+						</span>
+					</div>
+				</div>
+			</c:forEach>
+		
+		</div>
+		
+		<!-- 学校收费类型 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">收费类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="chargeType" id="chargeType">
+						<option value="" selected>请选择</option>
+						<option value="1">学校付费</option>
+						<option value="2">家长付费</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<input type="hidden" value="1" id="isOpen" name="isOpen"/>
+		
+		<!-- 开通按钮 -->
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				
+				<input class="btn btn-primary radius" id="submit" type="button" value="&nbsp;&nbsp;开通&nbsp;&nbsp;">
+			</div>
+		</div>
+		
+	</div>
+</form>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+$(function(){
+	$('#mealList').find('.select').each(function(){
+	      var id = this.id;
+	      //meal_14_13
+	      var ids = id.split("_");
+	      getMeal(ids[1],ids[2],id);//获取套餐
+	      
+	})
+	
+	//var schoolId = "${schoolId}";//获取学校id
+	//getGrade(schoolId,1);//获取年级信息
+	//获取选择套餐的id
+	//var selects = $("#mealList select");
+	
+	
+// 	getMeal(14,10,"meal41");//四年级语文
+// 	getMeal(14,11,"meal42");//四年级数学
+// 	getMeal(15,10,"meal51");//五年级语文
+// 	getMeal(15,11,"meal52");//五年级数学
+})
+
+//提交按钮的点击事件
+$("#submit").click(function(){
+	var mealId = "";
+	$('#mealList').find('.select').each(function(){
+		var id = this.id;
+		mealId += $("#"+id).val()+","
+	})
+	mealId = mealId.substring(0,mealId.length-1);
+	
+	var chargeType = $("#chargeType").val();//收费类型
+	var isOpen = $("#isOpen").val();//开通
+	var schoolId = "${schoolId}";
+	$.ajax({
+		url:'../school/updateSchool.action',
+		type:'post',
+		data:{'mealId':mealId,'chargeType':chargeType,'isOpen':isOpen,'schoolId':schoolId},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status){
+				layer.msg("成功开通",{icon:1,time:1000},function(){
+					parent.window.location.href="../school/schoolTypeView.action";
+					parent.layer.close(1);
+				});
+				
+			}
+		}
+	}) 
+	
+})
+
+
+//获取套餐信息
+function getMeal(grade,subject,id){
+	$.ajax({
+		url:'../meal/getMealList.action',
+		type:'get',
+		data:{'grade':grade,'subject':subject},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status){
+				var data = obj.data;
+				$("#"+id).empty();
+				$("#"+id).append("<option lev='' value=''>请选择套餐</option>");
+				for(var i=0;i<data.length;i++){
+					$("#"+id).append("<option value='"+data[i].mealId+"'>"+data[i].mealName+"</option>");
+				}
+			}
+		}
+	})
+}
+
+</script>
+
+</body>
+</html>

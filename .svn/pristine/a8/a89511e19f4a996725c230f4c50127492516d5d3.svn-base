@@ -1,0 +1,55 @@
+package com.zhiliao.model.school;
+
+import java.util.Date;
+
+public class teacherClass {
+    private Long teacherClassId;
+
+    private Long teacherId;
+
+    private Integer classId;
+
+    private String subjectCode;
+
+    private Date addTime;
+
+    public Long getTeacherClassId() {
+        return teacherClassId;
+    }
+
+    public void setTeacherClassId(Long teacherClassId) {
+        this.teacherClassId = teacherClassId;
+    }
+
+    public Long getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode == null ? null : subjectCode.trim();
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+}

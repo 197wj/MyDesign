@@ -1,0 +1,20 @@
+package com.zhiliao.dao.param;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.param.TbTerm;
+
+public interface TbTermMapper {
+    public int deleteById(Integer termId);
+
+    public int insert(TbTerm record);
+
+    public TbTerm selectById(Integer termId);
+
+    public int updateById(TbTerm record);
+    
+    public int deleteTermList(List<Integer> list);
+    
+    public List<TbTerm> selectList(Map<String, Object> map);
+}

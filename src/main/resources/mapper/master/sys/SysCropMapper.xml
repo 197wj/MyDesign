@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.design.dao.sys.SysCropDao">
+  <resultMap id="BaseResultMap" type="com.design.model.sys.SysCrop">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="crop_name" jdbcType="VARCHAR" property="cropName" />
+    <result column="crop_land_moisture" jdbcType="DOUBLE" property="cropLandMoisture" />
+    <result column="crop_air_moisture" jdbcType="DOUBLE" property="cropAirMoisture" />
+    <result column="crop_air_temp" jdbcType="DOUBLE" property="cropAirTemp" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_update" jdbcType="TIMESTAMP" property="gmtUpdate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, crop_name, crop_land_moisture, crop_air_moisture, crop_air_temp, status, gmt_create, 
+    gmt_update
+  </sql>
+  
+  <!-- 添加数据 -->
+  <insert id="insertCrop" parameterType="com.design.model.sys.SysCrop">
+    insert into sys_crop
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="cropName != null">
+        crop_name,
+      </if>
+      <if test="cropLandMoisture != null">
+        crop_land_moisture,
+      </if>
+      <if test="cropAirMoisture != null">
+        crop_air_moisture,
+      </if>
+      <if test="cropAirTemp != null">
+        crop_air_temp,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtUpdate != null">
+        gmt_update,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cropName != null">
+        #{cropName,jdbcType=VARCHAR},
+      </if>
+      <if test="cropLandMoisture != null">
+        #{cropLandMoisture,jdbcType=DOUBLE},
+      </if>
+      <if test="cropAirMoisture != null">
+        #{cropAirMoisture,jdbcType=DOUBLE},
+      </if>
+      <if test="cropAirTemp != null">
+        #{cropAirTemp,jdbcType=DOUBLE},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtUpdate != null">
+        #{gmtUpdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 批量删除数据 -->
+  <update id="deleteByIds">
+    update sys_crop
+    set status=1
+    <where>
+    	<foreach collection="list" item="id" separator="," open="id in (" close=")">
+        	#{id}
+        </foreach>
+    </where>
+  </update>
+  
+  <!-- 根据 id 查询一条数据信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_crop
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据 名称 查询一条数据信息 -->
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_crop
+    where crop_name = #{cropName,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 更新数据 -->
+  <update id="updateByIdSelective" parameterType="java.util.Map">
+    update sys_crop
+    <set>
+      <if test="cropName != null">
+        crop_name = #{cropName,jdbcType=VARCHAR},
+      </if>
+      <if test="cropLandMoisture != null">
+        crop_land_moisture = #{cropLandMoisture,jdbcType=DOUBLE},
+      </if>
+      <if test="cropAirMoisture != null">
+        crop_air_moisture = #{cropAirMoisture,jdbcType=DOUBLE},
+      </if>
+      <if test="cropAirTemp != null">
+        crop_air_temp = #{cropAirTemp,jdbcType=DOUBLE},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtUpdate != null">
+        gmt_update = #{gmtUpdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 分页获取信息数据 -->
+  <select id="selectCropList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from sys_crop
+    <where>
+    	status=0
+    	<if test="cropName!=null">
+    		and crop_name like '%${cropName}%'
+    	</if>
+    </where>
+    order by gmt_create desc
+  </select>
+  
+  <!-- 分页获取信息数量 -->
+  <select id="selectCropCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select 
+    count(id)
+    from sys_crop
+    <where>
+    	status=0
+    	<if test="cropName!=null">
+    		and crop_name like '%${cropName}%'
+    	</if>
+    </where>
+    order by gmt_create desc
+  </select>
+  
+</mapper>

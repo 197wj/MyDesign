@@ -1,0 +1,47 @@
+package com.zhiliao.service.order.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.order.AccountMapper;
+import com.zhiliao.model.order.Account;
+import com.zhiliao.service.order.AccountService;
+@Service
+public class AccountServiceImpl implements AccountService {
+
+	@Autowired
+	private AccountMapper accountMapper;
+	
+	@Override
+	public int insert(Account record) {
+		// TODO Auto-generated method stub
+		int rows = this.accountMapper.insert(record);
+		return rows;
+	}
+	
+	@Override
+	public Account selectById(Integer id) {
+		// TODO Auto-generated method stub
+		Account account = this.accountMapper.selectById(id);
+		return account;
+	}
+	
+	@Override
+	public List<Account> selectByUserId(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<Account> list = this.accountMapper.selectByUserId(map);
+		return list;
+	}
+	
+	@Override
+	public int updateById(Account record) {
+		// TODO Auto-generated method stub
+		int rows = this.accountMapper.updateById(record);
+		return rows;
+	}
+	
+	
+}

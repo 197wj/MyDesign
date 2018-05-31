@@ -1,0 +1,24 @@
+package com.zhiliao.dao.order;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.order.Order;
+
+public interface OrderMapper {
+
+    public int insert(Order record);
+
+    public Order selectById(String orderId);
+
+    public int updateById(Order record);
+    
+    public List<Order> selectList(Map<String, Object>map);
+    
+    public int payOrder(Order order);
+    
+    public int selectByMap(Map<String, Object> map);
+    
+    public int getOrderCount(Map<String, Object> map);
+
+}

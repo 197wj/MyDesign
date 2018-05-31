@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration 
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+      "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<classPathEntry location="D:\101Maven\mysql\mysql-connector-java\5.1.39\mysql-connector-java-5.1.39.jar" />
+	<context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
+
+		<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+		 <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/farmlandinformation?characterEncoding=utf8" userId="root" password="123456">
+		</jdbcConnection>  
+		
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="true"/>
+		</javaTypeResolver>
+		
+		<!-- targetProject:自动生成代码的位置 -->
+		<!-- 生成实体类 -->
+		<javaModelGenerator targetPackage="com.design.model.sys" targetProject="farmlandInformation">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- 生成xml文件 -->
+		<sqlMapGenerator targetPackage="mapper.master.sys" targetProject="farmlandInformation/src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+
+		<!-- 生成dao层 -->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.design.dao.sys" targetProject="farmlandInformation">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		<table tableName="sys_crop" domainObjectName="SysCrop" enableCountByExample="false" enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"/>
+		<table tableName="sys_farmland" domainObjectName="SysFarmland" enableCountByExample="false" enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"/>
+		<table tableName="sys_log" domainObjectName="SysLog" enableCountByExample="false" enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"/>
+		<table tableName="sys_user" domainObjectName="SysUser" enableCountByExample="false" enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"/>
+	</context>
+
+</generatorConfiguration>

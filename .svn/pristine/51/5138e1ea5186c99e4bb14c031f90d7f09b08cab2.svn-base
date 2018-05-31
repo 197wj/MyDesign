@@ -1,0 +1,142 @@
+.circle-text{
+	margin-top:45px;
+}
+.kemu-head li{
+	border-right: 1px solid #E5E5E5;
+}
+.color1{
+	background-position:0 0;border:1px solid #0EB0FC!important;background:#0EB0FC!important;background-size: cover;border-radius: 10px;
+}
+.color3{
+	background-position:0 0;border:1px solid #38C03F!important;background:#38C03F!important;background-size: cover;border-radius: 10px;
+}
+.color2{
+	background-position:0 0;border:1px solid #F68C52!important;background:#F68C52!important;background-size: cover;border-radius: 10px;
+}
+.fenxi-head{
+	height: 80px;
+	width: 100%;
+	/*line-height: 80px;*/
+}
+.fenxi-head-yi{
+	float: left;
+	margin-left:27px;
+	margin-top: 20px;
+}
+.fenxi-head-yi p{
+	font-size: 22px;
+	color: #848383;
+	margin-top: -10px;
+}
+.fenxi-head-yi span{
+	font-size: 16px;
+	color: #848383;
+}
+.fenxi-head-yi-span{
+	margin-left:40px;
+}
+.fenxi-head-er{
+	float: right; 
+	margin-right:15px;
+	margin-top: 20px;
+}
+.fenxi-head-er li{
+	float: left;
+	margin-left: 27px;
+}
+.fenxi-head-er li p{
+	float:left;
+	width: 40px;
+	height: 22px;
+	border-radius: 10px;
+	display:inline-block;
+}
+.fenxi-head-er li span{
+	float:left;
+	display: inline-block;
+	font-size:17px;
+	color: #333333;
+	margin-left: 10px;
+}
+.fenxi-head-er-yi{
+	background:#0EB0FC;
+}
+.fenxi-head-er-er{
+	background:#38C03F;
+}
+.fenxi-head-er-san{
+	background:#F68C52;
+}
+.fenxi-bie{
+	width: 100%;
+	height:20px ;
+	background:#F3F3F3;
+}
+.biaoti{
+	height:50px;
+	border-bottom: 1px solid #E6E6E6;
+	line-height:50px;
+}
+.biaoti h1{
+	float: left;
+	margin-left:30px;
+	margin-top:13px;
+	padding:0;
+	font-size:20px;
+}
+.biaoti div{
+	width: 150px;
+	float: right;
+}
+.biaoti div img{
+	width:28px;
+	float: left;
+	margin-top:26px;
+}
+.biaoti div span{
+	font-size:16px;
+	color: #333333;
+	margin-left: 10px;
+}
+.votebox{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.header-search{
+	top: 35px;
+}
+.header-search span{
+	font-size: 24px;
+}
+.header-search img{
+	margin:10px 0 0 5px;
+}
+#tixing{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+	display: none;
+}
+#tixing ul{
+	position:absolute;
+	top:90px;
+	right:10px;
+	width:200px;
+	background: white;
+}
+#tixing ul li{
+	height:60px;
+	line-height:60px;
+	text-align: center;
+	font-size:24px;
+	border-bottom: 1px solid #E6E6E6;
+}
+.titit{
+	color: #248CFD;
+}
+.titt span{
+	top: 50px!important;
+}

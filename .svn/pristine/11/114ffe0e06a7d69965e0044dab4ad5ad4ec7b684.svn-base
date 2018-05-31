@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.user.UserTypeMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.user.UserType">
+    <id column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    type_id, type_name, logo, add_time, is_delete, remark
+  </sql>
+  <!-- 分页获取用户类型 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from user_type
+    <where>
+    	is_delete = '0'
+    	<if test="typeName!=null">
+    		and type_name not like concat('%',#{typeName,jdbcType=VARCHAR},'%')
+    	</if>
+    	<if test="name!=null">
+    		and type_name like concat('%',#{name,jdbcType=VARCHAR},'%')
+    	</if>
+    </where>
+    order by add_time
+  </select>
+  
+  <!-- 分页获取用户类型数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select  count(type_id)
+    from user_type
+    <where>
+    	is_delete = '0'
+    	<if test="typeName!=null">
+    		and type_name like concat('%',#{typeName,jdbcType=VARCHAR},'%')
+    	</if>
+    </where>
+    order by add_time
+  </select>
+  
+  
+  
+  <!-- 根据id获取用户类型信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_type
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据id删除 -->
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from user_type
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </delete>
+  <!-- 增加用户类型信息 -->
+  <insert id="insert" parameterType="com.zhiliao.model.user.UserType">
+    insert into user_type (type_id, type_name, logo, 
+      add_time, is_delete, remark
+      )
+    values (#{typeId,jdbcType=INTEGER}, #{typeName,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <!-- 根据id修改用户类型信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.user.UserType">
+    update user_type
+    <set>
+      <if test="typeName != null">
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=CHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </update>
+ 	<!-- 批量或者单条删除 -->
+  <update id="deleteTypeList" parameterType="java.util.List">
+    update user_type 
+    set  is_delete = '1' 
+    where type_id in
+    <foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+        #{idList}
+    </foreach>
+ </update>
+</mapper>

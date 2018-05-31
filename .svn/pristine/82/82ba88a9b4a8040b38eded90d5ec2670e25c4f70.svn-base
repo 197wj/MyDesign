@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.excel.ExcelMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.excel.UserExcel">
+    <result column="schoolId" jdbcType="INTEGER" property="schoolId" />
+    <result column="schoolName" jdbcType="VARCHAR" property="schoolName" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="userNo" jdbcType="VARCHAR" property="userNo" />
+    <result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+    <result column="className" jdbcType="VARCHAR" property="className" />
+    <collection property="parent" resultMap="parent"/>
+  </resultMap>
+  
+  <resultMap type="com.zhiliao.model.excel.Parent" id="parent">
+  	<result column="pType" jdbcType="VARCHAR" property="pType" />
+    <result column="pName" jdbcType="VARCHAR" property="pName" />
+    <result column="pPhone" jdbcType="VARCHAR" property="pPhone" />
+  </resultMap>
+  
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT ss.school_name schoolName,su.school_id schoolId,su.user_name userName,su.user_account userNo,
+  	sg.grade_name gradeName,sc.class_name className,par.user_name pName,par.user_account pPhone,
+  	sup.parentType pType
+	FROM sys_user su
+	LEFT JOIN sys_userrole sur ON sur.userid = su.user_id
+	RIGHT JOIN sys_user_parents sup ON sup.userId = su.user_id
+	LEFT JOIN sys_user par ON par.user_id = sup.parentId
+	LEFT JOIN sys_school ss ON ss.school_id = su.school_id
+	LEFT JOIN sys_class sc ON sc.class_id = su.class_id 
+	LEFT JOIN sys_grade sg ON sg.school_grade_id = sc.school_grade_id
+	<where>
+		sg.grade_code in(14,15)
+		<if test="schoolId!=null">
+			and su.school_id = #{schoolId}
+		</if>
+		<if test="list!=null">
+			and su.school_id in
+			<foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+		        #{idList}
+		    </foreach>
+		</if>
+		
+	</where>
+	
+	ORDER BY su.school_id ,sg.grade_code,su.class_id
+  </select>
+  
+  
+  
+  
+  
+</mapper>

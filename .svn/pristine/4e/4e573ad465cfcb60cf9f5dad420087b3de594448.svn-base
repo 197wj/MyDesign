@@ -1,0 +1,20 @@
+package com.zhiliao.service.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.Examstatistics;
+
+/**
+ * 主要统计组卷系统中的数据统计
+ * @author 毕伟谦
+ *
+ */
+public interface PhpCountService {
+	
+	public List<Examstatistics> selectInfo(Map<String, Object> map);
+	
+	public List<Examstatistics> selectInfoZ(Map<String, Object> map);
+	
+	public List<Examstatistics> getClassRank(Map<String, Object> map);
+}

@@ -1,0 +1,379 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>销量结算页面</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页<span class="c-gray en">&gt;</span> 系统统计  <span class="c-gray en">&gt;</span> 销售统计 <span class="c-gray en">&gt;</span> 发票 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" id="yanshicontent" >
+	<div class="text-c">
+		<form class="Huiform" method="get" action="${path}/invoice/invoice-list.action" target="_self" id="pageForm">
+			<input type="hidden" id="thisYear" value="${thisYear}">
+			<input type="hidden" id="thisMonth" value="${thisMonth}">
+			<!-- 区域 -->
+			<span class="select-box inline radius" id="xianSelect" >
+			<select id="areaSelect" class="select">
+				<option value="0">-所有区域-</option>
+				<c:forEach items="${AreaList}" var="area" varStatus="index">
+					<option value="${area.areaId}"  
+						<c:if test="${area.areaId==areaId}">selected="selected"</c:if>
+					>
+						${area.areaname}
+					</option>
+				</c:forEach>
+			</select>
+			</span>
+			<!-- 发票状态 -->
+			<span class="select-box inline radius" id="xiangSelect" >
+			<select id="statusSelect"  class="select">
+				<option value="2">-所有发票状态-</option>
+				<option value="0"  <c:if test="${invoiceStatus==0}">selected="selected"</c:if>>
+					未开发票
+				</option>
+				<option value="1" <c:if test="${invoiceStatus==1}">selected="selected"</c:if>>
+					已开发票
+				</option>
+			</select>
+			</span>
+			<span>	
+				<!-- 开始年份 -->
+				<span class="select-box inline radius" id="xiangSelect" >
+				<select id="beginYearSelect"  class="select">
+					<c:forEach items="${yearList}" var="year" varStatus="index">
+						<option value="${year}" class="1" id="beginyear${year}"
+							<c:if test="${beginYear==year }">selected="selected"</c:if> 
+						>
+							${year}年
+						</option>
+					</c:forEach>
+				</select>
+				</span>
+				<!-- 开始月份 -->
+				<span class="select-box inline radius" id="xiangSelect" >
+				<select id="beginMonthSelect"  class="select">
+					<c:forEach items="${monthList}" var="month" varStatus="index">
+						<option value="${month}"  class="2" id="beginmonth${month}"
+							<c:if test="${beginMonth==month }">selected="selected"</c:if> 
+						>
+							${month}月
+						</option>
+					</c:forEach>
+				</select>
+				</span>
+				->
+				<!-- 结束年份 -->
+				<span class="select-box inline radius" id="xiangSelect" >
+				<select id="endYearSelect"  class="select">
+					<c:forEach items="${yearList}" var="year" varStatus="index">
+						<option value="${year}"  class="3" id="endyear${year}"
+							<c:if test="${endYear==year }">selected="selected"</c:if> 
+						>
+							${year}年
+						</option>
+					</c:forEach>
+				</select>
+				</span>
+				<!-- 结束月份 -->
+				<span class="select-box inline radius" id="xiangSelect" >
+				<select id="endMonthSelect"  class="select">
+					<c:forEach items="${monthList}" var="month" varStatus="index">
+						<option value="${month}"  class="4"  id="endmonth${month}"
+							<c:if test="${endMonth==month }">selected="selected"</c:if>
+						>
+							${month}月
+						</option>
+					</c:forEach>
+				</select>
+				</span>
+			</span>
+			<input type="hidden" id="areaIdImport" value="${areaId}" name="areaId">
+			<input type="hidden" id="statusImport" value="${invoiceStatus}" name="invoiceStatus">
+			<input type="hidden" id="beginYearImport" value="${beginYear}" name="beginYear">
+			<input type="hidden" id="beginMonthImport" value="${beginMonth}" name="beginMonth">
+			<input type="hidden" id="endYearImport" value="${endYear}" name="endYear">
+			<input type="hidden" id="endMonthImport" value="${endMonth}" name="endMonth">
+			<input type="text" class="input-text radius" style="width:150px" placeholder="输入手机号/ID" id="content" value="${content}" name="content" >
+			<button type="button" class="btn btn-success radius" onclick="getSearch()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+		</form>
+	</div>
+	<br>
+	<div id="contentShow"
+		<c:if test="${InvoiceList.size()==0 }">style="display: none;"</c:if>
+	>
+		<div class="div-table" >
+			<a href="javascript:;" onclick="batchDel()" class="btn btn-success radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量开通</a> 
+			<table  class="table table-border table-bordered table-hover table-bg mt-20 " >
+				<thead>
+					<tr class="text-c">
+						<th width="3%"><input type="checkbox" value="" name="" id="mainCheck"></th>
+						<th width="3%">ID</th>
+						<th width="15%">区域</th>
+						<th width="7%">发票抬头</th>
+						<th width="7%">税号</th>
+						<th width="7%">收件人</th>
+						<th width="10%">手机号</th>
+						<th width="5%">邮编</th>
+						<th width="15%">地址</th>
+						<th width="10%">备注</th>
+						<th width="5%">金额</th>
+						<th width="10%">登录账户</th>
+						<th width="5%">状态</th>
+						<th width="5%">操作</th>
+					</tr>
+				</thead>
+				<tbody >
+					<c:if test="${InvoiceList.size()>0}">
+						<c:forEach items="${InvoiceList}" var="v" varStatus="index">
+							<tr class="text-c tableContent ">	
+								
+								<c:if test="${v.invoiceStatus==0}">
+									<td><input type="checkbox" value="${v.id}" name="pass"></td> 
+								</c:if>
+								<c:if test="${v.invoiceStatus==1}">
+									<td onclick="unableSelect()"></td> 
+								</c:if>
+								<td>${v.id}</td>
+								<td>${v.areaName}</td>
+								<td>${v.raised}</td>
+								<td>${v.number}</td>
+								<td>${v.linkMan}</td>
+								<td>${v.linkPhone}</td>
+								<td>${v.code}</td>
+								<td>${v.address}</td>
+								<td>${v.remarks}</td>
+								<td>20</td>
+								<td>${v.phone}</td>
+								<c:if test="${v.invoiceStatus==0}"><td><span class="btn btn-warning radius">未开</span></td></c:if>
+								<c:if test="${v.invoiceStatus==1}"><td><span class="btn btn-success radius">已开</span></td></c:if>
+								<td>	
+									<c:if test="${v.invoiceStatus==0}">
+										<a title="开票" href="javascript:void(0);" onclick="kaitong('${v.id}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+									</c:if>
+								</td>
+							</tr>	
+						</c:forEach>
+					</c:if>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+ 
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+var thisYear=$("#thisYear").val();
+var thisMonth=$("#thisMonth").val();
+
+var beginYear=$("#beginYearImport").val();
+var beginMonth=$("#beginMonthImport").val();
+var endYear=$("#endYearImport").val();
+var endMonth=$("#endMonthImport").val();
+
+if(beginYear==thisYear){
+	$(".2").hide();
+	for(var i=thisMonth;i>0;i--){
+		$("#beginmonth"+i).show();
+	}
+	
+	$(".3").hide();
+	$("#endyear"+thisYear).show();
+	
+	$(".4").hide();
+	for(var i=thisMonth;i>0;i--){
+		$("#endmonth"+i).show();
+	}
+	
+}else{
+	$(".2").show();
+	
+	$(".3").hide();
+	for(var i=thisYear;i>=beginYear;i--){
+		$("#endyear"+i).show();
+	}
+	
+	$(".4").hide();
+	if(endYear==thisYear){
+		for(var i=thisMonth;i>0;i--){
+			$("#endmonth"+i).show();
+		}
+	}else{
+		$(".4").show();
+	}
+	
+}
+
+
+//提交
+function getSearch(){
+	var areaSelect=$.trim($("#areaSelect").find("option:selected").val());
+	var statusSelect=$.trim($("#statusSelect").find("option:selected").val());
+	var beginYearSelect=$.trim($("#beginYearSelect").find("option:selected").val());
+	var beginMonthSelect=$.trim($("#beginMonthSelect").find("option:selected").val());
+	var endYearSelect=$.trim($("#endYearSelect").find("option:selected").val());
+	var endMonthSelect=$.trim($("#endMonthSelect").find("option:selected").val());
+	
+//	alert(areaSelect);
+	
+	$("#areaIdImport").val(areaSelect);
+	$("#statusImport").val(statusSelect);
+	$("#beginYearImport").val(beginYearSelect);
+	$("#beginMonthImport").val(beginMonthSelect);
+	$("#endYearImport").val(endYearSelect);
+	$("#endMonthImport").val(endMonthSelect);
+	
+//	alert($("#statusImport").val());
+	
+	$("#pageForm").submit();
+};
+
+//回车按钮
+function keydownEvent() {
+     var e = window.event || arguments.callee.caller.arguments[0];
+     if (e && e.keyCode == 13 ) {
+    	 getSearch();
+     }
+};
+
+//选中区域
+$("#areaSelect").change(function(){
+	$("#schoolSelect").find("option:selected").removeAttr("selected");
+	$("#gradeSelect").find("option:selected").removeAttr("selected");
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".2").hide();
+	var areaSelect=$.trim($(this).find("option:selected").val());
+//	alert(areaSelect);
+	if(areaSelect==0){
+		$(".2").show();
+	}else{
+		$("."+areaSelect).show();
+	}
+	$(".3").hide();
+	$(".4").hide();
+	
+	
+});
+//选中学校
+$("#schoolSelect").change(function(){
+	$("#gradeSelect").find("option:selected").removeAttr("selected");
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".3").hide();
+	var schoolSelect=$.trim($(this).find("option:selected").val());
+//	alert(schoolSelect);
+	if(schoolSelect==0){
+		$(".3").show();
+	}else{
+		$("."+schoolSelect).show();
+	}
+	$(".4").hide();
+});
+//选中年级
+$("#gradeSelect").change(function(){
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".4").hide();
+	var gradeSelect=$.trim($(this).find("option:selected").val());
+//	alert(gradeSelect);
+	if(gradeSelect==0){
+		$(".3").show();
+	}else{
+		$("."+gradeSelect).show();
+	}
+});
+//选中开始年份
+$("#beginYearSelect").change(function(){
+	$("#endYearSelect").find("option:selected").removeAttr("selected");
+	$("#endMonthSelect").find("option:selected").removeAttr("selected");
+	var beginYearSelect=$.trim($(this).find("option:selected").val());
+	var endYearSelect=$.trim($("#endYearSelect").find("option:selected").val());
+//	alert(beginYearSelect+"beginYearSelect");
+	if(beginYearSelect==thisYear){
+		
+		$("#endMonthSelect").find("option:selected").removeAttr("selected");
+		$(".2").hide();
+		for(var i=thisMonth;i>0;i--){
+			$("#beginmonth"+i).show();
+		}
+		
+		$(".3").hide();
+		$("#endyear"+thisYear).show();
+		
+		$(".4").hide();
+		for(var i=thisMonth;i>0;i--){
+			$("#endmonth"+i).show();
+		}
+		
+	}else{
+		$(".2").show();
+		
+		$(".3").hide();
+		for(var i=thisYear;i>=beginYearSelect;i--){
+			$("#endyear"+i).show();
+		}
+		
+		$(".4").hide();
+		if(endYearSelect==thisYear){
+			for(var i=thisMonth;i>0;i--){
+				$("#endmonth"+i).show();
+			}
+		}else{
+			$(".4").show();
+		}
+		
+	}
+});
+
+//点击已开发票的复选框
+function unableSelect(){
+	layer.msg('已开通的发票不用再开通!',{icon:2,time:1000});
+	return false;
+}
+/*单个开通*/
+function kaitong(id){
+	var ids = [];
+	ids.push(id);
+	delDeptInfoList(ids.toString());
+	}
+/* 批量开通*/
+function batchDel(){
+	var id = document.getElementsByName("pass");
+	var ids = [];
+	for (var i=0;i<id.length;i++) {
+		if (id[i].checked == true) {
+			ids.push(id[i].value);
+		};
+	}
+	delDeptInfoList(ids.toString());
+}
+/*批量开通  */
+function delDeptInfoList(ids){
+	if (ids == "") {
+		layer.msg("至少选中一条数据",{icon:7,time:1000});
+	}else {
+		layer.confirm('确认要开通吗？',function(index){
+			$.ajax({
+				url: '${path}/invoice/invoicepass.action',
+				type: 'POST',
+				data:{'ids':ids},
+				dataType: 'json',
+				success: function(data){
+					layer.msg('开通成功',{icon:1,time:1000},function(){
+						location.reload();
+					});
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						location.reload();
+					});
+				}
+		     });
+		});
+	}
+}
+
+</script>
+</body>
+</html>

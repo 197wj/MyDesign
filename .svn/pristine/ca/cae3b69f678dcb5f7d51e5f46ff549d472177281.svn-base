@@ -1,0 +1,196 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>销量结算页面</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页<span class="c-gray en">&gt;</span> 系统统计  <span class="c-gray en">&gt;</span> 销售统计 <span class="c-gray en">&gt;</span> 发票 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" id="yanshicontent" >
+	<div class="text-c">
+		<form class="Huiform" method="get" action="${path}/invoice/invoice-list.action" target="_self" id="pageForm">
+			<!-- 区域 -->
+			<span class="select-box inline radius" id="xianSelect" >
+			<select id="areaSelect" class="select">
+				<option value="0">-所有区域-</option>
+				<c:forEach items="${AreaList}" var="area" varStatus="index">
+					<option value="${area.areaId}"  
+						<c:if test="${area.areaId==areaId}">selected="selected"</c:if>
+					>
+						${area.areaname}
+					</option>
+				</c:forEach>
+			</select>
+			</span>
+			<!-- 发票状态 -->
+			<span class="select-box inline radius" id="xiangSelect" >
+			<select id="statusSelect"  class="select">
+				<option value="2">-所有状态-</option>
+				<option value="0"  <c:if test="${invoiceStatus==0}">selected="selected"</c:if>>
+					未开发票
+				</option>
+				<option value="1" <c:if test="${invoiceStatus==1}">selected="selected"</c:if>>
+					已开发票
+				</option>
+			</select>
+			</span>
+		
+			<input type="hidden" id="areaIdImport" value="${areaId}" name="areaId">
+			<input type="hidden" id="statusImport" value="${invoiceStatus}" name="invoiceStatus">
+			<input type="text" class="input-text radius" style="width:150px" placeholder="输入手机号/ID" id="content" value="${content}" name="content" >
+			<button type="button" class="btn btn-success radius" onclick="getSearch()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+		</form>
+	</div>
+	<br>
+	<div id="contentShow"
+		<c:if test="${InvoiceList.size()==0 }">style="display: none;"</c:if>
+	>
+		<div class="div-table" >
+			<table  class="table table-border table-bordered table-hover table-bg mt-20 " >
+				<thead>
+					<tr class="text-c">
+						<th width="5%">选择</th>
+						<th width="5%">ID</th>
+						<th width="7%">区域</th>
+						<th width="7%">发票抬头</th>
+						<th width="7%">税号</th>
+						<th width="7%">收件人</th>
+						<th width="7%">手机号</th>
+						<th width="10%">邮政编码</th>
+						<th width="10%">地址</th>
+						<th width="10%">备注</th>
+						<th width="10%">金额</th>
+						<th width="10%">登录账户</th>
+						<th width="10%">状态</th>
+						<th width="10%">操作</th>
+					</tr>
+				</thead>
+				<tbody >
+					<c:if test="${InvoiceList.size()>0}">
+						<c:forEach items="${InvoiceList}" var="v" varStatus="index">
+							<tr class="text-c tableContent ">	
+								<c:if test="${v.invoiceStatus==0}">
+									<td><input type="checkbox" value="${v.invoiceStatus}" name="del" ></td> 
+								</c:if>
+								<c:if test="${v.invoiceStatus==1}">
+									<td></td> 
+								</c:if>
+								<td>${v.id}</td>
+								<td>${v.areaName}</td>
+								<td>${v.raised}</td>
+								<td>${v.number}</td>
+								<td>${v.linkMan}</td>
+								<td>${v.linkPhone}</td>
+								<td>${v.code}</td>
+								<td>${v.address}</td>
+								<td>${v.remarks}</td>
+								<td>20</td>
+								<td>${v.phone}</td>
+								<td>
+									<c:if test="${v.invoiceStatus==0}">未开</c:if>
+									<c:if test="${v.invoiceStatus==1}">已开</c:if>
+								</td>
+								<td>
+									<c:if test="${v.invoiceStatus==0}">
+										<a href="${path}/areaCount/saleOrder.action?classId='+${c.classId}+'&subjectCode='+${s.subjectCode}+'&className='+${c.className}+'&subjectName='+${s.subjectName}+'&schoolName='+${c.schoolName}+'&gradeName='+${c.gradeName}+'"><i class="Hui-iconfont">&#xe720;</i>查看</a>
+									</c:if>
+									
+								</td>
+							</tr>	
+						</c:forEach>
+					</c:if>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+ 
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+
+	
+	var areaId=$("#areaIdImport").val();
+	var invoiceStatus=$("#statusImport").val();
+	
+//	alert(invoiceStatus);
+
+
+
+
+//提交
+function getSearch(){
+	var areaSelect=$.trim($("#areaSelect").find("option:selected").val());
+	var statusSelect=$.trim($("#statusSelect").find("option:selected").val());
+	
+	
+	
+	$("#areaIdImport").val(areaSelect);
+	$("#statusImport").val(statusSelect);
+	
+//	alert($("#statusImport").val());
+	
+	$("#pageForm").submit();
+};
+
+//回车按钮
+function keydownEvent() {
+     var e = window.event || arguments.callee.caller.arguments[0];
+     if (e && e.keyCode == 13 ) {
+    	 getSearch();
+     }
+};
+
+//选中区域
+$("#areaSelect").change(function(){
+	$("#schoolSelect").find("option:selected").removeAttr("selected");
+	$("#gradeSelect").find("option:selected").removeAttr("selected");
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".2").hide();
+	var areaSelect=$.trim($(this).find("option:selected").val());
+//	alert(areaSelect);
+	if(areaSelect==0){
+		$(".2").show();
+	}else{
+		$("."+areaSelect).show();
+	}
+	$(".3").hide();
+	$(".4").hide();
+	
+	
+});
+//选中学校
+$("#schoolSelect").change(function(){
+	$("#gradeSelect").find("option:selected").removeAttr("selected");
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".3").hide();
+	var schoolSelect=$.trim($(this).find("option:selected").val());
+//	alert(schoolSelect);
+	if(schoolSelect==0){
+		$(".3").show();
+	}else{
+		$("."+schoolSelect).show();
+	}
+	$(".4").hide();
+});
+//选中年级
+$("#gradeSelect").change(function(){
+	$("#classSelect").find("option:selected").removeAttr("selected");
+	$(".4").hide();
+	var gradeSelect=$.trim($(this).find("option:selected").val());
+//	alert(gradeSelect);
+	if(gradeSelect==0){
+		$(".3").show();
+	}else{
+		$("."+gradeSelect).show();
+	}
+});
+
+
+
+</script>
+</body>
+</html>

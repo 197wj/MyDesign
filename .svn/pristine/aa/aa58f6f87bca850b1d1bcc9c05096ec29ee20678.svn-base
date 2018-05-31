@@ -1,0 +1,18 @@
+package com.zhiliao.service.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.Class;
+import com.zhiliao.service.BaseService;
+
+public interface ClassService extends BaseService<Class, Map<String, Object>> {
+
+	public Class selectById(Integer classId);
+
+	public int updateById(Class record);
+
+    public List<Class> selectList(Map<String, Object>map);
+
+	public List<Class> getListByMap(Map<String, Object> map);
+}

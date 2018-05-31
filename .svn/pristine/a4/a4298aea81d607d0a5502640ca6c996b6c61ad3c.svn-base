@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.count.CountMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.school.Class">
+    <id column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+    <result column="school_grade_id" jdbcType="INTEGER" property="schoolGradeId" />
+    <result column="teacher_id" jdbcType="INTEGER" property="teacherId" />
+    <result column="teacher_name" jdbcType="VARCHAR" property="teacherName" />
+    <result column="enter_school_year" jdbcType="VARCHAR" property="enterSchoolYear" />
+    <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="short_Class_Name" jdbcType="VARCHAR" property="shortClassName" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="class_photo" jdbcType="VARCHAR" property="classPhoto" />
+    <result column="import_status" jdbcType="VARCHAR" property="importStatus" />
+    <result column="is_open" jdbcType="CHAR" property="isOpen" />
+  </resultMap>
+  <!-- 统计开通班级的数量 -->
+  <select id="selectClassCount" parameterType="java.util.Map" resultType="integer">
+  	SELECT count(sc.class_id)
+	from sys_class sc
+	LEFT JOIN sys_grade sg ON  sg.school_grade_id = sc.school_grade_id
+	LEFT JOIN sys_school ss ON ss.school_id = sg.school_id
+	LEFT JOIN uc_grade ug ON ug.grade_code = sg.grade_code
+	<where>
+		ss.is_open='1' AND ug.is_open = '1'
+		<if test="schoolId!=null">
+			and ss.school_id = #{schoolId}
+		</if>
+		<if test="gradeCode!=null">
+			and ug.grade_code = #{gradeCode}
+		</if>
+	</where>
+  </select>
+  <!-- 获取各科的订购数 -->
+  <select id="selectSubjectCount" parameterType="java.util.Map" resultType="java.util.Map">
+  	
+  </select>
+  
+  
+  
+  
+</mapper>

@@ -1,0 +1,62 @@
+package com.zhiliao.service.product.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.product.ProductMapper;
+import com.zhiliao.model.product.Product;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.product.ProductService;
+
+@Service
+public class ProductServiceImpl extends BaseServiceImpl<Product, Map<String, Object>> implements ProductService {
+	
+	@Autowired
+	private ProductMapper productMapper;
+	
+	@Override
+	public int deleteById(Integer productId) {
+		// TODO Auto-generated method stub
+		int rows = this.productMapper.deleteById(productId);
+		return rows;
+	}
+	
+	@Override
+	public int deleteProList(List<Integer> list) {
+		// TODO Auto-generated method stub
+		int rows = this.productMapper.deleteProList(list);
+		return rows;
+	}
+	
+	@Override
+	public int insert(Product record) {
+		// TODO Auto-generated method stub
+		int rows = this.productMapper.insert(record);
+		return rows;
+	}
+	
+	@Override
+	public Product selectById(Integer productId) {
+		// TODO Auto-generated method stub
+		Product product = this.productMapper.selectById(productId);
+		return product;
+	}
+	
+	@Override
+	public int updateById(Product record) {
+		// TODO Auto-generated method stub
+		int rows = this.productMapper.updateById(record);
+		return rows;
+	}
+	
+	@Override
+	public List<Product> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<Product> list = this.productMapper.selectList(map);
+		return list;
+	}
+	
+}

@@ -1,0 +1,52 @@
+package com.zhiliao.model.order;
+
+public class OrderVo extends Order {
+	private Integer schoolCode;
+	
+	private Integer classCode;
+	
+	private String schoolname;
+	
+	private String classname;
+
+	private String gradename;
+	public String getGradename() {
+		return gradename;
+	}
+
+	public void setGradename(String gradename) {
+		this.gradename = gradename;
+	}
+
+	public Integer getSchoolCode() {
+		return schoolCode;
+	}
+
+	public void setSchoolCode(Integer schoolCode) {
+		this.schoolCode = schoolCode;
+	}
+
+	public Integer getClassCode() {
+		return classCode;
+	}
+
+	public void setClassCode(Integer classCode) {
+		this.classCode = classCode;
+	}
+
+	public String getSchoolname() {
+		return schoolname;
+	}
+
+	public void setSchoolname(String schoolname) {
+		this.schoolname = schoolname;
+	}
+
+	public String getClassname() {
+		return classname;
+	}
+
+	public void setClassname(String classname) {
+		this.classname = classname;
+	}
+}

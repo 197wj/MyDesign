@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.param.TbTermMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.param.TbTerm">
+    <id column="term_id" jdbcType="INTEGER" property="termId" />
+    <result column="term_year" jdbcType="VARCHAR" property="termYear" />
+    <result column="term" jdbcType="VARCHAR" property="term" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    term_id, term_year, term, add_time, is_delete
+  </sql>
+  
+  <!-- 分页获取学期信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	 from tb_term
+  	 <where>
+  	 	is_delete = '0'
+  	 	<if test="termYear!=null">
+  	 		and term_year = #{termYear,jdbcType=VARCHAR}
+  	 	</if> 
+  	 	<if test="team!=null">
+  	 		and term = #{term,jdbcType=VARCHAR}
+  	 	</if>
+  	 </where>
+  	 order by add_time
+  </select>
+  
+  <!-- 分页获取学期数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(term_id)
+  	 from tb_term
+  	 <where>
+  	 	is_delete = '0'
+  	 	<if test="termYear!=null">
+  	 		and term_year = #{termYear,jdbcType=VARCHAR}
+  	 	</if> 
+  	 	<if test="team!=null">
+  	 		and term = #{term,jdbcType=VARCHAR}
+  	 	</if>
+  	 </where>
+  	 order by add_time
+  </select>
+  
+  
+  <!-- 根据id查询学期 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_term
+    where term_id = #{termId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据id删除学期 -->
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from tb_term
+    where term_id = #{termId,jdbcType=INTEGER}
+  </delete>
+  <!-- 增加学期数 -->
+  <insert id="insert" parameterType="com.zhiliao.model.param.TbTerm">
+    insert into tb_term (term_id, term_year, term, 
+      add_time, is_delete)
+    values (#{termId,jdbcType=INTEGER}, #{termYear,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=CHAR})
+  </insert>
+  <!-- 根据id修改学期信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.param.TbTerm">
+    update tb_term
+    <set>
+      <if test="termYear != null">
+        term_year = #{termYear,jdbcType=VARCHAR},
+      </if>
+      <if test="term != null">
+        term = #{term,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=CHAR},
+      </if>
+    </set>
+    where term_id = #{termId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 批量或者单条删除 -->
+  <update id="deleteTermList" parameterType="java.util.List">
+    update tb_term 
+    set  is_delete = '1' 
+    where term_id in
+    <foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+        #{idList}
+    </foreach>
+ </update>
+  
+  
+</mapper>

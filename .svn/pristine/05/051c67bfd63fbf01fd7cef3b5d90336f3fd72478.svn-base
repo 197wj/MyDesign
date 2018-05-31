@@ -1,0 +1,282 @@
+package com.zhiliao.controller.php;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.zhiliao.model.php.PhpKnows;
+import com.zhiliao.model.php.PhpSection;
+import com.zhiliao.model.school.Class;
+import com.zhiliao.model.school.School;
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.php.PhpKnowService;
+import com.zhiliao.service.school.ClassService;
+import com.zhiliao.service.school.SchoolService;
+import com.zhiliao.service.user.SysUserService;
+import com.zhiliao.util.ExcelUtilss;
+import com.zhiliao.util.PathUtil;
+import com.zhiliao.util.SendPostandGet;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+import com.zhiliao.util.excel.core.ExcelUtils;
+import com.zhiliao.util.excel.core.IExcelUtil;
+@RequestMapping("appKonw")
+@Controller
+public class AppKnowsController {
+	
+	@Autowired
+	private PhpKnowService knowService;
+	
+	//获取学生信息
+	@Autowired
+	private SysUserService sysUserService;
+	
+	//获取学校信息
+	@Autowired
+	private SchoolService schoolService;
+	
+	//获取班级信息
+	@Autowired
+	private ClassService classService;
+	
+	
+	
+	/**
+	 * 报告导出(数学)
+	 * @Title: exportKnow 
+	 * @param @param response
+	 * @param @param schoolId
+	 * @param @param gradeId
+	 * @param @param classId
+	 * @param @param subject 
+	 * @return void
+	 * @throws IOException 
+	 */
+	@RequestMapping("/AppExport.action")
+	@ResponseBody
+	public void exportKnow(HttpServletResponse response,
+						   @RequestParam(value="schoolId",required=false)Integer schoolId,
+						   @RequestParam(value="gradeId",required=false)Integer gradeId,
+						   @RequestParam(value="classId",required=false)Integer classId,
+						   @RequestParam(value="subject",required=false)Integer subject,
+						   @RequestParam(value="userId",required=false)Long userId) throws IOException{
+		
+		//schoolId=22;
+		//gradeId=14;
+		//classId=79;
+		//userId = 19291l;
+		//subject=11;
+		
+		//获取学生信息
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		SysUser sysUser = this.sysUserService.selectById(userId);
+		
+		//获取学校,班级信息
+		School school = this.schoolService.selectById(schoolId);//学校信息
+		Class sysClass = this.classService.selectById(classId);//班级信息
+		
+		/*****************设置excel相关信息***********************/
+		//excel相关东西
+		List<String> sheetNames = new ArrayList<String>();//获取全部sheetName
+		List<List<PhpKnows>> val = new ArrayList<List<PhpKnows>>();//获取全部的values
+		List<Long> userIds = new ArrayList<Long>();//学生id
+		
+		//设置excel名称和sheet名称
+      	String fileName = null;//文件名称
+		String []title = new String[6];//标题
+		String sheetName = null;//sheet名称
+		String schoolName = school.getSchoolName();
+		
+		
+		String graName = null;//年级和班级名称 
+		if(gradeId==14){
+			graName = "四年级"+sysClass.getClassName();
+		}else {
+			graName = "五年级"+sysClass.getClassName();
+		}
+		
+		String subjectName = null;//科目名称
+		if(subject==10){
+			subjectName = "语文";
+		}else if(subject==11){
+			subjectName = "数学";
+		}else if(subject==12){
+			subjectName = "英语";
+		}
+		fileName = userId+"_"+subject+".xls"; //文件名
+		//设置文件的存储路径
+		String path= PathUtil.getWebRootPath()+ File.separator + "excel/"+File.separator;
+		//判断文件夹是否存在
+		if(!new File(path).exists()){
+			new File(path).mkdirs();
+		}
+		
+		FileOutputStream output = new FileOutputStream(path+fileName);
+		
+		
+		//根据科目id判断调用那个导出方法
+		if(subject==11){//导出数学信息
+			/*****************开始获取知识点***********************/
+			//获取一级知识点
+			MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+			List<PhpKnows> list = knowService.getKnow(gradeId+","+subject);//一级知识点
+			if(list!=null){//判断一级知识点是否为空(不为空)
+				for(PhpKnows firKnows:list){//二级
+					//获取知识点的id,并将年级,科目,知识点的id拼接成字符串
+					String gsk = gradeId+","+subject+","+firKnows.getKonwId();
+					firKnows.setGsk(gsk);
+				}
+			}//一级知识点为空
+			
+			
+			/************知识点获取完毕************/
+			
+			MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+			
+			//设置每列title
+			title[0] = "一级知识点";
+			title[1] = "总分值";
+			title[2] = "所得分值";
+			title[3] = "掌握度";
+			/****************excel设置完成*********************/
+			
+			//设置sheet名称
+			sheetName = sysUser.getUserName();
+			
+			/****************判断知识点*********************/
+			for(PhpKnows know: list){//获取二级知识点
+				String gsk = know.getGsk();
+				//调用接口
+				JSONObject jsonObj = getScore(gsk,userId);
+				System.out.println(jsonObj);
+				know.setTotalScore(jsonObj.get("sum_score").toString());//总分数
+				know.setGetScore(jsonObj.get("get_score").toString());//得到的分数
+				know.setRank(jsonObj.get("scoring_ratio").toString());//掌握度			
+			}
+			/*******************知识点判断结束*************************/
+			//增加sheet名称
+			sheetNames.add(sheetName);
+			//增加学生id
+			userIds.add(userId);
+			//增加values
+			val.add(list);
+			
+			
+			//调用导出excel工具类
+			
+			HSSFWorkbook wb = ExcelUtilss.getHSSFWorkbook(schoolName,graName,subjectName,sheetNames,userIds , title, val, null);
+			
+			 //将文件存到指定位置  
+			try {  
+		       wb.write(output);
+		       output.flush();  
+		       output.close();
+			} catch (Exception e) {  
+		       e.printStackTrace();
+		       
+			}
+			
+		}else if(subject==12) {//导出英语信息
+			/*****************开始获取知识点***********************/
+			//获取一级知识点
+			MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+			List<PhpKnows> list = knowService.getKnow(gradeId+","+subject);//一级知识点
+			if(list!=null){//判断一级知识点是否为空(不为空)
+				for(PhpKnows firKnows:list){//二级
+					List<PhpSection> secList = knowService.getSecSection(firKnows.getKonwId());//二级知识点
+					if(secList!=null && secList.size()>0 ){//判断二级知识点是否为空(不为空)
+						for(PhpSection secKnows:secList){//二级
+							//获取知识点的id,并将年级,科目,知识点的id拼接成字符串
+							String gsk = gradeId+","+subject+","+firKnows.getKonwId()+","+secKnows.getSectionId();
+							secKnows.setGsk(gsk);
+						}
+						firKnows.setSections(secList);//不为空将二级知识点放到一级知识点下
+						
+					}else{//二级知识点为空
+						PhpSection phpSection = new PhpSection();
+						//获取知识点的id,并将年级,科目,知识点的id拼接成字符串
+						String gsk = gradeId+","+subject+","+firKnows.getKonwId();
+						phpSection.setGsk(gsk);
+						secList.add(phpSection);
+						firKnows.setSections(secList);
+					}
+				}
+			}//一级知识点为空
+			MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+			/************知识点获取完毕************/
+			
+			//设置每列title
+			title[0] = "一级知识点";
+			title[1] = "二级知识点";
+			title[2] = "总分值";
+			title[3] = "所得分值";
+			title[4] = "掌握度";
+			
+			/****************excel设置完成*********************/
+			
+			/****************判断知识点*********************/
+			for(PhpKnows know: list){//获取二级知识点
+				List<PhpSection> secList = know.getSections();
+				if(secList!=null && secList.size()>0){//判断二级知识点(不为空)
+					for(PhpSection secKnows:secList){//获取三级知识点
+						
+						String gsk = secKnows.getGsk();
+						//调用接口
+						JSONObject jsonObj = getScore(gsk,userId);
+						secKnows.setTotalScore(jsonObj.get("sum_score").toString());//总分数
+						secKnows.setGetScore(jsonObj.get("get_score").toString());//得到的分数
+						secKnows.setRank(jsonObj.get("scoring_ratio").toString());//掌握度
+					}
+				}else {//判断二级知识点(为空)
+					String gsk = know.getGsk();
+					//调用接口
+					JSONObject jsonObj = getScore(gsk,userId);
+					System.out.println(jsonObj);
+					know.setTotalScore(jsonObj.get("sum_score").toString());//总分数
+					know.setGetScore(jsonObj.get("get_score").toString());//得到的分数
+					know.setRank(jsonObj.get("scoring_ratio").toString());//掌握度
+				}
+			}
+			/*******************知识点判断结束*************************/
+			sheetName = sysUser.getUserName();
+			//增加sheet名称
+			sheetNames.add(sheetName);
+			//增加学生id
+			userIds.add(userId);
+			//增加values
+			val.add(list);
+			
+	        IExcelUtil<PhpKnows> eu = new ExcelUtils<>();
+			eu.build(PhpKnows.class).exportExcel(schoolName,graName,subjectName,userIds,val, sheetNames, output);
+		}
+		
+		
+	
+	}
+	/**
+	 * 获取成绩
+	 * @Title: getScore 
+	 * @param @param knowledge
+	 * @param @param userId
+	 * @return Object
+	 */
+	public JSONObject getScore(String knowledge,Long userId){
+		//String url ="http://120.194.183.35:8110/php/zhijiaoyun/index.php/home/port/Student_Data";
+		String url ="http://192.168.1.241/zhijiaoyun/index.php/home/port/Student_Data";
+		String param = "knowledge="+knowledge+"&userId="+userId;
+    	StringBuffer result = SendPostandGet.submitPost(url, param, "utf-8");
+		return JSON.parseObject(result.toString());
+	}
+}

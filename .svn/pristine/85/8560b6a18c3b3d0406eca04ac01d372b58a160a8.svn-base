@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.php.ExamstatisticsMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.php.Examstatistics">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="examid" jdbcType="INTEGER" property="examid" />
+    <result column="schoolid" jdbcType="INTEGER" property="schoolid" />
+    <result column="gradeid" jdbcType="INTEGER" property="gradeid" />
+    <result column="classid" jdbcType="INTEGER" property="classid" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="students" jdbcType="INTEGER" property="students" />
+    <result column="totalscore" jdbcType="REAL" property="totalscore" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="book" jdbcType="INTEGER" property="book" />
+    <result column="deletetime" jdbcType="INTEGER" property="deletetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, examid, schoolid, gradeid, classid, number, subject, students, totalscore, status, 
+    deletetime
+  </sql>
+  
+  <!-- 根据学校id,年级id,班级id和科目id获取提交学生的数量和学生成绩信息 -->
+  <select id="selectInfo" parameterType="map" resultMap="BaseResultMap">
+	SELECT
+	sc.*,ex.examstatus book
+	FROM x2_examstatistics sc
+	left join x2_exams ex on sc.examid = ex.examid
+	<where>
+		<if test="schoolId!=null">
+			and schoolid = #{schoolId,jdbcType=INTEGER}
+		</if>
+		<if test="gradeId!=null">
+			and gradeid = #{gradeId,jdbcType=INTEGER}
+		</if>
+		<if test="classId!=null">
+			and classid = #{classId,jdbcType=INTEGER}
+		</if>
+		<if test="subject!=null">
+			and SUBJECT = #{subject,jdbcType=INTEGER}
+		</if>
+	</where>
+	group by number
+	Order by number
+  </select>
+  
+  <select id="selectInfoz" parameterType="map" resultMap="BaseResultMap">
+	SELECT sum(sc.students) students, sum(sc.totalscore) totalscore,id, 
+	sc.examid, schoolid, gradeid, classid, number, subject, status, deletetime,
+	ex.examstatus book
+	FROM x2_examstatistics sc
+	left join x2_exams ex on sc.examid = ex.examid
+	<where>
+		<if test="schoolId!=null">
+			and schoolid = #{schoolId,jdbcType=INTEGER}
+		</if>
+		<if test="gradeId!=null">
+			and gradeid = #{gradeId,jdbcType=INTEGER}
+		</if>
+		<if test="classId!=null">
+			and classid = #{classId,jdbcType=INTEGER}
+		</if>
+		<if test="subject!=null">
+			and SUBJECT = #{subject,jdbcType=INTEGER}
+		</if>
+	</where>
+	group by number
+	order by number
+  </select>
+  
+  <!-- 获取班级的排名 -->
+  <select id="getClassRank" parameterType="map" resultMap="BaseResultMap">
+  	SELECT sum(sc.students) students, sum(sc.totalscore) totalscore,id, 
+	sc.examid, schoolid, gradeid, classid, number, subject, status, deletetime,
+	ex.examstatus book
+	FROM x2_examstatistics sc
+	left join x2_exams ex on sc.examid = ex.examid
+	<where>
+		<if test="schoolId!=null">
+			and schoolid = #{schoolId,jdbcType=INTEGER}
+		</if>
+		<if test="gradeId!=null">
+			and gradeid = #{gradeId,jdbcType=INTEGER}
+		</if>
+		<if test="classId!=null">
+			and classid = #{classId,jdbcType=INTEGER}
+		</if>
+		<if test="subject!=null">
+			and SUBJECT = #{subject,jdbcType=INTEGER}
+		</if>
+	</where>
+	order by number
+  	group by classid
+  </select>
+  
+  
+  
+</mapper>

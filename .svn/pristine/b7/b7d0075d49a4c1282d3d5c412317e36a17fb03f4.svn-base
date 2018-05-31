@@ -1,0 +1,125 @@
+package com.zhiliao.model.school;
+
+public class UcSubject {
+    private String subjectCode;
+
+    private String subjectName;
+
+    private String subjectNum;
+
+    private String modifyable;
+
+    private String isBaseSubject;
+
+    private String simpleCode;
+
+    private String icon;
+
+    private String icon1;
+
+    private String isOpen;
+    
+    
+    //扩展字段
+    private Integer peopleSum;//订购人数
+    private Integer moneySum;//订购总额
+    private String teacherName;//教师姓名
+    
+    
+
+    public String getTeacherName() {
+		return teacherName;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
+	}
+
+	public Integer getPeopleSum() {
+		return peopleSum;
+	}
+
+	public void setPeopleSum(Integer peopleSum) {
+		this.peopleSum = peopleSum;
+	}
+
+	public Integer getMoneySum() {
+		return moneySum;
+	}
+
+	public void setMoneySum(Integer moneySum) {
+		this.moneySum = moneySum;
+	}
+
+	public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode == null ? null : subjectCode.trim();
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName == null ? null : subjectName.trim();
+    }
+
+    public String getSubjectNum() {
+        return subjectNum;
+    }
+
+    public void setSubjectNum(String subjectNum) {
+        this.subjectNum = subjectNum == null ? null : subjectNum.trim();
+    }
+
+    public String getModifyable() {
+        return modifyable;
+    }
+
+    public void setModifyable(String modifyable) {
+        this.modifyable = modifyable == null ? null : modifyable.trim();
+    }
+
+    public String getIsBaseSubject() {
+        return isBaseSubject;
+    }
+
+    public void setIsBaseSubject(String isBaseSubject) {
+        this.isBaseSubject = isBaseSubject == null ? null : isBaseSubject.trim();
+    }
+
+    public String getSimpleCode() {
+        return simpleCode;
+    }
+
+    public void setSimpleCode(String simpleCode) {
+        this.simpleCode = simpleCode == null ? null : simpleCode.trim();
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon == null ? null : icon.trim();
+    }
+
+    public String getIcon1() {
+        return icon1;
+    }
+
+    public void setIcon1(String icon1) {
+        this.icon1 = icon1 == null ? null : icon1.trim();
+    }
+
+    public String getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen == null ? null : isOpen.trim();
+    }
+}

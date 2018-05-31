@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.order.TradeMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.order.Trade">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account_id" jdbcType="INTEGER" property="accountId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="trade_type" jdbcType="CHAR" property="tradeType" />
+    <result column="amount" jdbcType="REAL" property="amount" />
+    <result column="obj_type" jdbcType="CHAR" property="objType" />
+    <result column="obj_id" jdbcType="INTEGER" property="objId" />
+     <result column="phone_type" jdbcType="VARCHAR" property="phoneType" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, account_id, user_id, user_name, trade_type, amount, obj_type, obj_id, phone_type, add_time, status
+  </sql>
+  <!-- 分页获取交易记录信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap"> 
+  	select 
+    <include refid="Base_Column_List" />
+    from tb_trade
+    <where>
+    	<if test="userId!=null">
+    		and user_id = #{userId,jdbcType=INTEGER}
+    	</if>
+    	<if test="tradeType!=null">
+    		and trade_type = #{tradeType,jdbcType=VARCHAR}
+    	</if>
+    </where>
+    order by add_time DESC
+  </select>
+  
+  <!-- 分页获取交易记录的数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(id)
+    from tb_trade
+    <where>
+    	<if test="userId!=null">
+    		and user_id = #{userId,jdbcType=INTEGER}
+    	</if>
+    	<if test="tradeType!=null">
+    		and trade_type = #{tradeType,jdbcType=VARCHAR}
+    	</if>
+    </where>
+    order by add_time DESC
+  </select>
+  
+  <!-- 根据id获取交易记录 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_trade
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 增加用的交易记录 -->
+  <insert id="insert" parameterType="com.zhiliao.model.order.Trade">
+    insert into tb_trade (id, account_id, user_id, user_name, 
+      trade_type, amount, obj_type, 
+      obj_id, phone_type, add_time,
+      status
+      )
+    values (#{id,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{tradeType,jdbcType=CHAR}, #{amount,jdbcType=REAL}, #{objType,jdbcType=CHAR}, 
+      #{objId,jdbcType=INTEGER}, #{phoneType,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=CHAR}
+      )
+  </insert>
+  
+</mapper>

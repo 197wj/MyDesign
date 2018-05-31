@@ -1,0 +1,163 @@
+package com.zhiliao.model.php;
+
+public class Exams {
+    private Integer examid;
+
+    private String examsubject;
+
+    private String exam;
+
+    private Integer examstatus;
+
+    private Integer examtype;
+
+    private Integer examauthorid;
+
+    private String examauthor;
+
+    private Integer examtime;
+
+    private String examkeyword;
+
+    private Integer examdecide;
+
+    private Integer way;
+
+    private String courseFiles;
+
+    private String tingli;
+
+    private String examsetting;
+
+    private String examquestions;
+
+    private String examscore;
+
+    public Integer getExamid() {
+        return examid;
+    }
+
+    public void setExamid(Integer examid) {
+        this.examid = examid;
+    }
+
+    public String getExamsubject() {
+        return examsubject;
+    }
+
+    public void setExamsubject(String examsubject) {
+        this.examsubject = examsubject == null ? null : examsubject.trim();
+    }
+
+    public String getExam() {
+        return exam;
+    }
+
+    public void setExam(String exam) {
+        this.exam = exam == null ? null : exam.trim();
+    }
+
+    public Integer getExamstatus() {
+        return examstatus;
+    }
+
+    public void setExamstatus(Integer examstatus) {
+        this.examstatus = examstatus;
+    }
+
+    public Integer getExamtype() {
+        return examtype;
+    }
+
+    public void setExamtype(Integer examtype) {
+        this.examtype = examtype;
+    }
+
+    public Integer getExamauthorid() {
+        return examauthorid;
+    }
+
+    public void setExamauthorid(Integer examauthorid) {
+        this.examauthorid = examauthorid;
+    }
+
+    public String getExamauthor() {
+        return examauthor;
+    }
+
+    public void setExamauthor(String examauthor) {
+        this.examauthor = examauthor == null ? null : examauthor.trim();
+    }
+
+    public Integer getExamtime() {
+        return examtime;
+    }
+
+    public void setExamtime(Integer examtime) {
+        this.examtime = examtime;
+    }
+
+    public String getExamkeyword() {
+        return examkeyword;
+    }
+
+    public void setExamkeyword(String examkeyword) {
+        this.examkeyword = examkeyword == null ? null : examkeyword.trim();
+    }
+
+    public Integer getExamdecide() {
+        return examdecide;
+    }
+
+    public void setExamdecide(Integer examdecide) {
+        this.examdecide = examdecide;
+    }
+
+    public Integer getWay() {
+        return way;
+    }
+
+    public void setWay(Integer way) {
+        this.way = way;
+    }
+
+    public String getCourseFiles() {
+        return courseFiles;
+    }
+
+    public void setCourseFiles(String courseFiles) {
+        this.courseFiles = courseFiles == null ? null : courseFiles.trim();
+    }
+
+    public String getTingli() {
+        return tingli;
+    }
+
+    public void setTingli(String tingli) {
+        this.tingli = tingli == null ? null : tingli.trim();
+    }
+
+    public String getExamsetting() {
+        return examsetting;
+    }
+
+    public void setExamsetting(String examsetting) {
+        this.examsetting = examsetting == null ? null : examsetting.trim();
+    }
+
+    public String getExamquestions() {
+        return examquestions;
+    }
+
+    public void setExamquestions(String examquestions) {
+        this.examquestions = examquestions == null ? null : examquestions.trim();
+    }
+
+    public String getExamscore() {
+        return examscore;
+    }
+
+    public void setExamscore(String examscore) {
+        this.examscore = examscore == null ? null : examscore.trim();
+    }
+}

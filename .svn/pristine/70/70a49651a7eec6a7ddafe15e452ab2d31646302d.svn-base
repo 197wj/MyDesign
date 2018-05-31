@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.param.SysParamMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.param.SysParam">
+    <id column="param_id" jdbcType="INTEGER" property="paramId" />
+    <result column="param_name" jdbcType="VARCHAR" property="paramName" />
+    <result column="param_type" jdbcType="VARCHAR" property="paramType" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="is_delete" jdbcType="VARCHAR" property="isDelete" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    param_id, param_name, param_type, sort, remark, add_time, is_delete
+  </sql>
+  
+  <!-- 分页 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from sys_param
+  	<where>
+  		is_delete = '0' and
+  		param_type = #{paramType,jdbcType=VARCHAR}
+  		<if test="paramName!=null">
+  			and param_name like concat('%',#{paramName,jdbcType=VARCHAR},'%')
+  		</if>
+  	</where>
+  	order by sort
+  </select>
+  <!-- 获取数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(param_id)
+  	from sys_param
+  	<where>
+  		is_delete = '0' and
+  		param_type = #{paramType,jdbcType=VARCHAR}
+  		<if test="paramName!=null">
+  			and param_name like concat('%',#{paramName,jdbcType=VARCHAR},'%')
+  		</if>
+  	</where>
+  	order by sort
+  </select>
+  
+  
+  <!-- 根据id获取字典的信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_param
+    where param_id = #{paramId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据id删除字典信息 -->
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from sys_param
+    where param_id = #{paramId,jdbcType=INTEGER}
+  </delete>
+  <!-- 增加字典信息 -->
+  <insert id="insert" parameterType="com.zhiliao.model.param.SysParam">
+    insert into sys_param (param_id, param_name, param_type, 
+      sort, remark, add_time, is_delete
+      )
+    values (#{paramId,jdbcType=INTEGER}, #{paramName,jdbcType=VARCHAR}, #{paramType,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP},
+      #{isDelete,jdbcType=VARCHAR})
+  </insert>
+  <!-- 根据id修改字典信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.param.SysParam">
+    update sys_param
+    <set>
+      <if test="paramName != null">
+        param_name = #{paramName,jdbcType=VARCHAR},
+      </if>
+      <if test="paramType != null">
+        param_type = #{paramType,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where param_id = #{paramId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 批量或者单条删除 -->
+  <update id="deleteParamList" parameterType="java.util.List">
+    update sys_param 
+    set  is_delete = '1' 
+    where param_id in
+    <foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+        #{idList}
+    </foreach>
+
+ </update>
+  
+  
+</mapper>

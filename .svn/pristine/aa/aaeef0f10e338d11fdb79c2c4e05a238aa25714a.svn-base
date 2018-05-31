@@ -1,0 +1,385 @@
+package com.zhiliao.controller.php;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.model.php.TeaCount;
+import com.zhiliao.model.school.Class;
+import com.zhiliao.model.school.Grade;
+import com.zhiliao.model.school.School;
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.php.TeaCountService;
+import com.zhiliao.service.school.ClassService;
+import com.zhiliao.service.school.SchoolService;
+import com.zhiliao.service.user.SysUserService;
+import com.zhiliao.util.ListSortUtil;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+@Controller
+@RequestMapping("teaCount")
+public class TeaCountController {
+
+	@Autowired
+	private TeaCountService countService;
+	
+	@Autowired
+	private SysUserService userService;
+	
+	@Autowired
+	private ClassService classService;
+	
+	@Autowired
+	private SchoolService schoolService;
+	
+	/**
+	 * 跳转到教师统计页面
+	 * @return
+	 */
+	@RequestMapping("/teacherCount.action")
+	public String teaCountView(HttpServletRequest request,
+							   @RequestParam(value="gradeId",required=false)Integer gradeId,
+							   @RequestParam(value="classId",required=false)Integer classId){
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		Class sysClass = this.classService.selectById(classId);
+		Integer schoolId = sysClass.getSchoolId();
+		School school = this.schoolService.selectById(schoolId);
+		String gradeName = "";
+		if (null == gradeId) {
+			Grade grade = this.countService.selectById(sysClass.getSchoolGradeId());
+			gradeId = Integer.parseInt(grade.getGradeCode());
+			gradeName = grade.getGradeName();
+		}else {
+			if(gradeId==14){
+				gradeName = "四年级";
+			}else if(gradeId==15){
+				gradeName = "五年级";
+			}
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		request.getSession().setAttribute("schoolId", schoolId);
+		request.getSession().setAttribute("gradeId", gradeId);
+		request.getSession().setAttribute("classId", classId);
+		
+		
+		
+		
+		request.getSession().setAttribute("schoolName", school.getSchoolName());
+		request.getSession().setAttribute("gradeName", gradeName);
+		request.getSession().setAttribute("className", sysClass.getClassName());
+		
+		return "count/teacherCount";
+	}
+	
+	
+	/**
+	 * 获取教师登录的统计信息
+	 * @param schoolId
+	 * @param gradeId
+	 * @param classId
+	 * @return
+	 */
+	@RequestMapping("/getCountInfo.action")
+	@ResponseBody
+	public Map<String, Object> getCountInfo(@RequestParam(value="schoolId",required = false)Integer schoolId,
+											@RequestParam(value="gradeId",required = false)Integer gradeId,
+											@RequestParam(value="classId",required = true)Integer classId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		Class sysClass = this.classService.selectById(classId);
+		if (null==schoolId) {
+			schoolId = sysClass.getSchoolId();
+		}
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		map.clear();
+		map.put("classId", classId);
+		map.put("subject", 12);
+		List<TeaCount> engList = this.countService.getCountInfo(map);//获取英语统计数量
+		List<List<TeaCount>> engRank = new ArrayList<List<TeaCount>>();
+		List<List<TeaCount>> engRankZ = new ArrayList<List<TeaCount>>();
+		for(TeaCount count:engList){//市级排名
+			map.clear();
+			map.put("examId", count.getExamId());
+			List<TeaCount> cityRank = this.countService.getCityRank(map);
+			engRank.add(cityRank);//市
+			map.clear();
+			map.put("schoolId", schoolId);
+			map.put("examId", count.getExamId());
+			List<TeaCount> cityRankZ = this.countService.getCityRank(map);
+			engRankZ.add(cityRankZ);//学校
+		}
+		
+		
+		
+		map.clear();
+		map.put("classId", classId);
+		map.put("subject", 11);
+		List<TeaCount> mathList = this.countService.getCountInfo(map);//获取数学统计数量
+		List<List<TeaCount>> mathRank = new ArrayList<List<TeaCount>>();
+		List<List<TeaCount>> mathRankZ = new ArrayList<List<TeaCount>>();
+		for(TeaCount count:mathList){//市级排名
+			map.clear();
+			map.put("examId", count.getExamId());
+			List<TeaCount> cityRank = this.countService.getCityRank(map);
+			mathRank.add(cityRank);//市
+			map.clear();
+			map.put("schoolId", schoolId);
+			map.put("examId", count.getExamId());
+			List<TeaCount> cityRankZ = this.countService.getCityRank(map);
+			mathRankZ.add(cityRankZ);//学校
+		}
+		
+		//排序(英语)
+		for (int i = 0; i < engRank.size(); i++) {//市
+			sort(engRank.get(i));
+		}
+		for (int i = 0; i < engRankZ.size(); i++) {//学校
+			sort(engRankZ.get(i));
+		}
+		//数学
+		for (int i = 0; i < mathRank.size(); i++) {//市
+			sort(mathRank.get(i));
+		}
+		for (int i = 0; i < mathRankZ.size(); i++) {//学校
+			sort(mathRankZ.get(i));
+		}
+		//将排序后的排名放到周测中(英语)
+		for(int i = 0; i < engRank.size(); i++){
+			for (TeaCount teaCount:engRank.get(i)) {
+				for (TeaCount count:engList) {
+					if(teaCount.getWeek()==count.getWeek() && teaCount.getClassId()==count.getClassId()){
+						count.setCityRank(teaCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		//将排序后的排名放到周测中(英语)
+		for(int i = 0; i < engRankZ.size(); i++){
+			for (TeaCount teaCount:engRankZ.get(i)) {
+				for (TeaCount count:engList) {
+					if(teaCount.getWeek()==count.getWeek() && teaCount.getClassId()==count.getClassId()){
+						count.setSchRank(teaCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		
+		
+		//将排序后的排名放到周测中(数学)
+		for(int i = 0; i < mathRank.size(); i++){
+			for (TeaCount teaCount:mathRank.get(i)) {
+				for (TeaCount count:mathList) {
+					if(teaCount.getWeek()==count.getWeek() && teaCount.getClassId()==count.getClassId()){
+						count.setCityRank(teaCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		//将排序后的排名放到周测中(数学)
+		for(int i = 0; i < mathRankZ.size(); i++){
+			for (TeaCount teaCount:mathRankZ.get(i)) {
+				for (TeaCount count:mathList) {
+					if(teaCount.getWeek()==count.getWeek() && teaCount.getClassId()==count.getClassId()){
+						count.setSchRank(teaCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		//综合
+		List<TeaCount> list = new ArrayList<TeaCount>();
+		for(TeaCount teaCount:engList){
+			for(TeaCount count:mathList){
+				if(teaCount.getWeek()==count.getWeek()){
+					TeaCount tea = new TeaCount();
+					tea.setExamId(teaCount.getExamId());//英语的id
+					tea.setClassId(count.getClassId());
+					tea.setReferCount(teaCount.getReferCount()+count.getReferCount());//提交数
+					tea.setGrantCount(teaCount.getGrantCount()+count.getGrantCount());//发放数
+					tea.setTotalScore(teaCount.getTotalScore()+count.getTotalScore());
+					tea.setWeek(count.getWeek());
+					list.add(tea);
+					continue;
+				}
+			}
+		}
+		
+		List<List<TeaCount>> zhList = new ArrayList<List<TeaCount>>();
+		List<List<TeaCount>> zhListZ = new ArrayList<List<TeaCount>>();
+		for(TeaCount count:list){//市级排名
+			map.clear();
+			map.put("week", count.getWeek());
+			List<TeaCount> city = this.countService.getCityRankZ(map);//市
+			zhList.add(city);
+			
+			map.clear();
+			map.put("schoolId", schoolId);
+			map.put("week", count.getWeek());
+			List<TeaCount> cityZ = this.countService.getCityRankZ(map);//学校
+			zhListZ.add(cityZ);//学校
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		//排序(综合)
+		for (int i = 0; i < zhList.size(); i++) {//市
+			sort(zhList.get(i));
+		}
+		for (int i = 0; i < zhListZ.size(); i++) {//学校
+			sort(zhListZ.get(i));
+		}
+		//将排序后的排名放到周测中(综合)
+		for(int i = 0; i < zhList.size(); i++){
+			for (TeaCount teaCount:zhList.get(i)) {
+				for (TeaCount count:list) {
+					if(teaCount.getWeek()==count.getWeek() && teaCount.getClassId()==count.getClassId()){
+						count.setSchRank(teaCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		//将排序后的排名放到周测中(综合)
+		for(int i = 0; i < zhListZ.size(); i++){
+			for (TeaCount teaCount:zhListZ.get(i)) {
+				for (TeaCount count:list) {
+					if(teaCount.getWeek()==count.getWeek() && teaCount.getClassId()==count.getClassId()){
+						count.setCityRank(teaCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		
+		
+		//获取教师信息
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		map.clear();
+		map.put("classId", classId);
+		map.put("subjectCode", 11);
+		List<SysUser> mathTea = this.userService.selectTeacherList(map);//数学老师
+		map.clear();
+		map.put("classId", classId);
+		map.put("subjectCode", 12);
+		List<SysUser> engTea = this.userService.selectTeacherList(map);//英语老师
+		//获取班主任
+		map.clear();
+		map.put("classId", classId);
+		SysUser teaAdmin = this.userService.getClassAdmin(map);//获取班主任信息
+		int count = this.userService.getStudentCount(map);//获取班级学生数量
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		resultMap.put("status", true);
+		resultMap.put("data", list);//综合
+		resultMap.put("eng", engList);//英语
+		resultMap.put("engTea", engTea);//英语教师
+		resultMap.put("math", mathList);//数学
+		resultMap.put("mathTea", mathTea);//数学教师
+		resultMap.put("classAdmin", teaAdmin);//班主任
+		resultMap.put("count", count);//班级学生数量
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 城市进行排序
+	 * @param list
+	 */
+	public void sort(List<TeaCount> list){
+		//获取平均分
+		for (TeaCount count:list) {
+			if(count.getReferCount()!=0){
+				count.setCityAvg((float)count.getTotalScore()/count.getReferCount());
+			}else {
+				count.setCityAvg((float)0);
+			}
+		}
+		//排序
+		ListSortUtil<TeaCount> sortUtil = new ListSortUtil<TeaCount>();
+		
+		sortUtil.sort(list, "cityAvg", "desc");
+		
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setCityRank(i+1);
+		}
+	}
+	
+	
+	/**
+	 * 获取平均分,生成折线图
+	 * @param classId
+	 * @return
+	 */
+	@RequestMapping("/getAvgInfo.action")
+	@ResponseBody
+	public Map<String, Object> getAvgInfo(@RequestParam(value="classId",required=true)Integer classId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		//获取数学信息
+		map.clear();
+		map.put("classId", classId);
+		map.put("subject", 11);
+		List<TeaCount> mathList = this.countService.getAvgInfo(map);//获取数学
+		for(TeaCount count :mathList){//计算平均分
+			if(count.getReferCount()!=0){
+				count.setCityAvg((float)count.getTotalScore()/count.getReferCount());
+			}else {
+				count.setCityAvg((float)0);
+			}
+		}
+		//获取英语信息
+		map.clear();
+		map.put("classId", classId);
+		map.put("subject", 12);
+		List<TeaCount> engList = this.countService.getAvgInfo(map);//获取英语
+		for(TeaCount count :engList){//计算平均分
+			if(count.getReferCount()!=0){
+				count.setCityAvg((float)count.getTotalScore()/count.getReferCount());
+			}else {
+				count.setCityAvg((float)0);
+			}
+		}
+		//获取综合信息
+		map.clear();
+		map.put("classId", classId);
+		List<TeaCount> list = this.countService.getAvgInfo(map);//获取综合
+		for(TeaCount count :list){//计算平均分
+			if(count.getReferCount()!=0){
+				count.setCityAvg((float)count.getTotalScore()/count.getReferCount());
+			}else {
+				count.setCityAvg((float)0);
+			}
+		}
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		
+		resultMap.put("status", true);
+		resultMap.put("data", list);
+		resultMap.put("eng", engList);
+		resultMap.put("math", mathList);
+		return resultMap;
+	}
+	
+	
+	
+	
+}

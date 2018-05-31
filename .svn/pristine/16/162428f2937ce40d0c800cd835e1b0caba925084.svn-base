@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.school.SchoolGradeMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.school.SchoolGrade">
+    <id column="gradeId" jdbcType="VARCHAR" property="gradeId" />
+    <result column="SchoolId" jdbcType="INTEGER" property="schoolId" />
+    <result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+    <result column="isOpen" jdbcType="CHAR" property="isOpen" />
+  </resultMap>
+  
+  <!-- 根据学校id获取年级信息 -->
+  <select id="getGradeBySchoolId" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT sg.grade_code gradeId,ug.grade_name gradeName,
+  	sg.school_id schoolId,ug.is_open isOpen
+	FROM sys_grade sg
+	LEFT JOIN uc_grade ug ON sg.grade_code = ug.grade_code
+	<where>
+		<if test="schoolId!=null">
+			and sg.school_id = #{schoolId}
+		</if>
+		<if test="isOpen!=null">
+			and ug.is_open = #{isOpen}
+		</if>
+	</where>
+  </select>
+  
+  <!-- 根据学校id和学校年级id获取年级信息 -->
+  <select id="getGrade" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT sg.grade_code gradeId,ug.grade_name gradeName,
+  	sg.school_id schoolId,ug.is_open isOpen
+	FROM sys_grade sg
+	LEFT JOIN uc_grade ug ON sg.grade_code = ug.grade_code
+	<where>
+		<if test="schoolId!=null">
+			and sg.school_id = #{schoolId}
+		</if>
+		<if test="schoolGrade!=null">
+			and sg.school_grade_id = #{schoolGrade}
+		</if>
+	</where>
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,16 @@
+package com.zhiliao.service.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.UcGrade;
+import com.zhiliao.service.BaseService;
+
+public interface UcGradeService extends BaseService<UcGrade, Map<String, Object>> {
+	
+	public UcGrade selectById(String gradeCode);
+
+    public int updateById(UcGrade record);
+
+    public List<UcGrade> selectList(Map<String, Object>map);
+}

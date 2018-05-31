@@ -1,0 +1,173 @@
+package com.zhiliao.model.user;
+
+public class Area {
+    private String areaId;
+
+    private String areaCode;
+
+    private String fid;
+
+    private String areaname;
+
+    private String fullname;
+
+    private String levelFlg;
+
+    private String flag;
+
+    private String isNode;
+
+    private String orgname;
+
+    private String sarAreaCode;
+
+    private String c1;
+
+    private String c2;
+
+    private String c3;
+
+    private String c4;
+
+    private String c5;
+
+    private String c6;
+
+    private String shortOrgName;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId == null ? null : areaId.trim();
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode == null ? null : areaCode.trim();
+    }
+
+    public String getFid() {
+        return fid;
+    }
+
+    public void setFid(String fid) {
+        this.fid = fid == null ? null : fid.trim();
+    }
+
+    public String getAreaname() {
+        return areaname;
+    }
+
+    public void setAreaname(String areaname) {
+        this.areaname = areaname == null ? null : areaname.trim();
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname == null ? null : fullname.trim();
+    }
+
+    public String getLevelFlg() {
+        return levelFlg;
+    }
+
+    public void setLevelFlg(String levelFlg) {
+        this.levelFlg = levelFlg == null ? null : levelFlg.trim();
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag == null ? null : flag.trim();
+    }
+
+    public String getIsNode() {
+        return isNode;
+    }
+
+    public void setIsNode(String isNode) {
+        this.isNode = isNode == null ? null : isNode.trim();
+    }
+
+    public String getOrgname() {
+        return orgname;
+    }
+
+    public void setOrgname(String orgname) {
+        this.orgname = orgname == null ? null : orgname.trim();
+    }
+
+    public String getSarAreaCode() {
+        return sarAreaCode;
+    }
+
+    public void setSarAreaCode(String sarAreaCode) {
+        this.sarAreaCode = sarAreaCode == null ? null : sarAreaCode.trim();
+    }
+
+    public String getC1() {
+        return c1;
+    }
+
+    public void setC1(String c1) {
+        this.c1 = c1 == null ? null : c1.trim();
+    }
+
+    public String getC2() {
+        return c2;
+    }
+
+    public void setC2(String c2) {
+        this.c2 = c2 == null ? null : c2.trim();
+    }
+
+    public String getC3() {
+        return c3;
+    }
+
+    public void setC3(String c3) {
+        this.c3 = c3 == null ? null : c3.trim();
+    }
+
+    public String getC4() {
+        return c4;
+    }
+
+    public void setC4(String c4) {
+        this.c4 = c4 == null ? null : c4.trim();
+    }
+
+    public String getC5() {
+        return c5;
+    }
+
+    public void setC5(String c5) {
+        this.c5 = c5 == null ? null : c5.trim();
+    }
+
+    public String getC6() {
+        return c6;
+    }
+
+    public void setC6(String c6) {
+        this.c6 = c6 == null ? null : c6.trim();
+    }
+
+    public String getShortOrgName() {
+        return shortOrgName;
+    }
+
+    public void setShortOrgName(String shortOrgName) {
+        this.shortOrgName = shortOrgName == null ? null : shortOrgName.trim();
+    }
+}

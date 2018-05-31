@@ -1,0 +1,23 @@
+package com.zhiliao.service.user;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.user.UserType;
+import com.zhiliao.service.BaseService;
+
+public interface UserTypeService extends BaseService<UserType, Map<String, Object>> {
+
+	public int deleteById(Integer typeId);
+
+	public int insert(UserType record);
+
+    public UserType selectById(Integer typeId);
+
+    public int updateById(UserType record);
+
+    public int deleteTypeList(List<Integer> list);
+    
+    public List<UserType> selectList(Map<String, Object> map);
+	
+}

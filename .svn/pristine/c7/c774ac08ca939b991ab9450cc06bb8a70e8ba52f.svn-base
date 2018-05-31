@@ -1,0 +1,47 @@
+package com.zhiliao.service.count;
+
+import java.util.Map;
+
+/**
+ * 首页统计的service层
+ * @ClassName: WelCountService 
+ * @author 毕伟谦 
+ * @date 2018年2月11日 下午1:36:05 
+ *
+ */
+public interface WelCountService {
+
+	/**
+	 * 获取班级数量
+	 * @Title: selectClaCount 
+	 * @param @param map
+	 * @return int
+	 */
+	public int selectClaCount(Map<String, Object> map);
+	
+	/**
+	 * 获取学校的数量
+	 * @Title: selectSchCount 
+	 * @param @param map
+	 * @return int
+	 */
+	public int selectSchCount(Map<String, Object> map);
+	
+	/**
+	 * 获取教师的数量
+	 * @Title: getTelCount 
+	 * @param @param map
+	 * @return int
+	 */
+	public int getTelCount(Map<String, Object> map);
+	
+	/**
+	 * 获取学生数量
+	 * @Title: getStuCount 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param @param map
+	 * @param @return 
+	 * @return int
+	 */
+	public int getStuCount(Map<String, Object> map);
+}

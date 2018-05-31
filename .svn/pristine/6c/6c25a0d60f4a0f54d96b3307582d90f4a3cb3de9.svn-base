@@ -1,0 +1,37 @@
+package com.zhiliao.dao.user;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.Class;
+import com.zhiliao.model.user.SysUser;
+
+public interface SysUserMapper {
+
+    public SysUser selectById(Long userId);
+
+    public int updateById(SysUser record);
+    
+    public List<SysUser> selectList(Map<String, Object>map);
+    
+    public List<SysUser> selectTeacherList(Map<String, Object>map);//获取教师信息
+    
+    public SysUser login(Map<String, Object> map);
+    
+    public List<SysUser> selectByIds(List<Integer>list);
+    
+    public int updateByIds(Map<String, Object>map);
+    
+    public SysUser getClassAdmin (Map<String, Object>map);//获取班主任信息
+    
+    public int getStudentCount(Map<String, Object>map);//获取班级学生的数量
+    
+    /**
+     * 根据任课教师id获取班级信息
+     * @Title: getClassByTeaId 
+     * @param @param map
+     * @return List<Class>
+     */
+    public List<Class> getClassByTeaId(Map<String, Object> map);
+
+}

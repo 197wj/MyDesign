@@ -1,0 +1,30 @@
+package com.zhiliao.service.php.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.php.ExamhistoryMapper;
+import com.zhiliao.model.php.Examhistory;
+import com.zhiliao.service.php.PhpHistService;
+@Service
+public class PhpHistServiceImpl implements PhpHistService {
+	
+	@Autowired
+	private ExamhistoryMapper examhistoryMapper;
+	
+	@Override
+	public int insert(Examhistory record) {
+		
+		return this.examhistoryMapper.insert(record);
+	}
+	
+	@Override
+	public List<Examhistory> selectByUserId(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.examhistoryMapper.selectByUserId(map);
+	}
+	
+}

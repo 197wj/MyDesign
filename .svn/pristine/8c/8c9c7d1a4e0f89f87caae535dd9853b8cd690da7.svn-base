@@ -1,0 +1,31 @@
+package com.zhiliao.dao.order;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.order.Trade;
+
+public interface TradeMapper {
+	
+	/**
+	 * 根据用户id获取用户的交易记录
+	 * @param map
+	 * @return
+	 */
+	public List<Trade> selectList(Map<String, Object> map);
+
+	/**
+	 * 增加用户的交易记录
+	 * @param record
+	 * @return
+	 */
+    public int insert(Trade record);
+
+    /**
+     * 根据id查询交易记录
+     * @param id
+     * @return
+     */
+    public Trade selectById(Integer id);
+
+}

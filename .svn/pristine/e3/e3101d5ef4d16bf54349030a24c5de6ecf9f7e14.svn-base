@@ -1,0 +1,42 @@
+package com.zhiliao.service.count.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.count.CountMapper;
+import com.zhiliao.model.count.SchoolCount;
+import com.zhiliao.service.count.CountService;
+
+@Service
+public class CountServiceImpl implements CountService {
+
+	@Autowired
+	private CountMapper countMapper;
+	
+	@Override
+	public int selectClassCount(Map<String, Object> map) {
+		int rows = this.countMapper.selectClassCount(map);
+		return rows;
+	}
+	
+	@Override
+	public List<Map<String, Object>> selectSubjectCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.countMapper.selectSubjectCount(map);
+	}
+	
+	@Override
+	public List<SchoolCount> getEnglishCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.countMapper.getEnglishCount(map);
+	}
+	
+	@Override
+	public List<SchoolCount> getMathCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.countMapper.getMathCount(map);
+	}
+}

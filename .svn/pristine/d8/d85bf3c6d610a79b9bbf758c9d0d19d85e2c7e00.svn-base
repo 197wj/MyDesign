@@ -1,0 +1,49 @@
+package com.zhiliao.service.school.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.school.SchoolMapper;
+import com.zhiliao.model.school.School;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.school.SchoolService;
+@Service 
+public class SchoolServiceImpl extends BaseServiceImpl<School, Map<String, Object>> implements SchoolService {
+
+	@Autowired
+	private  SchoolMapper schoolMapper;
+	
+	@Override
+	public School selectById(Integer schoolId) {
+		// TODO Auto-generated method stub
+		School school = this.schoolMapper.selectById(schoolId);
+		return school;
+	}
+
+	@Override
+	public int updateById(School record) {
+		// TODO Auto-generated method stub
+		int rows = this.schoolMapper.updateById(record);
+		return rows;
+	}
+
+	@Override
+	public List<School> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<School> list = this.schoolMapper.selectList(map);
+		return list;
+	}
+
+	@Override
+	public List<School> getListByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.schoolMapper.getListByMap( map);
+	}
+
+	
+}
+
+

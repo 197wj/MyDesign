@@ -1,0 +1,25 @@
+package com.zhiliao.service.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.SchoolGrade;
+
+public interface SchoolGradeService {
+
+	/**
+	 * 根据学校id获取年级信息
+	 * @Title: getGradeBySchoolId 
+	 * @param @param map
+	 * @return List<SchoolGrade>
+	 */
+	public List<SchoolGrade> getGradeBySchoolId(Map<String , Object> map);
+	
+	/**
+	 * 获取年级信息
+	 * @Title: getGrade 
+	 * @param @param map
+	 * @return SchoolGrade
+	 */
+	public SchoolGrade getGrade(Map<String , Object> map);
+}

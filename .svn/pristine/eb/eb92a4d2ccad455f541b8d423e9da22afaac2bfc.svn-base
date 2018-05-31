@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.order.AccountMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.order.Account">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="account_type" jdbcType="CHAR" property="accountType" />
+    <result column="balance" jdbcType="REAL" property="balance" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="start_time" jdbcType="VARCHAR" property="startTime" />
+    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, user_name, account_type, balance, add_time, start_time, end_time, status
+  </sql>
+  
+  <!-- 根据用户id获取用户账户信息 -->
+  <select id="selectByUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from tb_account
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  
+  <!-- 根据id获取账户信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!--增加账户信息-->
+  <insert id="insert" parameterType="com.zhiliao.model.order.Account">
+    insert into tb_account (id, user_id, user_name, 
+      account_type, balance, add_time, 
+      start_time, end_time, status
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{accountType,jdbcType=CHAR}, #{balance,jdbcType=REAL}, #{addTime,jdbcType=TIMESTAMP}, 
+      #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}
+      )
+  </insert>
+  
+  <!-- 根据id修改用户账户信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.order.Account">
+    update tb_account
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null">
+        account_type = #{accountType,jdbcType=CHAR},
+      </if>
+      <if test="balance != null">
+        balance = #{balance,jdbcType=REAL},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

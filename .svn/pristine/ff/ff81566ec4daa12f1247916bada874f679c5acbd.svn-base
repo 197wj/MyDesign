@@ -1,0 +1,62 @@
+package com.zhiliao.service.param.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.param.SysParamMapper;
+import com.zhiliao.model.param.SysParam;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.param.SysParamService;
+
+@Service
+public class SysParamServiceImpl extends BaseServiceImpl<SysParam, Map<String, Object>> implements SysParamService {
+	
+	@Autowired
+	private SysParamMapper paramMapper;
+	
+	@Override
+	public int deleteById(Integer paramId) {
+		// TODO Auto-generated method stub
+		int rows = this.paramMapper.deleteById(paramId);
+		return rows;
+	}
+	
+	@Override
+	public int insert(SysParam record) {
+		// TODO Auto-generated method stub
+		int rows = this.paramMapper.insert(record);
+		return rows;
+	}
+	
+	@Override
+	public SysParam selectById(Integer paramId) {
+		// TODO Auto-generated method stub
+		SysParam sysParam = this.paramMapper.selectById(paramId);
+		return sysParam;
+	}
+	
+	@Override
+	public int updateById(SysParam record) {
+		// TODO Auto-generated method stub
+		int rows = this.paramMapper.updateById(record);
+		return rows;
+	}
+	
+	@Override
+	public int deleteParamList(List<Integer> list) {
+		// TODO Auto-generated method stub
+		int rows = this.paramMapper.deleteParamList(list);
+		return rows;
+	}
+	
+	@Override
+	public List<SysParam> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SysParam> list = this.paramMapper.selectList(map);
+		return list;
+	}
+	
+}

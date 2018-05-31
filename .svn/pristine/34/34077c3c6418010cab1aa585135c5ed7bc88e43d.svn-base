@@ -1,0 +1,9 @@
+package com.zhiliao.dao.school;
+
+import com.zhiliao.model.school.Grade;
+
+public interface GradeMapper {
+    
+    public Grade selectById(Integer schoolGradeId);
+    
+}

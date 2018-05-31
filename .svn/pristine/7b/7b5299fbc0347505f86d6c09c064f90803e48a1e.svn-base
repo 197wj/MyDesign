@@ -1,0 +1,16 @@
+package com.zhiliao.service.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.UcSubject;
+import com.zhiliao.service.BaseService;
+
+public interface UcSubjectService extends BaseService<UcSubject, Map<String , Object>> {
+
+	public UcSubject selectById(String subjectCode);
+
+    public int updateById(UcSubject record);
+
+    public List<UcSubject> selectList(Map<String, Object>map);
+}

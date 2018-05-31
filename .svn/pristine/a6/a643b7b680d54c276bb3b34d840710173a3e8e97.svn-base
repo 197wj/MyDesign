@@ -1,0 +1,85 @@
+package com.zhiliao.model.app;
+
+import java.util.Date;
+
+public class SysApp {
+    private Integer updId;
+
+    private String versionName;
+
+    private Integer versionCode;
+
+    private String description;
+
+    private String path;
+
+    private String md5;
+
+    private Date addTime;
+
+    private String status;
+
+    public Integer getUpdId() {
+        return updId;
+    }
+
+    public void setUpdId(Integer updId) {
+        this.updId = updId;
+    }
+
+    public String getVersionName() {
+        return versionName;
+    }
+
+    public void setVersionName(String versionName) {
+        this.versionName = versionName == null ? null : versionName.trim();
+    }
+
+    public Integer getVersionCode() {
+        return versionCode;
+    }
+
+    public void setVersionCode(Integer versionCode) {
+        this.versionCode = versionCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path == null ? null : path.trim();
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5 == null ? null : md5.trim();
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+}

@@ -1,0 +1,233 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>添加产品</title>
+<meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<style type="text/css">
+	.input-week{box-sizing: border-box;border: solid 1px #ddd;width: 45%;font-size: 14px;
+   				height: 31px;line-height: 1.42857;padding: 4px;}
+</style>
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">学期：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="termId" id="termId">
+						<option value="" selected>请选择年份和学期</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">年级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="gradeCode" id="gradeName">
+						<option value="" selected>请选择年级</option>
+						<option value="1">二年级</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">科目：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="subjectCode" id="subjectName">
+						<option value="" selected>请选择科目</option>
+						<option value="1">数学</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<input type="text" class="input-week" value="" placeholder="" id="week1" ><span>周 至</span>
+				<input type="text" class="input-week" value="" placeholder="" id="week2" ><span>周</span>
+				<input style="display: none" id=weekName name="weekName">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>价格：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="price" name="price">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">备注：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea name="remark" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" onKeyUp="$.Huitextarealength(this,100)"></textarea>
+				<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input type="text" id="isShelf" value="2" name="isShelf" style="display: none;"/>
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+$(function(){
+	//获取学期
+	getTerm();
+	//获取年级
+	getGrade()
+	//获取类型
+	getParam("weekName","week");
+	//获取科目
+	getSubject();
+});
+//获取年级
+function getGrade(){
+	$.ajax({
+		url:'../grade/getGradeList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#gradeName").empty();
+				$("#gradeName").append("<option value='' selected>请选择年级</option>")
+				for(var i=0;i<data.length;i++){
+					$("#gradeName").append("<option value='"+data[i].gradeCode+"'>"+data[i].gradeName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+//获取学科信息
+function getSubject(){
+	$.ajax({
+		url:'../subject/getSubjectList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#subjectName").empty();
+				$("#subjectName").append("<option value='' selected>请选择学科</option>")
+				for(var i=0;i<data.length;i++){
+					$("#subjectName").append("<option value='"+data[i].subjectCode+"'>"+data[i].subjectName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取字典信息
+function getParam(id,type){
+	$.ajax({
+		url:'../param/getParamList.action',
+		type:'get',
+		dataType:'json',
+		data:{'paramType':type},
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#"+id).empty();
+				$("#"+id).append("<option value='' selected>请选择</option>");
+				for(var i=0;i<data.length;i++){
+					$("#"+id).append("<option value='"+data[i].paramName+"'>"+data[i].paramName+"</option>");
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取学期
+function getTerm(){
+	$.ajax({
+		url:'../term/getTermList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#termId").empty();
+				$("#termId").append("<option value='' selected>请选择学期</option>")
+				for(var i=0;i<data.length;i++){
+					$("#termId").append("<option value='"+data[i].termId+"'>"+data[i].termYear+"年"+data[i].term+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+
+
+</script>
+
+<script type="text/javascript">
+$(function(){
+	$("#form-member-add").validate({
+		rules:{
+			termYear:{
+				required:true,
+				digits:true,
+			},
+			term:{
+				required:true,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			var weekName = $("#week1").val().trim()+"~"+$("#week2").val().trim();
+			debugger;
+			$("#weekName").val(weekName);
+			$(form).ajaxSubmit({
+				url:'../product/addProduct.action',
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							parent.window.location.href="../product/productView.action";
+							parent.layer.close(1);
+						});
+					}else{
+						layer.msg(data.msg,{icon:2,time:1000});
+						
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						parent.window.location.href="../product/productView.action";
+					});
+				}
+			});
+		}
+	});
+});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

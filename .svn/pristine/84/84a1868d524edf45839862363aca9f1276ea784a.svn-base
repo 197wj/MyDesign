@@ -1,0 +1,33 @@
+package com.zhiliao.model.school;
+
+public class UcGrade {
+    private String gradeCode;
+
+    private String gradeName;
+
+    private String isOpen;
+
+    public String getGradeCode() {
+        return gradeCode;
+    }
+
+    public void setGradeCode(String gradeCode) {
+        this.gradeCode = gradeCode == null ? null : gradeCode.trim();
+    }
+
+    public String getGradeName() {
+        return gradeName;
+    }
+
+    public void setGradeName(String gradeName) {
+        this.gradeName = gradeName == null ? null : gradeName.trim();
+    }
+
+    public String getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen == null ? null : isOpen.trim();
+    }
+}

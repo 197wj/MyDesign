@@ -1,0 +1,213 @@
+﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>类型管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户管理 <span class="c-gray en">&gt;</span> 类型管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="text-c">
+		<input type="text" class="input-text" style="width:250px" placeholder="输入类型" id="typeName" name="" onkeydown="keydownEvent()">
+		<button type="button" class="btn btn-success radius" id="seach" name=""><i class="Hui-iconfont">&#xe665;</i> 搜类型</button>
+	</div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" id="delAll" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="member_add('添加类型','../type/userTypeAddView.action','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加类型</a></span> <span class="r">共有数据：<strong id="count">0</strong> 条</span> </div>
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-hover table-bg table-sort">
+			<thead>
+				<tr class="text-c">
+					<th width="25"><input type="checkbox" name="" value=""></th>
+					<th width="80">ID</th>
+					<th width="100">类型名称</th>
+					<th width="100">logo</th>
+					<th width="90">增加时间</th>
+					<th width="150">备注</th>
+					<th width="100">操作</th>
+				</tr>
+			</thead>
+			<tbody id="userTypeList">
+			</tbody>
+		</table>
+		<!-- 分页 -->
+		<div style="width:70%;white-spacing:nowrap;margin:0 auto;"> 
+			<div id="kkpager"></div> 
+		</div>
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+
+<script type="text/javascript">
+	$(function(){
+		loadList();
+	})
+	function loadList(page,rows,typeName){
+		$.ajax({
+			url:'../type/getTypeByPage.action',
+			type:'get',
+			data:{'page':page,'rows':rows,'typeName':typeName},
+			dataType:'json',
+			success:function(obj){
+				var data = obj.rows;
+				var count = obj.total;
+				$("#userTypeList").empty();
+				$("#count").html(count);
+				kkpagerHtml(count,rows,page,typeName);
+				if(data!=null){
+					for(var i = 0;i<data.length;i++){
+						listHtml(data[i]);
+					}
+				}
+			}
+		});
+	}
+	//回车按钮
+	function keydownEvent() {
+	     var e = window.event || arguments.callee.caller.arguments[0];
+	     if (e && e.keyCode == 13 ) {
+	     	document.getElementById("seach").click();
+	     }
+	};
+	/**
+	 * 点击搜索,
+	 */
+	 $("#seach").click(function(){
+		var typeName = $("#typeName").val().trim();
+		loadList(1,10,typeName);
+	 });
+	
+	 /**
+	  * 学科列表Html
+	  */
+	 function listHtml(info){
+	 	var html='';
+	 	html+='<tr class="text-c">';
+	 	html+='<td><input type="checkbox" value="'+info.typeId+'" name="del"></td>';
+	 	html+='<td style="display:none">'+info.typeId+'</td>';
+	 	html+='<td>'+info.typeId+'</td>';
+	 	html+='<td>'+info.typeName+'</td>';
+	 	html+='<td>'+info.logo+'</td>';
+	 	html+='<td>'+formatterDateTime(info.addTime)+'</td>';
+	 	html+='<td>'+info.remark+'</td>';
+	 	html+='<td class="td-manage"><a title="编辑" href="javascript:;" onclick="member_edit(&#39;学科编辑&#39;,&#39;../type/userTypeUpdateView.action?typeId='+info.typeId+'&#39;,&#39;id&#39;,&#39;800&#39;,&#39;400&#39;)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> ';
+	 	html+='<a title="删除" href="javascript:;" onclick="member_del(this,&#39;'+info.typeId+'&#39;)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>';
+	 	html+='</tr>';
+	 	$("#userTypeList").append(html);
+	 }
+	 /**
+	  * kkpager分页工具
+	  */
+	 function kkpagerHtml(sum,rows,current,typeName){
+	     var totalPage = Math.ceil(sum/rows);//总页数总数据条数/每页显示数 向上取整  
+	     if(current == 0){  
+	        current = 1;  
+	     }  
+	     //初始化函数  
+	     kkpager.generPageHtml({  
+	         pno : current, //当前页数  
+	         total : totalPage,//总页数  
+	         totalRecords : sum, //总数据条数  
+	         mode:'click', //这里设置为click模式  
+	         isShowTotalRecords:true,
+	         //点击页码的函数，这里发送ajax请求后台  
+	         click:function(n){
+	        	 loadList(n,rows,typeName);
+	         	this.selectPage(n); //手动条用selectPage进行页码选中切换 
+	         	return false;
+	        },   
+	 	},true);  
+	 }
+	 /**
+	  * 将时间long类型转换为String类型
+	  */
+	  function formatterDateTime(val){
+	     var date = new Date(val);
+	     var y = date.getFullYear();  
+	     var m = date.getMonth() + 1;  
+	     m = m < 10 ? ('0' + m) : m;  
+	     var d = date.getDate();  
+	     d = d < 10 ? ('0' + d) : d;  
+	     var h = date.getHours();  
+	     h = h < 10 ? ('0' + h) : h;  
+	     
+	     var minute = date.getMinutes();  
+	     minute = minute < 10 ? ('0' + minute) : minute; 
+	     var second = date.getSeconds();
+	     second = second < 10 ? ('0' + second) : second; 
+	     return y + '-' + m + '-' + d+' '+ h+':'+minute+':'+second;  
+	 }
+	
+</script>
+
+
+
+
+<script type="text/javascript">
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-查看*/
+function member_show(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-编辑*/
+function member_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-删除*/
+function member_del(obj,id){
+	delList(id);
+}
+
+/**
+ * 批量删除
+ */
+ $("#delAll").click(function(){
+	 var id = document.getElementsByName("del");
+	 var ids = [];
+	 for (var i=0;i<id.length;i++) {
+		 if (id[i].checked == true) {
+			 ids.push(id[i].value);
+		 };
+	 }
+	 //调用删除方法
+	 delList(ids);
+ });
+
+/**
+ * 批量删除和单个删除
+ */
+function delList(ids){
+	if (ids == "") {
+		layer.msg("至少选中一条信息",{icon:7,time:1000});
+	} else {
+		layer.confirm('删除科目信息，确认要删除吗',function(index){
+			$.ajax({
+				url: '../type/deleteTypeList.action',
+				type: 'POST',
+				data:{'ids':ids},
+				dataType: 'json',
+				traditional:true,
+				success: function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							window.location.href="../type/userTypeView.action";
+						});
+					}else{
+						layer.msg(data.msg,{icon:2,time:1000});
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						window.location.href="../type/userTypeView.action";
+					});
+				}
+		     });
+		});
+	}
+}
+</script> 
+</body>
+</html>

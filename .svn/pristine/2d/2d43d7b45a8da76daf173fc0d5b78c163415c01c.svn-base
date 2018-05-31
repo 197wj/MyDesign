@@ -1,0 +1,27 @@
+package com.zhiliao.service.count;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.count.SchoolCount;
+
+public interface CountService {
+
+	/**
+	 * 根据学校和年级查询开通班级数量
+	 * @param map
+	 * @return int
+	 */
+	public int selectClassCount(Map<String, Object> map);
+	
+	/**
+	 * 获取各科购买人数
+	 * @param map
+	 * @return
+	 */
+	public List<Map<String, Object>> selectSubjectCount(Map<String, Object> map);
+	
+	public List<SchoolCount> getEnglishCount(Map<String, Object> map);//获取英语
+	
+	public List<SchoolCount> getMathCount(Map<String, Object> map);//获取数学
+}

@@ -1,0 +1,72 @@
+package com.zhiliao.model.php;
+
+import com.zhiliao.util.excel.annotation.ExcelAttribute;
+
+public class PhpSection {
+
+	private String sectionId;
+	
+	@ExcelAttribute(name="二级知识点",column="B")
+	private String sectionName;
+	
+	@ExcelAttribute(name="测试总分",column="C")
+	private String totalScore;
+	
+	@ExcelAttribute(name="所得分数",column="D")
+	private String getScore;
+	
+	@ExcelAttribute(name="掌握度",column="E")
+	private String rank;
+	
+	private String gsk;//获取知识点分数的参数
+
+	public String getSectionId() {
+		return sectionId;
+	}
+
+	public void setSectionId(String sectionId) {
+		this.sectionId = sectionId;
+	}
+
+	public String getSectionName() {
+		return sectionName;
+	}
+
+	public void setSectionName(String sectionName) {
+		this.sectionName = sectionName;
+	}
+
+	public String getTotalScore() {
+		return totalScore;
+	}
+
+	public void setTotalScore(String totalScore) {
+		this.totalScore = totalScore;
+	}
+
+	public String getGetScore() {
+		return getScore;
+	}
+
+	public void setGetScore(String getScore) {
+		this.getScore = getScore;
+	}
+
+	public String getRank() {
+		return rank;
+	}
+
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
+
+	public String getGsk() {
+		return gsk;
+	}
+
+	public void setGsk(String gsk) {
+		this.gsk = gsk;
+	}
+	
+	
+}

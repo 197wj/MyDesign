@@ -1,0 +1,229 @@
+package com.zhiliao.util;
+
+import java.util.List;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellRangeAddress;
+
+import com.zhiliao.model.php.PhpKnows;
+
+
+@SuppressWarnings("deprecation")
+public class ExcelUtilss {
+
+	
+	public static HSSFWorkbook getHSSFWorkbook(String schoolName,String graName,String subjectName,
+			List<String> sheetNames,List<Long> userIds,String[] title, 
+			List<List<PhpKnows>> val, HSSFWorkbook wb) {
+		String text = "诊断说明："+
+    "本知识点诊断报告是以家长在线批改结果为依据精心制作而成；测试总分：指家长批改试卷中该知识点的总分数；所得分数：指学生在本知识点上的答对得分；掌握度：指学生对该知识点的掌握情况。"+
+    "掌握度越高该知识点掌握越好，反之亦然！学生可根据掌握度有针对性的进行期末复习！ 预祝同学们期末取得好成绩，加油！";
+		
+		
+		// 第一步，创建一个webbook，对应一个Excel文件
+		if (wb == null) {
+			wb = new HSSFWorkbook();
+		}
+		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+		for (int m = 0; m < sheetNames.size(); m++) {
+			HSSFSheet sheet = wb.createSheet(sheetNames.get(m));
+			
+			// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+			HSSFRow row = sheet.createRow(0);
+			// 第四步，创建单元格，并设置值表头 设置表头居中
+			HSSFCellStyle style = wb.createCellStyle();
+			style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+			style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);    //设置垂直居中  
+			style.setAlignment(HSSFCellStyle.ALIGN_CENTER);   //设置水平居中  
+			style.setWrapText(true);                          //设置自动换行
+			HSSFFont headerFont = (HSSFFont) wb.createFont(); //创建字体样式  
+			headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD); // 字体加粗  
+			headerFont.setFontName("Times New Roman");  //设置字体类型  
+			headerFont.setFontHeightInPoints((short) 18);    //设置字体大小  
+			style.setFont(headerFont);    //为标题样式设置字体样式
+			
+			//建议样式(3,0)
+			HSSFCellStyle style3 = wb.createCellStyle();
+			style3.setAlignment(HSSFCellStyle.ALIGN_LEFT); // 创建一个居中格式
+			style3.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);    //设置垂直居中  
+			style3.setAlignment(HSSFCellStyle.ALIGN_LEFT);   //设置水平居中  
+			style3.setWrapText(true);                          //设置自动换行
+			HSSFFont headerFont1 = (HSSFFont) wb.createFont(); //创建字体样式  
+			headerFont1.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD); // 字体加粗  
+			headerFont1.setFontName("微软雅黑");  //设置字体类型  
+			headerFont1.setFontHeightInPoints((short) 11);    //设置字体大小  
+			style3.setFont(headerFont1);    //为标题样式设置字体样式
+			
+			//设置excel内容的样式
+			HSSFCellStyle cell_Style = (HSSFCellStyle) wb .createCellStyle();// 设置字体样式  
+			cell_Style.setAlignment(HSSFCellStyle.ALIGN_CENTER);  
+			cell_Style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 垂直对齐居中  
+			cell_Style.setWrapText(true); // 设置为自动换行  
+			HSSFFont cell_Font = (HSSFFont) wb.createFont();  
+			cell_Font.setFontName("宋体");  
+			cell_Font.setFontHeightInPoints((short) 12);  
+			cell_Style.setFont(cell_Font); 
+			
+			//设置excel内容(3,1)
+			HSSFCellStyle style31 = wb.createCellStyle();
+			style31.setAlignment(HSSFCellStyle.ALIGN_LEFT); // 创建一个居中格式
+			style31.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);    //设置垂直居中  
+			style31.setAlignment(HSSFCellStyle.ALIGN_LEFT);   //设置水平居中  
+			style31.setWrapText(true);                          //设置自动换行
+			
+			
+			
+			
+			
+			// 创建标题
+			//第0行
+			HSSFCell cellt = row.createCell(0);
+			row.setHeightInPoints(50);
+			sheet.addMergedRegion(new CellRangeAddress(0, (short) 0, 0, (short)3));
+			cellt = row.createCell(0);
+			cellt.setCellValue("2017-2018年上学期“周周清”知识点诊断报告");
+			cellt.setCellStyle(style);
+			//第一行
+			HSSFRow rowt = sheet.createRow(1);
+			HSSFCell cellt1 = rowt.createCell(0);
+			cellt1.setCellValue("所属学校");
+			sheet.setColumnWidth(1, 6134);//设置cell宽度
+			sheet.setColumnWidth(2, 2530);//设置cell宽度
+			sheet.setColumnWidth(3, 3000);//设置cell宽度
+			rowt.createCell(1).setCellValue(schoolName);
+			rowt.createCell(2).setCellValue("年级班级");
+			HSSFCell cellt4 = rowt.createCell(3);
+			cellt4.setCellValue(graName);
+			//第二行
+			HSSFRow rowt2 = sheet.createRow(2);
+			HSSFCell cellt21 = rowt2.createCell(0);
+			cellt21.setCellValue("学生ID");
+			HSSFCell cell31 =rowt2.createCell(1);
+			cell31.setCellValue(userIds.get(m));
+			cell31.setCellStyle(style31);
+			rowt2.createCell(2).setCellValue("姓名科目");
+			HSSFCell cellt24 = rowt2.createCell(3);
+			cellt24.setCellValue(sheetNames.get(m)+" ("+subjectName+")");
+			
+			//第三行
+			HSSFRow rowt3 = sheet.createRow(3);
+			HSSFCell cellt31 = rowt3.createCell(0);
+			rowt3.setHeightInPoints(80);
+			sheet.addMergedRegion(new CellRangeAddress(3, (short) 3, 0,(short)3));
+			cellt31 = rowt3.createCell(0);
+			cellt31.setCellValue(text);
+			cellt31.setCellStyle(style3);
+			
+			//标题
+			HSSFCell cell = null;
+
+			row = sheet.createRow(4);
+			
+			for (int i = 0; i < title.length; i++) {
+				cell = row.createCell(i);
+				cell.setCellValue(title[i]);
+				cell.setCellStyle(cell_Style);
+			}
+			
+			
+			
+			
+			
+			
+			// 创建内容
+			setExcelVal(val.get(m),cell,sheet,cell_Style,style3);
+			/*String[][] values = val.get(m);
+			for (int i = 0; i < values.length; i++) {
+				row = sheet.createRow(i + 2);
+				for (int j = 0; j < values[i].length; j++) {
+					cell = row.createCell(j);
+					cell.setCellValue(values[i][j]);
+					cell.setCellStyle(cell_Style);
+				}
+			}*/
+		}
+		
+		return wb;
+	}
+	
+	public static void setExcelVal(List<PhpKnows> val, HSSFCell cell,HSSFSheet sheet,HSSFCellStyle cell_Style,HSSFCellStyle style31){
+		int thr = 0;
+		//int two = 0;
+		int one = 0;
+		HSSFRow row = null;
+		
+		
+ 		for(PhpKnows knows:val){//一级知识点
+ 			one++;
+			//获取二级知识点
+ 			List<PhpKnows> secList = knows.getKnows();
+ 			if(secList!=null && secList.size()>0){//二级知识点不为空
+// 				for(PhpKnows secKnows:secList){
+// 					two++;
+// 					//获取三级知识点
+// 					List<PhpKnows> thiList = secKnows.getKnows();
+// 					if(thiList!=null&&thiList.size()>0){//三级知识点不为空 
+// 						for(PhpKnows thiKnows:thiList){
+// 							thr++;
+// 							row = sheet.createRow(thr+4);
+// 							cell = row.createCell(2);//三级知识点的cell,第三列
+// 							cell.setCellValue(thiKnows.getKonwName());
+// 							row.createCell(3).setCellValue(knows.getTotalScore());//第四列
+// 							row.createCell(4).setCellValue(knows.getGetScore());//第五列
+// 							row.createCell(5).setCellValue(knows.getRank());//第六列
+// 						}
+//// 						sheet.addMergedRegion(new CellRangeAddress(thr+two-thiList.size()+5,(short) thr, 0, (short)0));
+//// 						row = sheet.createRow(thr+two-thiList.size()+5);
+//// 						cell = row.createCell(1);//创建第二列
+//// 						cell.setCellValue(secKnows.getKonwName());
+// 					}else {//三级知识点为空
+// 						row = sheet.createRow(two+thr+4);
+////						cell = row.createCell(1);//第二列
+////						cell.setCellValue(secKnows.getKonwName());
+// 						row.createCell(3).setCellValue(knows.getTotalScore());//第四列
+// 						row.createCell(4).setCellValue(knows.getGetScore());//第五列
+// 						row.createCell(5).setCellValue(knows.getRank());//第六列
+//					}
+// 					sheet.addMergedRegion(new CellRangeAddress(two+4,(short) two+thr+4, 0, (short)0));
+// 					cell = row.createCell(1);//创建第一列
+// 					cell.setCellValue(secKnows.getKonwName());
+// 				}
+ 				
+ 				
+ 			}else {//二级知识点为空
+ 				row = sheet.createRow(one+thr+4);
+				cell=row.createCell(1);
+				cell.setCellValue(knows.getTotalScore());//第四列
+				cell.setCellStyle(cell_Style);
+				cell=row.createCell(2);
+				cell.setCellValue(knows.getGetScore());//第五列
+				cell.setCellStyle(cell_Style);
+				cell=row.createCell(3);
+				cell.setCellValue(knows.getRank());//第六列
+				cell.setCellStyle(cell_Style);
+				
+				
+			}
+ 			sheet.setColumnWidth(0, 11665);
+ 			//sheet.addMergedRegion(new CellRangeAddress(one+4,(short) one+thr+4, 0, (short)0));
+ 			cell = row.createCell(0);//创建第一列
+ 			cell.setCellValue(knows.getKonwName());
+ 			cell.setCellStyle(cell_Style);
+		}
+ 		
+ 		row = sheet.createRow(one+4);
+ 		cell = row.createCell(0);
+ 		cell.setCellValue("教师寄语:");
+ 		cell.setCellStyle(style31);
+ 		cell = row.createCell(1);
+ 		sheet.addMergedRegion(new CellRangeAddress(one+4,(short) one+4, 1, (short)3));
+		cell.setCellValue("");
+	}
+	
+	
+}

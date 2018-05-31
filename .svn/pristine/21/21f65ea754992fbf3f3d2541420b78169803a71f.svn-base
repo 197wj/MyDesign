@@ -1,0 +1,66 @@
+package com.zhiliao.service.order.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.order.OrderMapper;
+import com.zhiliao.model.order.Order;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.order.OrderService;
+@Service
+public class OrderServiceImpl extends BaseServiceImpl<Order, Map<String, Object>> implements OrderService {
+
+	@Autowired
+	private OrderMapper orderMapper;
+	
+	@Override
+	public int insert(Order record) {
+		// TODO Auto-generated method stub
+		int row = this.orderMapper.insert(record);
+		return row;
+	}
+
+	@Override
+	public Order selectById(String orderId) {
+		// TODO Auto-generated method stub
+		Order order = this.orderMapper.selectById(orderId);
+		return order;
+	}
+
+	@Override
+	public int updateById(Order record) {
+		// TODO Auto-generated method stub
+		int row = this.orderMapper.updateById(record);
+		return row;
+	}
+
+	@Override
+	public List<Order> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<Order> orders = this.orderMapper.selectList(map);
+		return orders;
+	}
+	
+	@Override
+	public int payOrder(Order order) {
+		// TODO Auto-generated method stub
+		int rows = this.orderMapper.payOrder(order);
+		return rows;
+	}
+
+	@Override
+	public int selectByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.orderMapper.selectByMap(map);
+	}
+	
+	@Override
+	public int getOrderCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		int rows = this.orderMapper.getOrderCount(map);
+		return rows;
+	}
+}

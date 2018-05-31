@@ -1,0 +1,207 @@
+package com.zhiliao.controller;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.model.count.SchoolCount;
+import com.zhiliao.service.count.CountService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+@Controller
+@RequestMapping("count")
+public class CountController {
+
+	@Autowired
+	private CountService countService;
+	
+	@RequestMapping("/countView.action")
+	public String  countView(){
+		return "count/count";
+	}
+	
+	/**
+	 * 获取开通的班级数量
+	 * @param schoolId
+	 * @param gradeCode
+	 * @return
+	 */
+	@RequestMapping("/getClassCount.action")
+	@ResponseBody
+	public Map<String, Object> getClassCount(@RequestParam(value="schoolId",required=false)Integer schoolId,
+											 @RequestParam(value="gradeCode",required=false)String gradeCode){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("schoolId", schoolId);
+		map.put("gradeCode", gradeCode);
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		int rows = countService.selectClassCount(map);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		if(rows>0){
+			resultMap.put("status", true);
+			resultMap.put("math", rows);
+			resultMap.put("total", rows*2);
+			resultMap.put("msg", "获取成功!!");
+		}
+		
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 获取订单中各科的订购数量
+	 * @return
+	 */
+	@RequestMapping("/getSubjectCount.action")
+	@ResponseBody
+	public Map<String, Object> getSubjectCount(){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> list = this.countService.selectSubjectCount(map);
+		if(list.size()>0){
+			resultMap.put("status", true);
+			resultMap.put("data", list);
+			resultMap.put("msg", "获取成功");
+		}else {
+			resultMap.put("status", true);
+			resultMap.put("data", list);
+			resultMap.put("msg", "获取失败");
+		}
+		
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 获取学校统计
+	 * @return
+	 */
+	@RequestMapping("/getSchoolCount.action")
+	@ResponseBody
+	public Map<String, Object> getSchoolCount(){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<SchoolCount> EList = this.countService.getEnglishCount(map);
+		List<SchoolCount> MList = this.countService.getMathCount(map);
+ 		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		if (EList.size()>0) {
+			if (MList.size()>0) {
+				for(SchoolCount count:EList){
+					for (SchoolCount count2:MList) {
+						if(count2!=null){
+							if (count.getSchoolId()==count2.getSchoolId()) {
+								count.setMCount(count2.getMCount());
+								count.setMName(count2.getMName());
+								count.setTotal(count.getECount()+count2.getMCount());
+							}
+						}
+					}
+				}
+			}
+		}
+		resultMap.put("msg", "获取成功!!");
+		resultMap.put("status", true);
+		resultMap.put("data",EList);
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 获取学校的数量
+	 * @return
+	 */
+	@RequestMapping("/selectSchoolCount.action")
+	@ResponseBody
+	public Map<String, Object> selectSchoolCount(){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		map.put("isOpen", '1');
+		Integer openRows = this.countService.selectSchoolCount(map);
+		map.clear();
+		map.put("isOpen", null);
+		Integer rows = this.countService.selectSchoolCount(map);
+ 		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+ 		resultMap.put("status",true);
+ 		resultMap.put("openRows", openRows);
+ 		resultMap.put("rows", rows);
+ 		
+ 		
+		return resultMap;
+	}
+	/**
+	 * 获取班级的数量
+	 * @return
+	 */
+	@RequestMapping("/getClaCount.action")
+	@ResponseBody
+	public Map<String, Object> getClaCount(){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		map.put("isOpen", '1');
+		Integer openRows = this.countService.getClassCount(map);
+		map.clear();
+		map.put("isOpen", null);
+		Integer rows = this.countService.getClassCount(map);
+ 		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+ 		resultMap.put("status",true);
+ 		resultMap.put("openRows", openRows);
+ 		resultMap.put("rows", rows);
+		
+		return resultMap;
+	}
+	/**
+	 * 获取手中人数
+	 * @return
+	 */
+	@RequestMapping("/getPerCount.action")
+	@ResponseBody
+	public Map<String, Object> getPerCount(){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		map.put("isOpen", '1');
+		Integer openRows = this.countService.selectPerCount(map);
+		map.clear();
+		map.put("isOpen", null);
+		Integer rows = this.countService.selectPerCount(map);
+ 		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+ 		resultMap.put("status",true);
+ 		resultMap.put("openRows", openRows);
+ 		resultMap.put("rows", rows);
+ 		
+ 		return resultMap;
+	}
+	
+	/**
+	 * 获取用户类型的数量
+	 * @return
+	 */
+	@RequestMapping("/getUserType.action")
+	@ResponseBody
+	public Map<String, Object> getUserType(){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> list = this.countService.selectUserType(map);
+		if(list.size()>0){
+			resultMap.put("status", true);
+			resultMap.put("msg", "获取成功!!");
+			resultMap.put("data", list);
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "获取失败!!");
+		}
+		return resultMap;
+	}
+	
+	
+}

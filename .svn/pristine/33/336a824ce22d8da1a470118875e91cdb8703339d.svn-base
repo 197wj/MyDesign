@@ -1,0 +1,65 @@
+package com.zhiliao.model.sys;
+
+import java.util.Date;
+
+public class MoneySet {
+    private Integer id;
+
+    private String setType;
+
+    private String setMold;
+
+    private Float money;
+
+    private Date addTime;
+
+    private String status;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getSetType() {
+        return setType;
+    }
+
+    public void setSetType(String setType) {
+        this.setType = setType == null ? null : setType.trim();
+    }
+
+    public String getSetMold() {
+        return setMold;
+    }
+
+    public void setSetMold(String setMold) {
+        this.setMold = setMold == null ? null : setMold.trim();
+    }
+
+    public Float getMoney() {
+        return money;
+    }
+
+    public void setMoney(Float money) {
+        this.money = money;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+}

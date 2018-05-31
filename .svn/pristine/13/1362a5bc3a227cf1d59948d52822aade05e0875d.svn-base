@@ -1,0 +1,17 @@
+package com.zhiliao.dao.sys;
+
+import java.util.List;
+
+import com.zhiliao.model.sys.TbComment;
+
+public interface TbCommentMapper {
+	
+    public int deleteList(List<Integer> list);
+
+    public int insert(TbComment record);
+
+    public TbComment selectById(Integer id);
+
+    public int updateById(TbComment record);
+
+}

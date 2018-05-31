@@ -1,0 +1,275 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>添加套餐</title>
+<meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		
+		<!-- 折扣价 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>套餐名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="mealName" name="mealName">
+			</div>
+		</div>
+		
+		<!-- 年级下拉列表 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">年级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="grade" id="gradeName">
+						<option value="" selected>请选择年级</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		<!-- 科目下拉列表 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">科目：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="subject" id="subjectName">
+						<option value="" selected>请选择科目</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		
+		<!-- 产品列表 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">产品：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="productId" id="productId">
+						<option value="" selected>请选择产品</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		
+		<!-- 周期列表 -->
+		<div class="hidden"  id="week">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal" id="weekList">
+				
+			</div>
+		</div>
+		</div>
+
+		<!-- 折扣价 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>折扣：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="1" placeholder="" id="discount" name="discount">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">备注：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea name="remark" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" onKeyUp="$.Huitextarealength(this,100)"></textarea>
+				<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+		
+		
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<!-- 加载学期年分和年级以及学科的列表 -->
+<script type="text/javascript">
+$(function(){
+
+	//获取年级
+	getGrade();
+	
+	//获取科目
+	getSubject();
+	//获取产品列表
+	getPro();
+	
+});
+//根据年级筛选产品
+$(document).on("change","#gradeName",function(){
+	var subject = $("#subjectName").val();
+	var grade = $("#gradeName").val();
+	$("#productId").empty();
+	$("#productId").append("<option lev='' value=''>请选择产品</option>");
+	getPro(grade,subject);
+})
+//根据科目筛选产品
+$(document).on("change","#subjectName",function(){
+	var subject = $("#subjectName").val();
+	var grade = $("#gradeName").val();
+	$("#productId").empty();
+	$("#productId").append("<option lev='' value=''>请选择产品</option>");
+	getPro(grade,subject);
+})
+
+
+
+
+/* 根据选择不筒的产品,显示的周不的列表不同 */
+$(document).on("change","#productId",function(){
+	var proId = $("#productId").val();
+	if(proId){
+		$("#week").removeClass();
+		var week = $("#productId").find("option:selected").attr("lev");
+		getWeek(week);
+	}else{
+		$("#week").addClass("hidden");
+	}
+	
+});
+
+
+
+
+
+//获取产品信息
+function getPro(grade,subject){
+	$.ajax({
+		url:'../product/getProList.action',
+		type:'get',
+		data:{'gradeCode':grade,'subjectCode':subject},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status){
+				var data = obj.data;
+				$("#productId").empty();
+				$("#productId").append("<option lev='' value=''>请选择产品</option>");
+				for(var i=0;i<data.length;i++){
+					var year = data[i].term.termYear;
+					var termName = data[i].term.term;
+					var grade = data[i].gradeName;
+					var subject = data[i].subjectName;
+					var name = year+"年"+termName+" "+grade+subject+" 周测试卷";	
+					$("#productId").append("<option lev='"+data[i].weekName+"' value='"+data[i].productId+"'>"+name+"</option>");
+				}
+			}
+		}
+	})
+}
+/* 获取试卷类型 */
+function getWeek(week){
+	var weekName = week.split("~");
+	 var week1 = weekName[0];
+	 var week2 = weekName[1];
+	 $("#weekList").empty();
+	 for(var i=week1;i<=week2;i++){
+		 $("#weekList").append('<label><input name="week" type="checkbox" value="'+i+'"/>第'+i+'周</label>');
+	 }
+}
+
+//获取年级
+function getGrade(){
+	$.ajax({
+		url:'../grade/getGradeList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#gradeName").empty();
+				$("#gradeName").append("<option value='' selected>请选择年级</option>")
+				for(var i=0;i<data.length;i++){
+					$("#gradeName").append("<option value='"+data[i].gradeCode+"'>"+data[i].gradeName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+//获取学科信息
+function getSubject(){
+	$.ajax({
+		url:'../subject/getSubjectList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#subjectName").empty();
+				$("#subjectName").append("<option value='' selected>请选择学科</option>")
+				for(var i=0;i<data.length;i++){
+					$("#subjectName").append("<option value='"+data[i].subjectCode+"'>"+data[i].subjectName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+</script>
+
+
+
+<!-- 增加套餐的列表 -->
+<script type="text/javascript">
+$(function(){
+	
+	$("#form-member-add").validate({
+		rules:{
+			termYear:{
+				required:true,
+				digits:true,
+			},
+			term:{
+				required:true,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				url:'../meal/addMeal.action',
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							parent.window.location.href="../meal/mealView.action";
+							parent.layer.close(1);
+						});
+					}else{
+						layer.msg(data.msg,{icon:2,time:1000});
+						
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						parent.window.location.href="../meal/mealView.action";
+					});
+				}
+			});
+		}
+	});
+});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

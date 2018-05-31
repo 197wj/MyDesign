@@ -1,0 +1,67 @@
+package com.zhiliao.service.php.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.php.SchCountMapper;
+import com.zhiliao.model.php.SchCount;
+import com.zhiliao.service.php.SchCountService;
+
+@Service
+public class SchCountServiceImpl implements SchCountService {
+
+	@Autowired
+	private SchCountMapper countMapper;
+	
+	@Override
+	public List<SchCount> getCountInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getCountInfo(map);
+		return list;
+	}
+	
+	@Override
+	public int getGrantCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		int count = this.countMapper.getGrantCount(map);
+		return count;
+	}
+	
+	@Override
+	public List<SchCount> getCityScore(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getCityScore(map);
+		return list;
+	}
+	
+	@Override
+	public List<SchCount> getScoreInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getScoreInfo(map);
+		return list;
+	}
+	
+	@Override
+	public List<SchCount> getCityRank(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getCityRank(map);
+		return list;
+	}
+	
+	@Override
+	public List<SchCount> getAvgInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getAvgInfo(map);
+		return list;
+	}
+	
+	@Override
+	public List<SchCount> getRateGrade(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getRateGrade(map);
+		return list;
+	}
+}

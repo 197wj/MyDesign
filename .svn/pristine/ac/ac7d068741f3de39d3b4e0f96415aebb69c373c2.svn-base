@@ -1,0 +1,275 @@
+package com.zhiliao.model.school;
+
+import java.util.Date;
+
+public class School {
+    private Integer schoolId;
+
+    private String areaId;
+
+    private Integer secId;
+
+    private String schoolCode;
+
+    private String schoolName;
+
+    private String schoolShortname;
+
+    private String schoolAbbname;
+
+    private Date createTime;
+
+    private String schoolType;
+
+    private String schoolProfile;
+
+    private Integer isRecomm;
+
+    private Integer isEnable;
+
+    private String schoolHome;
+
+    private Integer schoolSectionId;
+
+    private String schoolPhoto;
+
+    private Integer schoolSort;
+
+    private Integer yearSection;//学段
+
+    private Integer schoolKind;//学校性质
+
+    private Integer schoolBelong;//学校归属
+
+    private Integer schoolCity;//学校城市
+    
+    private String city;//学校城市
+    
+    private String country;//学校乡镇
+
+    private Integer schoolCountry;//学校乡镇
+
+    private Integer shcoolAttrtype;//学校类型
+    
+    private String isOpen;
+    
+    private String chargeType;//学校收费类型
+    
+    private String mealId;//学校选择的套餐id
+
+    public String getChargeType() {
+		return chargeType;
+	}
+
+	public void setChargeType(String chargeType) {
+		this.chargeType = chargeType;
+	}
+
+	public String getMealId() {
+		return mealId;
+	}
+
+	public void setMealId(String mealId) {
+		this.mealId = mealId;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getIsOpen() {
+		return isOpen;
+	}
+
+	public void setIsOpen(String isOpen) {
+		this.isOpen = isOpen;
+	}
+
+	public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId == null ? null : areaId.trim();
+    }
+
+    public Integer getSecId() {
+        return secId;
+    }
+
+    public void setSecId(Integer secId) {
+        this.secId = secId;
+    }
+
+    public String getSchoolCode() {
+        return schoolCode;
+    }
+
+    public void setSchoolCode(String schoolCode) {
+        this.schoolCode = schoolCode == null ? null : schoolCode.trim();
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName == null ? null : schoolName.trim();
+    }
+
+    public String getSchoolShortname() {
+        return schoolShortname;
+    }
+
+    public void setSchoolShortname(String schoolShortname) {
+        this.schoolShortname = schoolShortname == null ? null : schoolShortname.trim();
+    }
+
+    public String getSchoolAbbname() {
+        return schoolAbbname;
+    }
+
+    public void setSchoolAbbname(String schoolAbbname) {
+        this.schoolAbbname = schoolAbbname == null ? null : schoolAbbname.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getSchoolType() {
+        return schoolType;
+    }
+
+    public void setSchoolType(String schoolType) {
+        this.schoolType = schoolType == null ? null : schoolType.trim();
+    }
+
+    public String getSchoolProfile() {
+        return schoolProfile;
+    }
+
+    public void setSchoolProfile(String schoolProfile) {
+        this.schoolProfile = schoolProfile == null ? null : schoolProfile.trim();
+    }
+
+    public Integer getIsRecomm() {
+        return isRecomm;
+    }
+
+    public void setIsRecomm(Integer isRecomm) {
+        this.isRecomm = isRecomm;
+    }
+
+    public Integer getIsEnable() {
+        return isEnable;
+    }
+
+    public void setIsEnable(Integer isEnable) {
+        this.isEnable = isEnable;
+    }
+
+    public String getSchoolHome() {
+        return schoolHome;
+    }
+
+    public void setSchoolHome(String schoolHome) {
+        this.schoolHome = schoolHome == null ? null : schoolHome.trim();
+    }
+
+    public Integer getSchoolSectionId() {
+        return schoolSectionId;
+    }
+
+    public void setSchoolSectionId(Integer schoolSectionId) {
+        this.schoolSectionId = schoolSectionId;
+    }
+
+    public String getSchoolPhoto() {
+        return schoolPhoto;
+    }
+
+    public void setSchoolPhoto(String schoolPhoto) {
+        this.schoolPhoto = schoolPhoto == null ? null : schoolPhoto.trim();
+    }
+
+    public Integer getSchoolSort() {
+        return schoolSort;
+    }
+
+    public void setSchoolSort(Integer schoolSort) {
+        this.schoolSort = schoolSort;
+    }
+
+    public Integer getYearSection() {
+        return yearSection;
+    }
+
+    public void setYearSection(Integer yearSection) {
+        this.yearSection = yearSection;
+    }
+
+    public Integer getSchoolKind() {
+        return schoolKind;
+    }
+
+    public void setSchoolKind(Integer schoolKind) {
+        this.schoolKind = schoolKind;
+    }
+
+    public Integer getSchoolBelong() {
+        return schoolBelong;
+    }
+
+    public void setSchoolBelong(Integer schoolBelong) {
+        this.schoolBelong = schoolBelong;
+    }
+
+    public Integer getSchoolCity() {
+        return schoolCity;
+    }
+
+    public void setSchoolCity(Integer schoolCity) {
+        this.schoolCity = schoolCity;
+    }
+
+    public Integer getSchoolCountry() {
+        return schoolCountry;
+    }
+
+    public void setSchoolCountry(Integer schoolCountry) {
+        this.schoolCountry = schoolCountry;
+    }
+
+    public Integer getShcoolAttrtype() {
+        return shcoolAttrtype;
+    }
+
+    public void setShcoolAttrtype(Integer shcoolAttrtype) {
+        this.shcoolAttrtype = shcoolAttrtype;
+    }
+}

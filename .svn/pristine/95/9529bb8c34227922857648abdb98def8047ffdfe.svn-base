@@ -1,0 +1,193 @@
+package com.zhiliao.controller.user;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.dao.user.SysUserMapper;
+import com.zhiliao.model.common.Pagination;
+import com.zhiliao.model.order.Order;
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.order.OrderService;
+import com.zhiliao.service.user.SysUserService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+@RequestMapping(value="/user")
+@Controller
+public class SysUserContrioller {
+	
+	@Autowired
+	private SysUserService sysUserService;
+	
+	@Autowired
+	private OrderService orderService;
+	
+	/**
+	 * 跳转到用户列表首页
+	 * @return
+	 */
+	@RequestMapping(value="/userView.action")
+	public String userView(){
+		return "user/user-list";
+	}
+	
+	/**
+	 * 用户详情页
+	 * @param request
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping(value="/userInfoView.action")
+	public String userInfoView(HttpServletRequest request,
+						@RequestParam(value="userId",required=true) Integer userId){
+		request.setAttribute("data", userId);
+		return "user/user-info";
+	}
+	
+	/**
+	 * 分页获取用户
+	 * @return
+	 */
+	@RequestMapping(value="/getUserByPage.action")
+	@ResponseBody
+	public Map<String, Object> getUserByPage(@RequestParam(value = "page",defaultValue = "1") Integer page,
+            								 @RequestParam(value = "rows",defaultValue = "10") Integer rows,
+            								 @RequestParam(value = "areaId",required = false) Integer areaId,
+            								 @RequestParam(value = "schoolId",required = false) Integer schoolId,
+            								 @RequestParam(value = "gradeId",required = false)Integer gradeId,
+            								 @RequestParam(value = "classId",required = false) Integer classId,
+            								 @RequestParam(value = "userNo",required = false) String userNo){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		try {
+			List<Map<String, Object>> resultList = null;
+			int totalRecords = 0;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("areaId", areaId);
+			map.put("schoolId", schoolId);
+			map.put("gradeId", gradeId);
+			map.put("classId", classId);
+			map.put("userNo", userNo);
+			//调用service方法,进行数据的查询
+			Pagination<Map<String, Object>> pagination;
+			MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+			pagination = this.sysUserService.getPagingDatas(map, page, rows, "selectCount","selectList",SysUserMapper.class);
+			resultList = pagination.getPageList();//返回数据
+			totalRecords = pagination.getTotalRecords();//返回行数	
+			MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+			List<SysUser> list = new ArrayList<SysUser>();
+			for (int i = 0; i < resultList.size(); i++) {
+				SysUser user = (SysUser)resultList.get(i);
+				map.clear();
+				map.put("userId", user.getUserId());
+				List<Order> orders = this.orderService.selectList(map);
+				user.setOrders(orders);
+				list.add(user);
+			}
+			
+			if(totalRecords>0){
+				resultMap.put("rows", list);
+				resultMap.put("total", totalRecords);
+				resultMap.put("status", true);
+				resultMap.put("msg", "获取成功");
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "没有获取到数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 修改用户信息
+	 * @param request
+	 * @param param
+	 * @return
+	 */
+	@RequestMapping(value="/updateUser.action")
+	@ResponseBody
+	public Map<String, Object> updateUser(HttpServletRequest request,SysUser sysUser){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		int rows = this.sysUserService.updateById(sysUser);
+		if (rows > 0) {
+			resultMap.put("status", true);
+			resultMap.put("msg", "修改成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "修改失败");
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 获取根据类型获用户信息
+	 * @param paramType
+	 * @return
+	 */
+	@RequestMapping(value="/getUserList.action")
+	@ResponseBody
+	public Map<String, Object> getUserList(@RequestParam(value = "isOpen",required=false) String isOpen,
+											 @RequestParam(value = "schoolId",required=false) Integer schoolId,
+											 @RequestParam(value = "classId",required=false) Integer classId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("isOpen", isOpen);
+		map.put("schoolId", schoolId);
+		map.put("classId", classId);
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<SysUser> list = this.sysUserService.selectList(map);
+		if (list.size()>0) {
+			resultMap.put("data", list);
+			resultMap.put("status", true);
+			resultMap.put("msg", "获取成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "没有获取到数据");
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		return resultMap;
+	}
+	
+	/**
+	 * 获取根据类型获用户信息
+	 * @param paramType
+	 * @return
+	 */
+	@RequestMapping(value="/getTeacherList.action")
+	@ResponseBody
+	public Map<String, Object> getTeacherList(@RequestParam(value = "subjectCode",required=false) Integer subjectCode,
+											  @RequestParam(value = "classId",required=false) Integer classId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("subjectCode", subjectCode);
+		map.put("classId", classId);
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<SysUser> list = this.sysUserService.selectTeacherList(map);
+		if (list.size()>0) {
+			resultMap.put("data", list);
+			resultMap.put("status", true);
+			resultMap.put("msg", "获取成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "没有获取到数据");
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		return resultMap;
+	}
+	
+}

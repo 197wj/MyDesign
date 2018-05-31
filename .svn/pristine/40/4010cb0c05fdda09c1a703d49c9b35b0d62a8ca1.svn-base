@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.product.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.product.Product">
+    <id column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="week_name" jdbcType="VARCHAR" property="weekName" />
+    <result column="term_id" jdbcType="INTEGER" property="termId" />
+    <result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+    <result column="grade_code" jdbcType="INTEGER" property="gradeCode" />
+    <result column="price" jdbcType="REAL" property="price" />
+    <result column="subjectName" jdbcType="VARCHAR" property="subjectName" />
+    <result column="subject_code" jdbcType="INTEGER" property="subjectCode" />
+    <result column="is_shelf" jdbcType="CHAR" property="isShelf" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <collection property="term" resultMap="term"/>
+  </resultMap>
+  <!-- 学期属性 -->
+  <resultMap id="term" type="com.zhiliao.model.param.TbTerm">
+    <id column="term_id" jdbcType="INTEGER" property="termId" />
+    <result column="term_year" jdbcType="VARCHAR" property="termYear" />
+    <result column="term" jdbcType="VARCHAR" property="term" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    product_id, week_name, term_id, grade_code, price, subject_code, is_shelf, add_time, 
+    modify_time, is_delete,remark
+  </sql>
+  
+  <!-- 分页获取产品的信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	 select pro.*,term.*,ug.grade_name gradeName,us.subject_name subjectName
+     from tb_product pro
+     left join tms_els_test.uc_grade ug on ug.grade_code = pro.grade_code
+     left join tms_els_test.uc_subject us on us.subject_code = pro.subject_code
+     left join tb_term term on pro.term_id = term.term_id
+     <where>
+    	pro.is_delete = '0' and term.is_delete = '0'
+    	<if test="isShelf!=null">
+    		and pro.is_shelf = #{isShelf,jdbcType=CHAR}
+    	</if>
+    	<if test="termId!=null">
+    		and pro.term_id = #{termId,jdbcType=CHAR}
+    	</if>
+    	<if test="gradeCode!=null">
+    		and pro.grade_code = #{gradeCode,jdbcType=VARCHAR}
+    	</if>
+    	<if test="subjectCode!=null">
+    		and pro.subject_code = #{subjectCode,jdbcType=VARCHAR}
+    	</if>
+     </where>
+    order by pro.add_time
+  </select>
+  
+  <!-- 分页获取产品的数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	 select  count(product_id)
+     from tb_product pro
+     left join tms_els_test.uc_grade ug on ug.grade_code = pro.grade_code
+     left join tms_els_test.uc_subject us on us.subject_code = pro.subject_code
+     left join tb_term term on pro.term_id = term.term_id
+     <where>
+    	pro.is_delete = '0' and term.is_delete = '0'
+    	<if test="isShelf!=null">
+    		and pro.is_shelf = #{isShelf,jdbcType=CHAR}
+    	</if>
+    	<if test="gradeCode!=null">
+    		and pro.grade_code = #{gradeCode,jdbcType=VARCHAR}
+    	</if>
+    	<if test="subjectCode!=null">
+    		and pro.subject_code = #{subjectCode,jdbcType=VARCHAR}
+    	</if>
+     </where>
+    order by pro.add_time
+  </select>
+  
+  
+  <!-- 根据id搜索产品信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据id删除产品信息 -->
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from tb_product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <!-- 增加产品信息 -->
+  <insert id="insert" parameterType="com.zhiliao.model.product.Product">
+    insert into tb_product (product_id, week_name, term_id, 
+      grade_code, price, subject_code, 
+      is_shelf, add_time, modify_time, 
+      is_delete,remark)
+    values (#{productId,jdbcType=INTEGER}, #{weekName,jdbcType=VARCHAR}, #{termId,jdbcType=INTEGER}, 
+      #{gradeCode,jdbcType=INTEGER}, #{price,jdbcType=REAL}, #{subjectCode,jdbcType=INTEGER}, 
+      #{isShelf,jdbcType=CHAR}, #{addTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=CHAR},#{remark,jdbcType=VARCHAR})
+  </insert>
+  <!-- 根据id修改产品信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.product.Product">
+    update tb_product
+    <set>
+      <if test="weekName != null">
+        week_name = #{weekName,jdbcType=VARCHAR},
+      </if>
+      <if test="termId != null">
+        term_id = #{termId,jdbcType=INTEGER},
+      </if>
+      <if test="gradeCode != null">
+        grade_code = #{gradeCode,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=REAL},
+      </if>
+      <if test="subjectCode != null">
+        subject_code = #{subjectCode,jdbcType=INTEGER},
+      </if>
+      <if test="isShelf != null">
+        is_shelf = #{isShelf,jdbcType=CHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=CHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 批量或者单条删除(下架产品) -->
+  <update id="deleteProList" parameterType="java.util.List">
+    update tb_product 
+    set  is_delete = '1' 
+    where product_id in
+    <foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+        #{idList}
+    </foreach>
+ </update>
+  
+  
+</mapper>

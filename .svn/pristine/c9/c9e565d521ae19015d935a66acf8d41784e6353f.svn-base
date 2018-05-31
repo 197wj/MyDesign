@@ -1,0 +1,478 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>修改订单</title>
+<meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<style type="text/css">
+	.input-week{box-sizing: border-box;border: solid 1px #ddd;width: 45%;font-size: 14px;
+   				height: 31px;line-height: 1.42857;padding: 4px;}
+</style>
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		<!-- 学校 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">学校：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="schoolId" id="schoolId">
+						<option value="" selected>请选择学校</option>
+					</select>
+				</span>
+			</div>
+			<input type="text" style="display: none" value="${data.schoolName }" id="schoolName" name="schoolName" >
+		</div>
+		<!-- 年级 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">年级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="gradeId" id="gradeId">
+						<option value="" selected>请选择年级</option>
+					</select>
+				</span>
+			</div>
+			<input type="text" style="display: none" value="${data.gradeName }"  id="gradeName" name="gradeName" >
+		</div>
+		
+		<!-- 班级 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">班级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="classId" id="classId">
+						<option value="" selected>请选择班级</option>
+					</select>
+				</span>
+			</div>
+			<input type="text" style="display: none" value="${data.className }" id="className" name="className" >
+		</div>
+		
+		<!-- 学生 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">学生姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="userId" id="userId">
+						<option value="" selected>请选择学生</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>学号：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="${data.userNo }" placeholder="" id="userNo" name="userNo" readonly="readonly">
+				<input type="text" style="display: none" value="${data.userName }" id="userName" name="userName"/>
+			</div>
+		</div>
+		<!-- 科目 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">科目：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="subject" id="subject">
+						<option value="" selected>请选择科目</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		
+		<!-- 教师 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">教师：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="teacherId" id="teacherId">
+						<option value="" selected>请选择教师</option>
+					</select>
+				</span>
+			</div>
+			<input type="text" style="display: none" value="${data.teacherName }" id="teacherName" name="teacherName" >
+			<input type="text" style="display: none" value="${data.teacherTel }" id="teacherTel" name="teacherTel" >
+		</div>
+		<!-- 套餐 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">套餐：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="mealId" id="mealId">
+						<option value="" selected>请选择套餐</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		<!-- 订单类型 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">订单类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="typeId" id="typeId">
+						<option value="" selected>请选套餐类型</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<!-- 价格 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>价格：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="${data.price }" placeholder="" id="price" name="price">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input style="display: none;" value="${data.orderId }" name="orderId" id="orderId"/>
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+$(function(){ 
+	
+	//获取学校
+	getSchool("${data.schoolId}");
+	//获取年级
+	getGrade("${data.gradeId}");
+	//获取班级
+	getClass("${data.schoolId}","${data.gradeId}","${data.classId}");
+	//获取学生
+	getStudent("${data.schoolId}","${data.classId}","${data.userId}")
+	//获取科目
+	getSubject("${data.gradeId}");
+	//获取订单类型
+	getType("${data.typeId}");
+	//获取教师
+	getTeacher(null,"${data.classId}")
+	//获取套餐
+	getMeal("${data.gradeId}",null,"${data.mealId}")
+});
+//根据学校查询班级和学生信息
+$(document).on("change","#schoolId",function(){
+	var name = $("#schoolId").find("option:selected").text();
+	$("#schoolName").val(name);
+	var schoolId = $("#schoolId").val();
+	var gradeId = $("#gradeId").val();
+	var classId = $("#classId").val();
+	$("#classId").empty();
+	$("#classId").append("<option lev='' value=''>请选择班级</option>");
+	$("#userId").empty();
+	$("#userNo").val("");
+	$("#userId").append("<option lev='' value=''>请选择学生</option>");
+	getClass(schoolId,gradeId);//获取班级
+	getStudent(schoolId,classId);//获取学生
+})
+//根据年级查询班级
+$(document).on("change","#gradeId",function(){
+	var name = $("#gradeId").find("option:selected").text();
+	$("#gradeName").val(name);
+	var schoolId = $("#schoolId").val();
+	var gradeId = $("#gradeId").val();
+	var subject = $("#subject").val();
+	$("#classId").empty();
+	$("#classId").append("<option lev='' value=''>请选择班级</option>");
+	$("#mealId").empty();
+	$("#mealId").append("<option lev='' value=''>请选择套餐</option>");
+	getClass(schoolId,gradeId);
+	getMeal(gradeId,subject);//获取套餐
+})
+
+//根据班级查询学生
+$(document).on("change","#classId",function(){
+	var name = $("#classId").find("option:selected").text();
+	$("#className").val(name);
+	var schoolId = $("#schoolId").val();
+	var classId = $("#classId").val();
+	var subject = $("#subject").val();
+	$("#userNo").val("");
+	$("#userId").empty();
+	$("#userId").append("<option lev='' value=''>请选择学生</option>");
+	$("#teacherId").empty();
+	$("#teacherId").append("<option lev='' value=''>请选择教师</option>");
+	getStudent(schoolId,classId);//获取学生
+	getTeacher(subject,classId);//获取教师
+})
+
+//根据科目查询教师和套餐
+$(document).on("change","#subject",function(){
+	var gradeId = $("#gradeId").val();
+	var classId = $("#classId").val();
+	var subject = $("#subject").val();
+	$("#teacherId").empty();
+	$("#teacherId").append("<option lev='' value=''>请选择教师</option>");
+	$("#mealId").empty();
+	$("#mealId").append("<option lev='' value=''>请选择套餐</option>");
+	getTeacher(subject,classId);//获取教师
+	getMeal(gradeId,subject);//获取套餐
+})
+
+//选择学生
+$(document).on("change","#userId",function(){
+	var name = $("#userId").find("option:selected").text();
+	var no = $("#userId").find("option:selected").attr("lev");
+	$("#userName").val(name);
+	$("#userNo").val(no);
+})
+//选择教师
+$(document).on("change","#teacherId",function(){
+	var name = $("#teacherId").find("option:selected").text();
+	var tel = $("#teacherId").find("option:selected").attr("lev");
+	$("#teacherName").val(name);
+	$("#teacherTel").val(tel);
+})
+
+
+//获取教师
+function getTeacher(subjectCode,classId){
+	$.ajax({
+		url:'../user/getTeacherList.action',
+		type:'get',
+		data:{'subjectCode':subjectCode,'classId':classId},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#teacherId").empty();
+				$("#teacherId").append("<option lev='' value='' selected>请选择教师</option>")
+				for(var i=0;i<data.length;i++){
+					$("#teacherId").append("<option lev='"+data[i].userTelephone+"' value='"+data[i].userId+"'>"+data[i].userName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取学生
+function getStudent(schoolId,classId,id){
+	$.ajax({
+		url:'../user/getUserList.action',
+		type:'get',
+		data:{'schoolId':schoolId,'classId':classId},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#userId").empty();
+				$("#userId").append("<option lev='' value='' selected>请选择学生</option>")
+				for(var i=0;i<data.length;i++){
+					if(data[i].userId==id){
+						$("#userId").append("<option lev='"+data[i].userAccount+"' value='"+data[i].userId+"' selected>"+data[i].userName+"</option>");
+					}else{
+						$("#userId").append("<option lev='"+data[i].userAccount+"' value='"+data[i].userId+"'>"+data[i].userName+"</option>");
+					}
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取班级
+function getClass(schoolId,gradeCode,id){
+	$.ajax({
+		url:'../class/getClassList.action',
+		type:'get',
+		data:{'schoolId':schoolId,'gradeCode':gradeCode},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#classId").empty();
+				$("#classId").append("<option value='' selected>请选择班级</option>")
+				for(var i=0;i<data.length;i++){
+					if(data[i].classId==id){
+						$("#classId").append("<option value='"+data[i].classId+"' selected>"+data[i].className+"</option>")
+					}else{
+						$("#classId").append("<option value='"+data[i].classId+"'>"+data[i].className+"</option>")
+					}
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取学校
+function getSchool(id){
+	$.ajax({
+		url:'../school/getSchoolList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#schoolId").empty();
+				$("#schoolId").append("<option value='' selected>请选择学校</option>")
+				for(var i=0;i<data.length;i++){
+					if(data[i].schoolId==id){
+						$("#schoolId").append("<option value='"+data[i].schoolId+"' selected>"+data[i].schoolName+"</option>")
+					}else{
+						$("#schoolId").append("<option value='"+data[i].schoolId+"'>"+data[i].schoolName+"</option>")
+					}
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+//获取年级
+function getGrade(id){
+	$.ajax({
+		url:'../grade/getGradeList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#gradeId").empty();
+				$("#gradeId").append("<option value='' selected>请选择年级</option>")
+				for(var i=0;i<data.length;i++){
+					if(data[i].gradeCode==id){
+						$("#gradeId").append("<option value='"+data[i].gradeCode+"' selected>"+data[i].gradeName+"</option>")
+					}else{
+						$("#gradeId").append("<option value='"+data[i].gradeCode+"'>"+data[i].gradeName+"</option>")
+					}
+						
+					
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取学科信息
+function getSubject(id){
+	$.ajax({
+		url:'../subject/getSubjectList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#subject").empty();
+				$("#subject").append("<option value='' selected>请选择学科</option>")
+				for(var i=0;i<data.length;i++){
+					if(data[i].subjectCode==id){
+						$("#subject").append("<option value='"+data[i].subjectCode+"' selected>"+data[i].subjectName+"</option>")
+					}else{
+						$("#subject").append("<option value='"+data[i].subjectCode+"'>"+data[i].subjectName+"</option>")
+					}
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取套餐
+function getMeal(grade,subject,id){
+	$.ajax({
+		url:'../meal/getMealList.action',
+		type:'get',
+		data:{'grade':grade,'subject':subject},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#mealId").empty();
+				$("#mealId").append("<option lev='' value='' selected>请选择套餐</option>")
+				for(var i=0;i<data.length;i++){
+					if(data[i].mealId==id){
+						$("#mealId").append("<option lev='"+data[i].mealId+"' value='"+data[i].mealId+"' selected>"+data[i].mealName+"</option>")
+					}else{
+						$("#mealId").append("<option lev='"+data[i].mealId+"' value='"+data[i].mealId+"'>"+data[i].mealName+"</option>")
+					}
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取订单类型
+function getType(id){
+	$.ajax({
+		url:'../type/getTypeList.action',
+		type:'get',
+		data:{},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#typeId").empty();
+				$("#typeId").append("<option lev='' value='' selected>请选择类型</option>")
+				for(var i=0;i<data.length;i++){
+					if(data[i].typeId==id){
+						$("#typeId").append("<option lev='"+data[i].typeId+"' value='"+data[i].typeId+"'selected>"+data[i].typeName+"</option>")
+					}else{
+						$("#typeId").append("<option lev='"+data[i].typeId+"' value='"+data[i].typeId+"'>"+data[i].typeName+"</option>")
+					}
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+</script>
+
+<script type="text/javascript">
+
+	$("#form-member-add").validate({
+		rules:{
+			termYear:{
+				required:true,
+				digits:true,
+			},
+			term:{
+				required:true,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				url:'../order/updateOrder.action',
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							parent.window.location.href="../order/orderView.action";
+							parent.layer.close(1);
+						});
+					}else{
+						layer.msg(data.msg,{icon:2,time:1000});
+						
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						parent.window.location.href="../order/orderView.action";
+					});
+				}
+			});
+		}
+	});
+
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

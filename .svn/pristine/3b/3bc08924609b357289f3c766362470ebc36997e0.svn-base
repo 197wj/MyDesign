@@ -1,0 +1,94 @@
+package com.zhiliao.model.php;
+
+public class TeaCount {
+
+	private String examId;//用于试卷分析
+	
+	private Integer classId;//用于获取学生信息
+	
+	private Integer week;//第几周测
+	
+	private Integer referCount;//提交试卷数
+	
+	private Integer grantCount;//发放试卷数
+	
+	private Integer totalScore;//总分数
+	
+	private Integer schRank;//学校排名
+	
+	private Integer cityRank;//城市排名
+	
+	private Float cityAvg;//城市平均分
+
+	public Float getCityAvg() {
+		return cityAvg;
+	}
+
+	public void setCityAvg(Float cityAvg) {
+		this.cityAvg = cityAvg;
+	}
+
+	public String getExamId() {
+		return examId;
+	}
+
+	public void setExamId(String examId) {
+		this.examId = examId;
+	}
+
+	public Integer getClassId() {
+		return classId;
+	}
+
+	public void setClassId(Integer classId) {
+		this.classId = classId;
+	}
+
+	public Integer getWeek() {
+		return week;
+	}
+
+	public void setWeek(Integer week) {
+		this.week = week;
+	}
+
+	public Integer getReferCount() {
+		return referCount;
+	}
+
+	public void setReferCount(Integer referCount) {
+		this.referCount = referCount;
+	}
+
+	public Integer getGrantCount() {
+		return grantCount;
+	}
+
+	public void setGrantCount(Integer grantCount) {
+		this.grantCount = grantCount;
+	}
+
+	public Integer getTotalScore() {
+		return totalScore;
+	}
+
+	public void setTotalScore(Integer totalScore) {
+		this.totalScore = totalScore;
+	}
+
+	public Integer getSchRank() {
+		return schRank;
+	}
+
+	public void setSchRank(Integer schRank) {
+		this.schRank = schRank;
+	}
+
+	public Integer getCityRank() {
+		return cityRank;
+	}
+
+	public void setCityRank(Integer cityRank) {
+		this.cityRank = cityRank;
+	}
+}

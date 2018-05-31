@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.sys.MoneySetMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.sys.MoneySet">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="set_type" jdbcType="CHAR" property="setType" />
+    <result column="set_mold" jdbcType="CHAR" property="setMold" />
+    <result column="money" jdbcType="REAL" property="money" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, set_type, set_mold, money, add_time, status
+  </sql>
+  
+  <!-- 查询金额设置list -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from money_set
+    <where>
+    	<if test="setType !=null">
+    		and set_type like concat(#{setType,jdbcType=VARCHAR},'%' )
+    	</if>
+    </where>
+  </select>
+  <!-- 获取数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select 
+    count(id)
+    from money_set
+    <where>
+    	<if test="setType !=null">
+    		and set_type like concat(#{setType,jdbcType=VARCHAR},'%' )
+    	</if>
+    </where>
+  </select>
+  
+  <!-- 根据id查询金额设置信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from money_set
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据id删除金额设置信息 -->
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from money_set
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 增加金额设置信息 -->
+  <insert id="insert" parameterType="com.zhiliao.model.sys.MoneySet">
+    insert into money_set (id, set_type, set_mold, 
+      money, add_time, status)
+    values (#{id,jdbcType=INTEGER}, #{setType,jdbcType=CHAR}, #{setMold,jdbcType=CHAR}, 
+      #{money,jdbcType=REAL}, #{addTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR})
+  </insert>
+  
+  <!-- 根据id修改金额设置信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.sys.MoneySet">
+    update money_set
+    <set>
+      <if test="setType != null">
+        set_type = #{setType,jdbcType=CHAR},
+      </if>
+      <if test="setMold != null">
+        set_mold = #{setMold,jdbcType=CHAR},
+      </if>
+      <if test="money != null">
+        money = #{money,jdbcType=REAL},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

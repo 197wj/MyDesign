@@ -1,0 +1,15 @@
+package com.zhiliao.dao.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.UcGrade;
+
+public interface UcGradeMapper {
+	
+	public UcGrade selectById(String gradeCode);
+
+    public int updateById(UcGrade record);
+
+    public List<UcGrade> selectList(Map<String, Object>map);
+}

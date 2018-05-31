@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.php.ExamsMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.php.Exams">
+    <id column="examid" jdbcType="INTEGER" property="examid" />
+    <result column="examsubject" jdbcType="VARCHAR" property="examsubject" />
+    <result column="exam" jdbcType="VARCHAR" property="exam" />
+    <result column="examstatus" jdbcType="INTEGER" property="examstatus" />
+    <result column="examtype" jdbcType="INTEGER" property="examtype" />
+    <result column="examauthorid" jdbcType="INTEGER" property="examauthorid" />
+    <result column="examauthor" jdbcType="VARCHAR" property="examauthor" />
+    <result column="examtime" jdbcType="INTEGER" property="examtime" />
+    <result column="examkeyword" jdbcType="VARCHAR" property="examkeyword" />
+    <result column="examdecide" jdbcType="INTEGER" property="examdecide" />
+    <result column="way" jdbcType="INTEGER" property="way" />
+    <result column="course_files" jdbcType="VARCHAR" property="courseFiles" />
+    <result column="tingLi" jdbcType="VARCHAR" property="tingli" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zhiliao.model.php.Exams">
+    <result column="examsetting" jdbcType="LONGVARCHAR" property="examsetting" />
+    <result column="examquestions" jdbcType="LONGVARCHAR" property="examquestions" />
+    <result column="examscore" jdbcType="LONGVARCHAR" property="examscore" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    examid, examsubject, exam, examstatus, examtype, examauthorid, examauthor, examtime, 
+    examkeyword, examdecide, way, course_files, tingLi
+  </sql>
+  <sql id="Blob_Column_List">
+    examsetting, examquestions, examscore
+  </sql>
+  
+  <!-- 根据年级id获取试卷信息 -->
+  <select id="selectByGrade"  parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>
+  	from x2_exams
+  	<where>
+  		<if test="gradeId!=null and ''!=gradeId">
+  			and examsubject like concat('%',#{gradeId,jdbcType=VARCHAR},'%')
+  		</if>
+  	</where>
+  </select>
+  <!-- 根据id获取试卷信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from x2_exams
+    where examid = #{examid,jdbcType=INTEGER}
+  </select>
+  
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from x2_exams
+    where examid = #{examid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhiliao.model.php.Exams">
+    insert into x2_exams (examid, examsubject, exam, 
+      examstatus, examtype, examauthorid, 
+      examauthor, examtime, examkeyword, 
+      examdecide, way, course_files, 
+      tingLi, examsetting, examquestions, 
+      examscore)
+    values (#{examid,jdbcType=INTEGER}, #{examsubject,jdbcType=VARCHAR}, #{exam,jdbcType=VARCHAR}, 
+      #{examstatus,jdbcType=INTEGER}, #{examtype,jdbcType=INTEGER}, #{examauthorid,jdbcType=INTEGER}, 
+      #{examauthor,jdbcType=VARCHAR}, #{examtime,jdbcType=INTEGER}, #{examkeyword,jdbcType=VARCHAR}, 
+      #{examdecide,jdbcType=INTEGER}, #{way,jdbcType=INTEGER}, #{courseFiles,jdbcType=VARCHAR}, 
+      #{tingli,jdbcType=VARCHAR}, #{examsetting,jdbcType=LONGVARCHAR}, #{examquestions,jdbcType=LONGVARCHAR}, 
+      #{examscore,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhiliao.model.php.Exams">
+    insert into x2_exams
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="examid != null">
+        examid,
+      </if>
+      <if test="examsubject != null">
+        examsubject,
+      </if>
+      <if test="exam != null">
+        exam,
+      </if>
+      <if test="examstatus != null">
+        examstatus,
+      </if>
+      <if test="examtype != null">
+        examtype,
+      </if>
+      <if test="examauthorid != null">
+        examauthorid,
+      </if>
+      <if test="examauthor != null">
+        examauthor,
+      </if>
+      <if test="examtime != null">
+        examtime,
+      </if>
+      <if test="examkeyword != null">
+        examkeyword,
+      </if>
+      <if test="examdecide != null">
+        examdecide,
+      </if>
+      <if test="way != null">
+        way,
+      </if>
+      <if test="courseFiles != null">
+        course_files,
+      </if>
+      <if test="tingli != null">
+        tingLi,
+      </if>
+      <if test="examsetting != null">
+        examsetting,
+      </if>
+      <if test="examquestions != null">
+        examquestions,
+      </if>
+      <if test="examscore != null">
+        examscore,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="examid != null">
+        #{examid,jdbcType=INTEGER},
+      </if>
+      <if test="examsubject != null">
+        #{examsubject,jdbcType=VARCHAR},
+      </if>
+      <if test="exam != null">
+        #{exam,jdbcType=VARCHAR},
+      </if>
+      <if test="examstatus != null">
+        #{examstatus,jdbcType=INTEGER},
+      </if>
+      <if test="examtype != null">
+        #{examtype,jdbcType=INTEGER},
+      </if>
+      <if test="examauthorid != null">
+        #{examauthorid,jdbcType=INTEGER},
+      </if>
+      <if test="examauthor != null">
+        #{examauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="examtime != null">
+        #{examtime,jdbcType=INTEGER},
+      </if>
+      <if test="examkeyword != null">
+        #{examkeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="examdecide != null">
+        #{examdecide,jdbcType=INTEGER},
+      </if>
+      <if test="way != null">
+        #{way,jdbcType=INTEGER},
+      </if>
+      <if test="courseFiles != null">
+        #{courseFiles,jdbcType=VARCHAR},
+      </if>
+      <if test="tingli != null">
+        #{tingli,jdbcType=VARCHAR},
+      </if>
+      <if test="examsetting != null">
+        #{examsetting,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="examquestions != null">
+        #{examquestions,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="examscore != null">
+        #{examscore,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhiliao.model.php.Exams">
+    update x2_exams
+    <set>
+      <if test="examsubject != null">
+        examsubject = #{examsubject,jdbcType=VARCHAR},
+      </if>
+      <if test="exam != null">
+        exam = #{exam,jdbcType=VARCHAR},
+      </if>
+      <if test="examstatus != null">
+        examstatus = #{examstatus,jdbcType=INTEGER},
+      </if>
+      <if test="examtype != null">
+        examtype = #{examtype,jdbcType=INTEGER},
+      </if>
+      <if test="examauthorid != null">
+        examauthorid = #{examauthorid,jdbcType=INTEGER},
+      </if>
+      <if test="examauthor != null">
+        examauthor = #{examauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="examtime != null">
+        examtime = #{examtime,jdbcType=INTEGER},
+      </if>
+      <if test="examkeyword != null">
+        examkeyword = #{examkeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="examdecide != null">
+        examdecide = #{examdecide,jdbcType=INTEGER},
+      </if>
+      <if test="way != null">
+        way = #{way,jdbcType=INTEGER},
+      </if>
+      <if test="courseFiles != null">
+        course_files = #{courseFiles,jdbcType=VARCHAR},
+      </if>
+      <if test="tingli != null">
+        tingLi = #{tingli,jdbcType=VARCHAR},
+      </if>
+      <if test="examsetting != null">
+        examsetting = #{examsetting,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="examquestions != null">
+        examquestions = #{examquestions,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="examscore != null">
+        examscore = #{examscore,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where examid = #{examid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zhiliao.model.php.Exams">
+    update x2_exams
+    set examsubject = #{examsubject,jdbcType=VARCHAR},
+      exam = #{exam,jdbcType=VARCHAR},
+      examstatus = #{examstatus,jdbcType=INTEGER},
+      examtype = #{examtype,jdbcType=INTEGER},
+      examauthorid = #{examauthorid,jdbcType=INTEGER},
+      examauthor = #{examauthor,jdbcType=VARCHAR},
+      examtime = #{examtime,jdbcType=INTEGER},
+      examkeyword = #{examkeyword,jdbcType=VARCHAR},
+      examdecide = #{examdecide,jdbcType=INTEGER},
+      way = #{way,jdbcType=INTEGER},
+      course_files = #{courseFiles,jdbcType=VARCHAR},
+      tingLi = #{tingli,jdbcType=VARCHAR},
+      examsetting = #{examsetting,jdbcType=LONGVARCHAR},
+      examquestions = #{examquestions,jdbcType=LONGVARCHAR},
+      examscore = #{examscore,jdbcType=LONGVARCHAR}
+    where examid = #{examid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhiliao.model.php.Exams">
+    update x2_exams
+    set examsubject = #{examsubject,jdbcType=VARCHAR},
+      exam = #{exam,jdbcType=VARCHAR},
+      examstatus = #{examstatus,jdbcType=INTEGER},
+      examtype = #{examtype,jdbcType=INTEGER},
+      examauthorid = #{examauthorid,jdbcType=INTEGER},
+      examauthor = #{examauthor,jdbcType=VARCHAR},
+      examtime = #{examtime,jdbcType=INTEGER},
+      examkeyword = #{examkeyword,jdbcType=VARCHAR},
+      examdecide = #{examdecide,jdbcType=INTEGER},
+      way = #{way,jdbcType=INTEGER},
+      course_files = #{courseFiles,jdbcType=VARCHAR},
+      tingLi = #{tingli,jdbcType=VARCHAR}
+    where examid = #{examid,jdbcType=INTEGER}
+  </update>
+</mapper>

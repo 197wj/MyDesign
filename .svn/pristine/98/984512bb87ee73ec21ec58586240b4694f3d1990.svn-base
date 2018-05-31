@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.log.LogMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.log.Log">
+    <id column="log_id" jdbcType="INTEGER" property="logId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="oper_type" jdbcType="VARCHAR" property="operType" />
+    <result column="oper_path" jdbcType="VARCHAR" property="operPath" />
+    <result column="oper_object" jdbcType="VARCHAR" property="operObject" />
+    <result column="ip_address" jdbcType="VARCHAR" property="ipAddress" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    log_id, user_id, user_name, oper_type, oper_path, oper_object, ip_address, add_time
+  </sql>
+  
+  <!-- 分页获取日志信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from tb_log
+    <where>
+    	<if test="stratTime!=null">
+    		and add_time &gt; #{stratTime,jdbcType=TIMESTAMP})
+    	</if>
+    	<if test="endTime!=null">
+    		and add_time &lt; #{endTime,jdbcType=TIMESTAMP})
+    	</if>
+    </where>
+    order by add_time desc
+  </select>
+  
+  <!-- 分页获取日志信息 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select 
+    count(log_id)
+    from tb_log
+    <where>
+    	<if test="stratTime!=null">
+    		and add_time &gt; #{stratTime,jdbcType=TIMESTAMP})
+    	</if>
+    	<if test="endTime!=null">
+    		and add_time &lt; #{endTime,jdbcType=TIMESTAMP})
+    	</if>
+    </where>
+    order by add_time desc
+  </select>
+  
+  
+  <!-- 根据id查询日志信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 增加日志信息 -->
+  <insert id="insert" parameterType="com.zhiliao.model.log.Log">
+    insert into tb_log (log_id, user_id, user_name, 
+      oper_type, oper_path, oper_object, 
+      ip_address, add_time)
+    values (#{logId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{operType,jdbcType=VARCHAR}, #{operPath,jdbcType=VARCHAR}, #{operObject,jdbcType=VARCHAR}, 
+      #{ipAddress,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 根据id修改日志信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.log.Log">
+    update tb_log
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="operType != null">
+        oper_type = #{operType,jdbcType=VARCHAR},
+      </if>
+      <if test="operPath != null">
+        oper_path = #{operPath,jdbcType=VARCHAR},
+      </if>
+      <if test="operObject != null">
+        oper_object = #{operObject,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddress != null">
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

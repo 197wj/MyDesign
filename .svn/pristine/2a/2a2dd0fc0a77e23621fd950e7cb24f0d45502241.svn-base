@@ -1,0 +1,51 @@
+package com.zhiliao.service.count.impl;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.count.WelCountMapper;
+import com.zhiliao.service.count.WelCountService;
+/**
+ * 首页统计的service层实现类
+ * @ClassName: WelCountServiceImpl 
+ * @author 毕伟谦 
+ * @date 2018年2月11日 下午1:37:43 
+ *
+ */
+@Service
+public class WelCountServiceImpl implements WelCountService {
+
+	@Autowired
+	private WelCountMapper countMapper;
+	
+	@Override
+	public int selectClaCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		int rows = this.countMapper.selectClaCount(map);
+		return rows;
+	}
+
+	@Override
+	public int selectSchCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		int rows = this.countMapper.selectSchCount(map);
+		return rows;
+	}
+
+	@Override
+	public int getTelCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		int rows = this.countMapper.getTelCount(map);
+		return rows;
+	}
+
+	@Override
+	public int getStuCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		int rows = this.countMapper.getStuCount(map);
+		return rows;
+	}
+
+}

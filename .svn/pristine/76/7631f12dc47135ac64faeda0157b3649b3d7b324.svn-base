@@ -1,0 +1,72 @@
+package com.zhiliao.service.php.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.php.TeaCountMapper;
+import com.zhiliao.dao.school.GradeMapper;
+import com.zhiliao.model.php.TeaCount;
+import com.zhiliao.model.school.Grade;
+import com.zhiliao.service.php.TeaCountService;
+
+@Service
+public class TeaCountServiceImpl implements TeaCountService {
+
+	@Autowired
+	private TeaCountMapper countMapper;
+	
+	@Autowired
+	private GradeMapper gradeMapper;
+	
+	@Override
+	public List<TeaCount> getCountInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TeaCount> list = this.countMapper.getCountInfo(map);
+		return list;
+	}
+	
+	@Override
+	public List<TeaCount> getScoreInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TeaCount> list = this.countMapper.getScoreInfo(map);
+		return list;
+	}
+	
+	@Override
+	public List<TeaCount> getCityRank(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TeaCount> list = this.countMapper.getCityRank(map);
+		return list;
+	}
+	
+	@Override
+	public List<TeaCount> getCityRankZ(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TeaCount> list = this.countMapper.getCityRankZ(map);
+		return list;
+	}
+	
+	@Override
+	public List<TeaCount> getAvgInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TeaCount> list = this.countMapper.getAvgInfo(map);
+		return list;
+	}
+	
+	@Override
+	public Grade selectById(Integer schoolGradeId) {
+		// TODO Auto-generated method stub
+		Grade grade = this.gradeMapper.selectById(schoolGradeId);
+		return grade;
+	}
+	
+	@Override
+	public List<TeaCount> getRateClass(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TeaCount> list = this.countMapper.getRateClass(map);
+		return list;
+	}
+}

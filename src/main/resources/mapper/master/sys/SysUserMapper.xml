@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.design.dao.sys.SysUserDao">
+  <resultMap id="BaseResultMap" type="com.design.model.sys.SysUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_update" jdbcType="TIMESTAMP" property="gmtUpdate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, phone, name, password, status, gmt_create, gmt_update
+  </sql>
+  
+  <!-- 用户登录 -->
+  <select id="login" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from sys_user
+  	where 
+  		status=0 and phone=#{phone} and password=#{password}
+  </select>
+  
+
+  <!-- 动态插入 -->
+  <insert id="insertSelective" parameterType="com.design.model.sys.SysUser" useGeneratedKeys="true" keyProperty="id">
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtUpdate != null">
+        gmt_update,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtUpdate != null">
+        #{gmtUpdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getUserByPhone" resultMap="BaseResultMap">
+ 	select
+ 	 <include refid="Base_Column_List"/>
+ 	 from sys_user
+ 	 where phone=#{phone}
+  </select>
+  
+  <!-- 根据id删除用户 -->
+  <update id="deleteById">
+    update sys_user set status=1
+    where id=#{id}
+  </update>
+  
+  
+  <!-- 更新用户密码 -->
+  <update id="updateUserPassword" parameterType="java.util.Map">
+    update sys_user
+    <set>
+        password = #{password,jdbcType=VARCHAR},
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    
+  <!-- 查看用户信息 -->
+  <select id="getUserById" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <!-- 获取用户列表 -->
+  <select id="selectUserList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  select 
+  <include refid="Base_Column_List" />
+  from sys_user
+  	<where>
+  		status = 0
+		<if test="phone!=null and phone!=''">
+			and phone like #{phone}
+		</if>
+		<if test="name!=null and name!=''">
+			and name like #{name}
+		</if>
+	</where>
+  order by gmt_create
+  </select>
+  
+  <!-- 获取用户总数量 -->
+  <select id="selectUserCount" resultType="java.lang.Integer">
+  	select count(id)
+  	from sys_user 
+  	where status=0
+  </select>
+  
+</mapper>

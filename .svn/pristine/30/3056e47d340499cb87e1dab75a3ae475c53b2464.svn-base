@@ -1,0 +1,19 @@
+package com.zhiliao.dao.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.School;
+
+public interface SchoolMapper {
+
+    public School selectById(Integer schoolId);
+
+    public int updateById(School record);
+
+    public List<School> selectList(Map<String, Object>map);
+
+	public List<School> getListByMap(Map<String, Object> map);
+
+	
+}

@@ -1,0 +1,13 @@
+package com.zhiliao.dao.count;
+
+import java.util.Map;
+
+public interface CountMapper {
+
+	/**
+	 * 根据学校和年级查询开通班级数量
+	 * @param map
+	 * @return int
+	 */
+	public int selectClassCount(Map<String, Object> map);
+}

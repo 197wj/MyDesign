@@ -1,0 +1,24 @@
+package com.zhiliao.service.product;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.product.Meal;
+import com.zhiliao.service.BaseService;
+
+public interface MealService extends BaseService<Meal, Map<String, Object>> {
+
+	public int deleteById(Integer mealId);
+
+    public int insert(Meal record);
+
+    public Meal selectById(Integer mealId);
+
+    public int updateById(Meal record);
+
+    public int deleteMealList(List<Integer> list);
+    
+    public List<Meal> selectList(Map<String, Object>map);
+    
+    public List<Meal> selectListByIds(List<Integer> list);
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration 
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+      "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<classPathEntry location="D:\Server\zhiliao\mysql\mysql-connector-java-5.1.41.jar" />
+	<context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
+
+		<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+		<!-- 主数据源 -->
+		 <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://114.115.129.127:3306/db_assistant?characterEncoding=utf8" userId="superuser" password="su@perus#er">
+		</jdbcConnection>  
+		<!-- 副数据源 -->
+		<!--<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://192.168.1.240:3306/tms_els_test?characterEncoding=utf8" userId="superuser" password="superuser">
+		</jdbcConnection> -->
+		
+		<!-- 连接组卷系统数据源 -->
+		<!-- <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://59.110.143.219:3306/qy_phpems?characterEncoding=utf8" userId="dbuser1" password="123456">
+		</jdbcConnection>-->
+		
+		<!--  默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer  
+         true，把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal  
+		-->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="true"/>
+		</javaTypeResolver>
+		
+		<!-- targetProject:自动生成代码的位置 -->
+		<!-- 生成实体类 -->
+		<javaModelGenerator targetPackage="com.zhiliao.model.sys" targetProject="assistant">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- 生成xml文件 -->
+		<sqlMapGenerator targetPackage="mapper.master.sys" targetProject="assistant/src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+
+		<!-- 生成dao层 -->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.zhiliao.dao.sys" targetProject="assistant">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		<table tableName="tb_comment" domainObjectName="TbComment" enableCountByExample="false" enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"/>
+	</context>
+
+</generatorConfiguration>

@@ -1,0 +1,94 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>Insert title here</title>
+<style type="text/css">
+  .paiming_ul{height:35px;background:#d1d1d1;}
+  .paiming_ul li{float:left;line-height:35px;width:100px;text-align:center;cursor:pointer;}
+  .active{background:#fff;color:#3bb4f2;border:1px solid #3bb4f2;} 
+</style>
+</head>
+<body>
+   <ul class="paiming_ul">
+      <li class="active">数学学生排名</li>
+      <li>英语学生排名</li>
+   </ul>
+   <div class="table_1">
+      <table class="table table-border table-bg" style="">
+	  	<thead>
+	  		<tr class="text-c">
+	  		     <th>姓名</th>
+	  		     <th>成绩</th>
+	  		     <th>班级排名</th>
+	  		     <th>学校排名</th>
+	  		     <th>市级排名</th>
+	  		 </tr>
+	  	</thead>
+	  	<tbody>
+	  	   <tr class="text-c">
+	  		    <td>王文华</td>
+	  		    <td>99</td>
+	  		    <td>1</td>
+	  		    <td>1</td>
+	  		    <td>2</td>
+	  		    <!-- <td><a class="btn btn-link" onclick='ranking_details(&#39;排名详情&#39;,&#39;../useCount/usCountView1.action&#39;,&#39;800&#39;,&#39;400&#39;)'>查看</a></td>
+	  		    <td><a class="btn btn-link">查看</a></td> -->
+	  		</tr>
+	  	   <tr class="text-c">
+	  		    <td>王文华</td>
+	  		    <td>99</td>
+	  		    <td>1</td>
+	  		    <td>1</td>
+	  		    <td>2</td>
+	  		</tr>				  		 
+	  	</tbody>
+	</table>
+   </div>
+   <div class="table_1">
+      <table class="table table-border table-bg" style="">
+		  	<thead>
+		  		<tr class="text-c">
+		  		     <th>姓名</th>
+		  		     <th>成绩</th>
+		  		     <th>班级排名</th>
+		  		     <th>学校排名</th>
+		  		     <th>市级排名</th>
+		  		 </tr>
+		  	</thead>
+		  	<tbody>
+		  	   <tr class="text-c">
+		  		    <td>王文华</td>
+		  		    <td>99</td>
+		  		    <td>1</td>
+		  		    <td>1</td>
+		  		    <td>2</td>
+		  		    <!-- <td><a class="btn btn-link" onclick='ranking_details(&#39;排名详情&#39;,&#39;../useCount/usCountView1.action&#39;,&#39;800&#39;,&#39;400&#39;)'>查看</a></td>
+		  		    <td><a class="btn btn-link">查看</a></td> -->
+		  		</tr>
+		  	   <tr class="text-c">
+		  		    <td>王华</td>
+		  		    <td>99</td>
+		  		    <td>1</td>
+		  		    <td>1</td>
+		  		    <td>2</td>
+		  		</tr>				  		 
+		  	</tbody>
+		</table>
+   </div>
+<%@ include file="../common/_footer.jsp" %>
+<script>
+  $('.table_1').hide();
+  $('.table_1').eq(0).show();
+  $('.paiming_ul li').on('click',function(){
+	  var index=$('.paiming_ul li').index(this);
+	  $('.paiming_ul li').attr('class','');
+	  $('.paiming_ul li').eq(index).attr('class','active');
+	  $('.table_1').hide();
+	  $('.table_1').eq(index).show();
+  })
+ 
+</script>
+</body>
+</html>

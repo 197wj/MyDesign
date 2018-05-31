@@ -1,0 +1,37 @@
+package com.zhiliao.service.php.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.php.PhpKnowMapper;
+import com.zhiliao.model.php.PhpKnows;
+import com.zhiliao.service.php.PhpKnowService;
+@Service
+public class PhpKnowServiceImpl implements PhpKnowService {
+	
+	@Autowired
+	private PhpKnowMapper knowMapper;
+
+	@Override
+	public List<PhpKnows> getKnow(String gradeSub) {
+		// TODO Auto-generated method stub
+		List<PhpKnows> list = this.knowMapper.getKnow(gradeSub);
+		return list;
+	}
+	
+	@Override
+	public List<PhpKnows> getSecKnow(String knowId) {
+		// TODO Auto-generated method stub
+		List<PhpKnows> list = this.knowMapper.getSecKnow(knowId);
+		return list;
+	}
+	
+	@Override
+	public List<PhpKnows> getThiKnow(String knowId) {
+		// TODO Auto-generated method stub
+		List<PhpKnows> list = this.knowMapper.getThiKnow(knowId);
+		return list;
+	}
+}

@@ -1,0 +1,597 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>使用统计</title>
+<style>
+/* body{background:#f1f1f1;} */
+  /* .highcharts-credits{display:none;}
+  .highcharts-point{display:none;} */
+  #container{margin-top：30px;}
+  .paiming{display:inline-block;margin-right:30px;}
+  .search_btn{border:1px solid #e0e0e0;}
+  .beijing_bei{background:#3bb4f2;}
+  .ziti_ziti{display:inline-block;height:35px;background:white;width:80px;text-align:center;line-height:35px;cursor:pointer;}
+  .ziti_ziti1{display:inline-block;height:35px;width:80px;text-align:center;line-height:35px;cursor:pointer;color:#fff;}
+  .bainkuang{border:1px solid #3bb4f2;padding:0;position:relative;}
+  #active{background:white;color:#000!important;}
+  #activv{background:#8bc34a;}
+  /* .qiehuan{position:relative;top:0;left:0;} */
+  thead,tbody{width:100%;}
+  h4{background:#3bb4f2;color:#fff;font-size:15px;padding-left:20px;margin-top:0;margin-bottom:15px;}
+  .biankuang{padding:0;border:1px solid #3bb4f2;float:left;}
+  .zhusi{display:inline-block;padding-left:20px;margin-bottom:20px;}
+  .xiang-ul{float:right;}
+  .xiang-ul li{float:left;height:22px;margin-right:15px;cursor:pointer;}
+  .xiang-ul li span{display:inline-block;width:40px;height:18px;background:#d1d1d1;float:left;margin-right:5px;margin-top:2px;}
+  .ziziziz{color:#8bc34a;}
+  .xiang-ul li p{display:inline-block;float:left;}
+  .panelheader{margin-bottom:30px;padding-left:15px;}
+  .shuru_kuang{float:right;}
+  .shuru_kuang p{display:inline-block;height:25px;width:40px;text-align:center;cursor:pointer;}
+  .shuru_kuang input{height:25px;border-radius:5px;padding-left:10px;}
+  .layui-layer-title{background:#3bb4f2!important;color:#fff!important;}
+    .right{color:#fff; float:right;margin-right:20px;line-height:32px;}
+</style>
+
+</head>
+<body>
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> ${schoolName } <span class="c-gray en">&gt;</span> ${gradeName }<span class="c-gray en">&gt;</span> ${className } </nav>
+   <div class="page-container cl clearfix">
+	<div class="cl clearfix data_panel">
+	   <div class="banzhuren" id="teacher">           <!-- 班主任/教师 -->	  
+		<div class="col-sm-12 col-md-12 col-lg-12">
+		 	<!-- 提交率 -->
+		    <div class="biankuang" style="margin-left:1%;width:49%;float:left;height:385px;overflow:hidden;">
+		        <h4>班级提交率
+		        	<span class="ziti_ziti1 jiajiaiaj10 ml-20" id="active">综合</span>
+				    <span class="ziti_ziti1 jiajiaiaj10">数学</span>
+				    <span class="ziti_ziti1 jiajiaiaj10">语文</span>
+				</h4>
+			    <div id="container10" style="width:100%;height:300px"></div>
+		    </div>
+		
+			<!-- 平均分 -->
+		    <div class="biankuang" style="width:49.5%;float:left;height:385px;overflow:hidden;">
+		        <h4>平均分曲线图</h4>
+		        <div class="zhusi">高于市级平均分的次数：10</div>
+ 		        
+		        <div id="container" class="zhexiantu" style="width:100%;height:300px"></div>
+<!-- 		        <div id="container5" class="zhexiantu" style="width:100%;height:300px"></div> -->
+<!-- 		        <div id="container6" class="zhexiantu" style="width:100%;height:300px"></div>           -->
+	        </div>
+	       
+		</div>
+		<div class="col-sm-12 col-md-12 col-lg-12 bainkuang" style="margin-top:50px;">
+		   <div class="beijing_bei ban_qieiqei">
+		      <span class="ziti_ziti1 jiajiaiaj1" id="active">综合</span>
+		      <span class="ziti_ziti1 jiajiaiaj1">数学</span>
+		      <span class="ziti_ziti1 jiajiaiaj1">语文</span>
+		       <div class="shuru_kuang right" id="teaList">
+			                        班主任:<span></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+			                        数学老师:<span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+			                        语文老师:<span></span>&nbsp;&nbsp;&nbsp;&nbsp;  
+			                        班级人数:<span></span> 
+						
+			  </div>
+		   </div>
+		    <table id="table1" class="table table-border table-bg bao_gege" style="margin-top:30px;">
+				  	<thead>
+				  		<tr class="text-c">
+				  		     <th>周测数</th>
+				  		     <th>发卷数</th>
+				  		     <th>提交数</th>
+				  		     <th>平均分</th>
+				  		     <th>学校排名</th>
+				  		     <th>市级排名</th>
+				  		     <!-- <th>学生学情</th>
+				  		     <th>试卷分析</th> -->
+				  		 </tr>
+				  	</thead>
+				  	<tbody id="ZHList">
+				  	   				  		 
+				  	</tbody>
+				</table>
+				<table id="table2" class="table table-border table-bg bao_gege" style="margin-top:30px;">
+				  	<thead>
+				  		<tr class="text-c">
+				  		    <th>周测数</th>
+				  		     <th>发卷数</th>
+				  		     <th>提交数</th>
+				  		     <th>平均分</th>
+				  		     <th>学校排名</th>
+				  		     <th>市级排名</th>
+				  		     <th>学生学情</th>
+				  		     <th>试卷分析</th>
+				  		 </tr>
+				  	</thead>
+				  	<tbody id="MAList">
+				  	   		  		 
+				  	</tbody>
+				</table>
+				<table id="table3" class="table table-border table-bg bao_gege" style="margin-top:30px;">
+				  	<thead>
+				  		<tr class="text-c">
+				  		     <th>周测数</th>
+				  		     <th>发卷数</th>
+				  		     <th>提交数</th>
+				  		     <th>平均分</th>
+				  		     <th>学校排名</th>
+				  		     <th>市级排名</th>
+				  		     <th>学生学情</th>
+				  		     <th>试卷分析</th>
+				  		 </tr>
+				  	</thead>
+				  	<tbody id="ENList">
+				  	   			  		 
+				  	</tbody>
+				</table>
+		   </div>
+		</div>
+	</div>
+   </div>
+
+<%@ include file="../common/_footer.jsp" %> 
+
+<script type="text/javascript">
+
+$(function(){
+	$("#table1").removeClass("hidden");
+	$("#table2").addClass("hidden");
+	$("#table3").addClass("hidden");
+	var gradeId = "${gradeId}";
+	var classId = "${classId}";
+	if(gradeId==null || classId==null || gradeId=="" || classId==""){
+		
+		gradeId = '${user.sysClass.gradeCode}';
+		classId = '${user.sysClass.classId}';
+	}
+	getAvgInfo(classId);//获取平均分
+	getRankInfo(gradeId,classId)//获取排名信息
+	getClassInfo(gradeId,classId);//获取table表格信息
+	//获取班级提交率的柱状图
+	getRateClass(classId,0)
+	
+})
+/**
+ * 班级提交率
+ */
+//科目的切换
+ $('.jiajiaiaj10').on('click',function(){
+ 	var index=$('.jiajiaiaj10').index(this);
+ 	$('.jiajiaiaj10').attr('id','')
+ 	$('.jiajiaiaj10').eq(index).attr('id','active')
+ 	$('.cscsh').hide();
+ 	$('.cscsh').eq(index).show();
+
+	var classId = "${classId}";
+	if(classId==null || classId==""){
+		
+		classId = '${user.sysClass.classId}';
+	}
+	//获取班级提交率的柱状图
+	getRateClass(classId,index)
+ })
+//获取班级的提交率(每周的提交率)
+function getRateClass(classId,index){
+	var city = [];//班级名称
+ 	var rate = [];//提交率
+  	$.ajax({
+  		url:'../teaCount/getRateClass.action',
+  		data:{'classId':classId,'index':index},
+  		type:'post',
+  		dataType:'json',
+  		success:function(obj){
+  			var data = obj.data;
+  			for(var i=0;i<data.length;i++){
+  				city[i]= data[i].week;
+  				if(data[i].cityAvg > 0.9){
+  					var obj = new Object;
+  					obj.y = data[i].cityAvg*100;
+  					obj.color = "#25bcef";
+  					rate[i]=obj;
+ 				}else if(data[i].cityAvg > 0.6 && data[i].cityAvg < 0.9){
+ 					var obj = new Object;
+  					obj.y = data[i].cityAvg*100;
+  					obj.color = "#45ca59";
+  					rate[i]=obj;
+  				}else{
+  					var obj = new Object;
+  					obj.y = data[i].cityAvg*100;
+  					obj.color = "#f8b551";
+  					rate[i]=obj;
+  				}
+  			}
+  			ClassRateHtml(city,rate);//页面显示数据
+  		}
+  	})
+}
+
+//提交率的柱状图
+function ClassRateHtml(city,rate){
+	$('#container10').highcharts({
+		title: {
+	        text: ''
+	    },
+        chart: {
+            type: 'column'
+        },
+        xAxis: {
+            categories: eval(city),
+            crosshair: true
+        },
+        yAxis: {
+        	tickPositions: [0, 25, 50, 75 , 100], // 指定竖轴坐标点的值
+            min: 0,
+            title: {
+                text: '提交率'
+            }
+        },
+        
+        plotOptions: {
+            column: {
+                dataLabels: {
+	                formatter: function() {
+	                    return this.y.toFixed(1) + '%';
+	                },
+	                enabled: true
+	            },
+            }
+        },
+        series: [{
+            name: '百分比',
+            data: eval(rate),
+            tooltip: {
+	            pointFormat: '<span">第{series.name}周测</span>: <b>{point.y}%</b> '
+	        }
+        }]
+    });
+}
+
+
+
+//获取数量
+function getClassInfo(gradeId,classId){
+	$.ajax({
+		url:'../teaCount/getCountInfo.action',
+		data:{'gradeId':gradeId,'classId':classId},
+		//data:{'schoolId':'${user.sysClass.schoolId}','gradeId':'${user.sysClass.gradeCode}','classId':'${user.sysClass.classId}'},
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status){
+				
+				//获取综合数据
+				var ZHData = obj.data;
+				$("#ZHList").empty();
+				for(var i=0;i<ZHData.length;i++){
+					ZHHtml(ZHData[i])
+				}
+				//获取语文数据
+				var ENData = obj.eng;
+				$("#ENList").empty();
+				for(var i=0;i<ENData.length;i++){
+					ENHtml(ENData[i])
+				}
+				//获取数学数据
+				var MAData = obj.math;
+				$("#MAList").empty();
+				for(var i=0;i<MAData.length;i++){
+					MAHtml(MAData[i])
+				}
+				//获取教师和班级数量
+				$("#teaList").empty();
+				var classAdmin ;
+				if(obj.classAdmin==null || obj.classAdmin==""){
+					classAdmin="";
+				}else{
+					classAdmin = obj.classAdmin.userName;
+				}
+				var engTea ;
+				if(obj.engTea==null || obj.engTea==""){
+					engTea="";
+				}else{
+					engTea = obj.engTea[0].userName;
+				}
+				var mathTea ;
+				if(obj.mathTea==null || obj.mathTea==""){
+					mathTea="";
+				}else{
+					mathTea = obj.mathTea[0].userName;
+				}
+				var html = ' 班主任:<span>'+classAdmin+'</span>&nbsp;&nbsp;&nbsp;&nbsp;'
+                           +'数学老师:<span>'+mathTea+'</span>&nbsp;&nbsp;&nbsp;&nbsp;'
+                           +' 语文老师:<span>'+engTea+'</span>&nbsp;&nbsp;&nbsp;&nbsp; '
+                          +' 班级人数:<span>'+obj.count+'</span>';
+			    $("#teaList").append(html);
+			}
+		}
+	})
+}
+//综合数据的Html
+function ZHHtml(info){
+	var avg ;
+	if(info.referCount==0){
+		avg = 0;
+	}else{
+		avg = info.totalScore/(info.referCount);
+	}
+	var html='<tr class="text-c">';
+	 	html+=' <td>第'+info.week+'周测</td>';
+		html+='	<td>'+info.grantCount+'</td>';
+		html+='	<td>'+info.referCount+'</td>';
+		html+='	<td>'+avg.toFixed(1)+'</td>';
+		html+='	<td>'+info.schRank+'</td>';
+		html+='	<td>'+info.cityRank+'</td>';
+		//html+='	<td><a class="btn btn-link" onclick="ranking_details(&#39;排名详情&#39;,&#39;../useCount/usCountView1.action&#39;,&#39;800&#39;,&#39;400&#39;)">查看</a></td>';
+		//html+='	<td><a class="btn btn-link"  onclick="ranking_detail(&#39;正确率&#39;,&#39;../useCount/usCountView1_1.action&#39;,&#39;600&#39;,&#39;800&#39;)">查看</a></td>';
+		html+='</tr>';
+	$("#ZHList").append(html);
+}
+//语文数据的Html
+function ENHtml(info){
+	var avg ;
+	if(info.referCount==0){
+		avg = 0;
+	}else{
+		avg = info.totalScore/(info.referCount);
+	}
+	var html='<tr class="text-c">';
+	 	html+=' <td>第'+info.week+'周测</td>';
+		html+='	<td>'+info.grantCount+'</td>';
+		html+='	<td>'+info.referCount+'</td>';
+		html+='	<td>'+avg.toFixed(1)+'</td>';
+		html+='	<td>'+info.schRank+'</td>';
+		html+='	<td>'+info.cityRank+'</td>';
+		html+='	<td><a class="btn btn-link" onclick="ranking_details(&#39;排名详情&#39;,&#39;http://120.194.183.35:8110/php/zhijiaoyun/index.php/Home/Port/dataDetails?schoolId=${schoolId}&gradeId=${gradeId}&classId=${classId}&subjectId=12&examId='+info.examId+'&#39;,&#39;800&#39;,&#39;600&#39;)">查看</a></td>';
+		html+='	<td><a class="btn btn-link"  onclick="ranking_detail(&#39;正确率&#39;,&#39;http://120.194.183.35:8110/php/zhijiaoyun/index.php/Home/Port/examAnalyze?classId=${classId}&examId='+info.examId+'&subjectId=12&#39;,&#39;800&#39;,&#39;600&#39;)">查看</a></td>';
+		html+='</tr>';
+	$("#ENList").append(html);
+}
+//数学数据的Html
+function MAHtml(info){
+	var avg ;
+	if(info.referCount==0){
+		avg = 0;
+	}else{
+		avg = info.totalScore/(info.referCount);
+	}
+	var html='<tr class="text-c">';
+	 	html+=' <td>第'+info.week+'周测</td>';
+		html+='	<td>'+info.grantCount+'</td>';
+		html+='	<td>'+info.referCount+'</td>';
+		html+='	<td>'+avg.toFixed(1)+'</td>';
+		html+='	<td>'+info.schRank+'</td>';
+		html+='	<td>'+info.cityRank+'</td>';
+		html+='	<td><a class="btn btn-link" onclick="ranking_details(&#39;排名详情&#39;,&#39;http://120.194.183.35:8110/php/zhijiaoyun/index.php/Home/Port/dataDetails?schoolId=${schoolId}&gradeId=${gradeId}&classId=${classId}&subjectId=11&examId='+info.examId+'&#39;,&#39;800&#39;,&#39;600&#39;)">查看</a></td>';
+		html+='	<td><a class="btn btn-link"  onclick="ranking_detail(&#39;正确率&#39;,&#39;http://120.194.183.35:8110/php/zhijiaoyun/index.php/Home/Port/examAnalyze?classId=${classId}&examId='+info.examId+'&subjectId=11&#39;,&#39;800&#39;,&#39;600&#39;)">查看</a></td>';
+		html+='</tr>';
+	$("#MAList").append(html);
+}
+
+
+</script>
+<script type="text/javascript">
+   $('.qiehuan').hide();
+    $('.qiehuan').eq(0).show();
+    $('.dainji_qiehuan').on('click',function(){
+    	var index=$('.dainji_qiehuan').index(this);
+    	$('.dainji_qiehuan').attr('id','')
+    	$('.dainji_qiehuan').eq(index).attr('id','active')
+    	$('.qiehuan').hide();
+    	$('.qiehuan').eq(index).show();
+    })
+    $('.cscsh').hide();
+    $('.cscsh').eq(0).show();
+    $('.jiajiaiaj1').on('click',function(){
+    	var index=$('.jiajiaiaj1').index(this);
+    	$('.jiajiaiaj1').attr('id','')
+    	$('.jiajiaiaj1').eq(index).attr('id','active')
+    	$('.cscsh').hide();
+    	$('.cscsh').eq(index).show();
+    	if(index==0){//综合
+    		$("#table1").removeClass("hidden");
+    		$("#table2").addClass("hidden");
+    		$("#table3").addClass("hidden");
+    	}
+    	if(index==1){//综合
+    		$("#table2").removeClass("hidden");
+    		$("#table1").addClass("hidden");
+    		$("#table3").addClass("hidden");
+    	}
+    	if(index==2){//综合
+    		$("#table3").removeClass("hidden");
+    		$("#table2").addClass("hidden");
+    		$("#table1").addClass("hidden");
+    	}
+    })
+    
+    
+function getAvgInfo(classId){
+	//获取教师综合平均分
+	var city = [];
+	var sch = [];
+	var cla =[];
+	var week = [];
+	$.ajax({
+		url:'../teaCount/getAvgInfo.action',
+		data:{'classId':classId},
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			for(var i=0;i<16;i++){
+				if(city[i] == undefined){
+					city[i]=0;
+				}
+				
+				if(sch[i] == undefined){
+					sch[i]=0;
+				}
+				if(cla[i] == undefined){
+					cla[i]=0;
+				}
+			}
+			if(obj.status){
+				var data = obj.data;
+				for(var k=0;k<data.length;k++){
+					cla[data[k].week-1]=data[k].cityAvg;//获取班级的综合平均分
+				}
+				var math = obj.math;
+				for(var k=0;k<math.length;k++){
+					city[math[k].week-1]=math[k].cityAvg;//获取班级的数学平均分
+				}
+				var eng = obj.eng;
+				for(var k=0;k<eng.length;k++){
+					sch[eng[k].week-1]=eng[k].cityAvg;//获取班级的语文平均分
+				}
+				
+				
+				var chart = new Highcharts.Chart('container', {
+				    title: {
+				        text: '',
+				        x: -20
+				    },
+				    subtitle: {
+				        text: '',
+				        x: -20
+				    },
+				    xAxis: {
+				        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+				    },
+				    yAxis: {
+				    	
+				        title: {
+				            text: ''
+				        },
+				        plotLines: [{
+				            value: 0,
+				            width: 1,
+				            color: '#808080'
+				        }],
+				        max:100
+				    },
+				    tooltip: {
+				        valueSuffix: ''
+				    },
+				    legend: {
+				        layout: 'vertical',
+				        align: 'right',
+				       verticalAlign: 'top', 
+				        borderWidth: 0
+				    },
+				    series: [{
+				        name: '数学',
+				        data: [city[0], city[1], city[2], city[3], city[4], city[5], city[6], city[7], city[8], city[9], city[10], city[11], city[12], city[13], city[14], city[15]]
+				    }, {
+				        name: '语文',
+				        data: [sch[0],sch[1],sch[2],sch[3], sch[4],sch[5], sch[6], sch[7],sch[8], sch[9],sch[10], sch[11], sch[12], sch[13], sch[14], sch[15]]
+				    }, {
+				        name: '综合',
+				        data: [cla[0], cla[1], cla[2], cla[3], cla[4], cla[5], cla[6], cla[7], cla[8], cla[9], cla[10], cla[11], cla[12], cla[13], cla[14], cla[15]]
+				    }]
+				});
+	
+			}
+		},
+		
+	})
+};
+   
+    
+    //单科排名
+function getRankInfo(gradeId,classId) {
+	
+ 
+	//获取数学的排名
+	var city = [];
+	var eng = [];
+	var sch = [];
+	var week = [];
+	$.ajax({
+		url:'../teaCount/getCountInfo.action',
+		data:{'gradeId':gradeId,'classId':classId},
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			for(var i=0;i<16;i++){
+				if(city[i] == undefined){
+					city[i]=0;
+				}
+				if(eng[i] == undefined){
+					eng[i]=0;
+				}
+				if(sch[i] == undefined){
+					sch[i]=0;
+				}
+				
+			}
+			if(obj.status){
+				var data = obj.data;
+				for(var k=0;k<data.length;k++){
+					sch[data[k].week-1]=data[k].schRank;//获取学校排名
+				}
+				var eng1 = obj.eng;
+				for(var k=0;k<eng1.length;k++){
+					eng[eng1[k].week-1]=eng1[k].schRank;//获取学校排名
+				}
+				var math = obj.math;
+				for(var k=0;k<math.length;k++){
+					city[math[k].week-1]=math[k].schRank;//获取学校排名
+				}
+				
+				
+	
+	
+	
+	var chart = new Highcharts.Chart('container1', {
+	    title: {
+	        text: '',
+	        x: -20
+	    },
+	    subtitle: {
+	        text: '',
+	        x: -20
+	    },
+	    xAxis: {
+	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+	    },
+	    yAxis: {
+	        title: {
+	            text: ''
+	        },
+	        plotLines: [{
+	            value: 0,
+	            width: 1,
+	            color: '#808080'
+	        }]
+	    },
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	       verticalAlign: 'top', 
+	        borderWidth: 0
+	    },
+	    series: [{	        
+	        name: '数学',
+	        data: [city[0], city[1], city[2], city[3], city[4], city[5], city[6], city[7], city[8], city[9], city[10], city[11], city[12], city[13], city[14], city[15]]
+	    }, {
+	        name: '语文',
+	        data: [eng[0],eng[1],eng[2],eng[3], eng[4],eng[5], eng[6], eng[7],eng[8], eng[9],eng[10], eng[11], eng[12], eng[13], eng[14], eng[15]]
+	    },{
+	        name: '综合',
+	        data: [sch[0],sch[1],sch[2],sch[3], sch[4],sch[5], sch[6], sch[7],sch[8], sch[9],sch[10], sch[11], sch[12], sch[13], sch[14], sch[15]]
+	    }
+	    ]
+	});	
+			}
+		},
+		
+	})
+};
+</script>
+</body>
+</html>

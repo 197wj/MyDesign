@@ -1,0 +1,110 @@
+package com.zhiliao.controller.areaSale;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.zhiliao.model.school.Grade;
+import com.zhiliao.model.school.School;
+import com.zhiliao.model.user.Area;
+import com.zhiliao.service.school.SchoolService;
+import com.zhiliao.service.school.gradeService;
+import com.zhiliao.service.user.AreaService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+/**
+ * 区域销售统计controller
+ * @author yuanhuawei
+ *2018-02-06
+ */
+@Controller
+@RequestMapping(value="/areaCount")
+public class areaSaleCountController {
+	@Resource
+	private AreaService areaService;
+	@Resource
+	private SchoolService schoolService;
+	@Resource
+	private gradeService gradeService;
+	
+	
+	/**
+	 * yuanhuawei
+	 * 数据库转换代码如下：
+	 * 默认为主数据源
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源，对应数据库qy_phpems_new
+	 */
+	
+	/**
+	 * 跳转到销量结算页面
+	 */
+	@RequestMapping(value="/saleCount.action")
+	public String saleCount(HttpServletRequest request,ModelMap model){
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 接收参数
+		String xianorgId =request.getParameter("xianorgId");//县组织ID
+		String xiangorgId =request.getParameter("xiangorgId");//乡组织ID
+		String cunorgId =request.getParameter("cunorgId");//村组织ID
+		String selectorgId =request.getParameter("selectorgId");//所选组织ID
+		String assType =request.getParameter("assType");//周期类型
+		String selectYear =request.getParameter("selectYear");//年份
+		String mark =request.getParameter("mark");//第一次进入标记
+		model.put("xianorgId", xianorgId);
+		model.put("xiangorgId", xiangorgId);
+		model.put("cunorgId", cunorgId);
+		model.put("selectorgId", selectorgId);
+		model.put("assType", assType);
+		model.put("selectYear", selectYear);
+		if(null==mark||mark=="") {
+			model.put("mark", 0);
+		}else {
+			model.put("mark", 1);
+		}
+		//****************************公共部分开始****************************************************
+		// 获取所有的区域
+		map.clear();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+		List<Area> AreaList = areaService.getListByMap(map);
+		model.put("AreaList", AreaList);
+		// 获取所有的学校
+		map.clear();
+		List<School> SchoolList = schoolService.getListByMap(map);
+		model.put("SchoolList", SchoolList);
+		// 获取所有的年级
+		map.clear();
+		List<Grade> GradeList = gradeService.getListByMap(map);
+		model.put("GradeList", GradeList);
+		
+		//****************************公共部分结束****************************************************
+		
+		
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+		return "areaSaleCount/saleCount";
+	}
+	
+	
+	/**
+	 * 跳转到销量订单页面
+	 */
+	@RequestMapping(value="/saleOrder.action")
+	public String saleOrder(HttpServletRequest request,ModelMap model){
+	
+		
+		
+		return "areaSaleCount/saleOrder";
+	}
+	
+	
+	
+}

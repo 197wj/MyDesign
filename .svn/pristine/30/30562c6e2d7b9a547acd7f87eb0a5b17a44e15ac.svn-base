@@ -1,0 +1,22 @@
+package com.zhiliao.dao.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.teacherClass;
+
+public interface teacherClassMapper {
+    int deleteByPrimaryKey(Long teacherClassId);
+
+    int insert(teacherClass record);
+
+    int insertSelective(teacherClass record);
+
+    teacherClass selectByPrimaryKey(Long teacherClassId);
+
+    int updateByPrimaryKeySelective(teacherClass record);
+
+    int updateByPrimaryKey(teacherClass record);
+
+	List<teacherClass> getListByMap(Map<String, Object> map);
+}

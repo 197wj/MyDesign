@@ -1,0 +1,195 @@
+package com.zhiliao.controller.invoice;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
+import com.zhiliao.model.sys.Invoice;
+import com.zhiliao.model.user.Area;
+import com.zhiliao.service.order.OrderService;
+import com.zhiliao.service.school.ClassService;
+import com.zhiliao.service.school.SchoolService;
+import com.zhiliao.service.school.UcSubjectService;
+import com.zhiliao.service.school.gradeService;
+import com.zhiliao.service.sys.InvoiceService;
+import com.zhiliao.service.user.AreaService;
+import com.zhiliao.service.user.SysUserService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+/**
+ * 发票controller
+ * @author yuanhuawei
+ *2018-02-06
+ */
+@Controller
+@RequestMapping(value="/invoice")
+public class invoiceController {
+	@Resource
+	private AreaService areaService;
+	@Resource
+	private InvoiceService invoiceService;
+	@Resource
+	private SchoolService schoolService;
+	@Resource
+	private gradeService gradeService;
+	@Resource
+	private ClassService classService;
+	@Resource
+	private UcSubjectService ucSubjectService;
+	@Resource
+	private OrderService orderService;
+	@Resource
+	private SysUserService sysUserService;
+	/**
+	 * yuanhuawei
+	 * 数据库转换代码如下：
+	 * 默认为主数据源
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源，对应数据库qy_phpems_new
+	 */
+	
+	/**
+	 * 跳转到发票列表页面
+	 */
+	@RequestMapping(value="/invoice-list.action")
+	public String invoiceList(HttpServletRequest request,ModelMap model){
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 接收参数
+		String areaId =request.getParameter("areaId");//区域ID
+		String invoiceStatus =request.getParameter("invoiceStatus");//开票状态（0，未开，1，已开）
+		String beginYear =request.getParameter("beginYear");//开始年
+		String beginMonth =request.getParameter("beginMonth");//开始月
+		String endYear =request.getParameter("endYear");//结束年
+		String endMonth =request.getParameter("endMonth");//结束月
+		String content =request.getParameter("content");//搜索框的内容（模糊查询，可以是联系人手机号或发票数据的主键ID）
+		model.put("content", content);
+		
+		//****************************公共部分开始****************************************************
+		// 获取所有的区域
+		map.clear();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+		List<Area> AreaList = areaService.getListByMap(map);
+		model.put("AreaList", AreaList);
+		//获取可选年份，月份
+		Date now=new Date();
+		model.put("thisYear", now.getYear()+1900);
+		model.put("thisMonth", now.getMonth()+1);
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		String nowStr=sdf.format(now);
+		String[] nowArray=nowStr.split("-");
+		Integer year=Integer.valueOf(nowArray[0]);
+		List<Integer> yearList=new ArrayList<Integer>();
+		for(int i=year;i>=2017;i--) {
+			yearList.add(i);
+		}
+		model.put("yearList", yearList);
+		List<Integer> monthList=new ArrayList<Integer>();
+		for(int i=1;i<=12;i++) {
+			monthList.add(i);
+		}
+		model.put("monthList", monthList);
+		
+		//****************************公共部分结束****************************************************
+		map.clear();
+		if(null!=content&&!content.equals("")) {
+			map.put("content", content);
+		}
+		if(null==areaId||areaId.equals("")||areaId.equals("0")) {//默认显示所有区域
+			model.put("areaId", 0);
+		}else {
+			map.put("areaId", Integer.valueOf(areaId));
+			model.put("areaId", Integer.valueOf(areaId));
+		}
+		if(null==invoiceStatus||invoiceStatus.equals("")||invoiceStatus.equals("2")) {//默认显示所有状态的发票
+			model.put("invoiceStatus", 2);
+		}else {
+			map.put("invoiceStatus", Integer.valueOf(invoiceStatus));
+			model.put("invoiceStatus", invoiceStatus);
+		}
+		Date beginDate=new Date();
+		Date endDate=new Date();
+		if(null==beginYear||beginYear.equals("")) {//默认显示2017年1月到目前年月的所有数据
+			beginDate.setYear(117);
+			beginDate.setMonth(0);
+			beginDate.setDate(1);
+			model.put("beginYear", 2017);
+			model.put("beginMonth", 1);
+			model.put("endYear", endDate.getYear()+1900);
+			model.put("endMonth", endDate.getMonth()+1);
+			map.put("beginDate",beginDate);
+			map.put("endDate",endDate);
+		}else {
+			beginDate.setYear(Integer.valueOf(beginYear)-1900);
+			beginDate.setMonth(Integer.valueOf(beginMonth)-1);
+			beginDate.setDate(1);
+			endDate.setYear(Integer.valueOf(endYear)-1900);
+			endDate.setMonth(Integer.valueOf(endMonth)-1);
+			endDate.setDate(30);
+			model.put("beginYear", Integer.valueOf(beginYear));
+			model.put("beginMonth", Integer.valueOf(beginMonth));
+			model.put("endYear", Integer.valueOf(endYear));
+			model.put("endMonth", Integer.valueOf(endMonth));
+			map.put("beginDate",beginDate);
+			map.put("endDate",endDate);
+		}
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源，对应数据库qy_phpems_new
+		List<Invoice> InvoiceList = invoiceService.getListByMap(map);
+		if(InvoiceList.size()>0) {
+			for(int i=0;i<InvoiceList.size();i++) {
+				//获取区域名
+				MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+				Area a=areaService.selectById(String.valueOf(InvoiceList.get(i).getAreaId()));
+				InvoiceList.get(i).setAreaName(a.getAreaname());
+				
+				
+				
+			}
+		}
+		model.put("InvoiceList", InvoiceList);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+		return "invoice/invoice-list";
+	}
+	
+	/**
+	 * 开通发票
+	 * @param ids
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/invoicepass.action")
+	public String invoicePass(@RequestParam(value="ids",required=false) String ids) {
+		JSONObject json = new JSONObject();
+		try{
+			String[] idArray = ids.split(",");
+			for(String idStr:idArray){
+				Invoice v = new Invoice();
+				v.setId(Integer.valueOf(idStr));
+				v.setInvoiceStatus(1);
+				MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源，对应数据库qy_phpems_new
+				this.invoiceService.update(v);
+			}
+			json.put("status", "1");
+			json.put("msg", "开通成功");
+		}catch(Exception e){
+			json.put("status", "2");
+			json.put("msg", "开通失败");
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+		return json.toJSONString();
+	}
+	
+}

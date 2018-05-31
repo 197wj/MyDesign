@@ -1,0 +1,40 @@
+package com.zhiliao.service.school.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.school.UcGradeMapper;
+import com.zhiliao.model.school.UcGrade;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.school.UcGradeService;
+@Service
+public class UcGradeServiceImpl extends BaseServiceImpl<UcGrade, Map<String, Object>> implements UcGradeService {
+
+	@Autowired
+	private UcGradeMapper ucGardeMapper;
+	
+	@Override
+	public UcGrade selectById(String gradeCode) {
+		// TODO Auto-generated method stub
+		UcGrade ucGrade = this.ucGardeMapper.selectById(gradeCode);
+		return ucGrade;
+	}
+
+	@Override
+	public int updateById(UcGrade record) {
+		// TODO Auto-generated method stub
+		int rows = this.ucGardeMapper.updateById(record);
+		return rows;
+	}
+
+	@Override
+	public List<UcGrade> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<UcGrade> list = this.ucGardeMapper.selectList(map);
+		return list;
+	}
+
+}

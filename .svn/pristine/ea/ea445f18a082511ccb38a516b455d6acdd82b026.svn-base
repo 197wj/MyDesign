@@ -1,0 +1,84 @@
+package com.zhiliao.model.php;
+
+public class PhpCount {
+
+	private float classSynthesizeScorre;
+	
+	private Integer classSynthesizeSubmit;
+	
+	private Integer week;
+	
+	private Integer book;
+	
+	private float schoolSynthesizeScorre;
+	
+	private Integer schoolSynthesizeSubmit;
+	
+	private float citySynthesizeScorre;
+	
+	private Integer citySynthesizeSubmit;
+
+	public float getClassSynthesizeScorre() {
+		return classSynthesizeScorre;
+	}
+
+	public void setClassSynthesizeScorre(float classSynthesizeScorre) {
+		this.classSynthesizeScorre = classSynthesizeScorre;
+	}
+
+	public Integer getClassSynthesizeSubmit() {
+		return classSynthesizeSubmit;
+	}
+
+	public void setClassSynthesizeSubmit(Integer classSynthesizeSubmit) {
+		this.classSynthesizeSubmit = classSynthesizeSubmit;
+	}
+
+	public Integer getWeek() {
+		return week;
+	}
+
+	public void setWeek(Integer week) {
+		this.week = week;
+	}
+
+	public Integer getBook() {
+		return book;
+	}
+
+	public void setBook(Integer book) {
+		this.book = book;
+	}
+
+	public float getSchoolSynthesizeScorre() {
+		return schoolSynthesizeScorre;
+	}
+
+	public void setSchoolSynthesizeScorre(float schoolSynthesizeScorre) {
+		this.schoolSynthesizeScorre = schoolSynthesizeScorre;
+	}
+
+	public Integer getSchoolSynthesizeSubmit() {
+		return schoolSynthesizeSubmit;
+	}
+
+	public void setSchoolSynthesizeSubmit(Integer schoolSynthesizeSubmit) {
+		this.schoolSynthesizeSubmit = schoolSynthesizeSubmit;
+	}
+
+	public float getCitySynthesizeScorre() {
+		return citySynthesizeScorre;
+	}
+
+	public void setCitySynthesizeScorre(float citySynthesizeScorre) {
+		this.citySynthesizeScorre = citySynthesizeScorre;
+	}
+
+	public Integer getCitySynthesizeSubmit() {
+		return citySynthesizeSubmit;
+	}
+
+	public void setCitySynthesizeSubmit(Integer citySynthesizeSubmit) {
+		this.citySynthesizeSubmit = citySynthesizeSubmit;
+	}
+}

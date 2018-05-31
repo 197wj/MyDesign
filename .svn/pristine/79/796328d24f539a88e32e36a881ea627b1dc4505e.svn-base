@@ -1,0 +1,32 @@
+package com.zhiliao.service.php.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.php.TeaCountMapper;
+import com.zhiliao.model.php.TeaCount;
+import com.zhiliao.service.php.TeaCountService;
+
+@Service
+public class TeaCountServiceImpl implements TeaCountService {
+
+	@Autowired
+	private TeaCountMapper countMapper;
+	
+	@Override
+	public List<TeaCount> getCountInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TeaCount> list = this.countMapper.getCountInfo(map);
+		return list;
+	}
+	
+	@Override
+	public List<TeaCount> getScoreInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TeaCount> list = this.countMapper.getScoreInfo(map);
+		return list;
+	}
+}

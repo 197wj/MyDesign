@@ -1,0 +1,560 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>我的桌面</title>
+</head>
+<body style="background:#f1f1f1">
+<div class="page-container cl clearfix">
+	<div class="cl clearfix data_panel">
+		<div class="col-sm-12 col-md-12 col-lg-6">
+			<div class="panel panel-secondary cl clearfix">
+				<div class="panel-header">产品覆盖统计</div>
+				<div class="col-sm-6 col-md-6 col-lg-6 top15">
+					<div class="border-grey">
+						<div class="cl clearfix">
+							<div class="col-sm-6 col-md-6 col-lg-6">
+								<div id="left1" style="height:10vw"></div>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-6 data_tit">
+								<span>覆盖班级数</span>
+								<big><b style="color:#57c8f2">平衡</b></big>
+							</div>
+						</div>
+						<div class="data_stage">
+							<span style="color:#73c245" id="WMCount">数学:106个班</span>
+							<big></big>
+							<span style="color:#0caf6d" id="WECount">英语:54个班</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-6 top15">
+					<div class="border-grey">
+						<div class="cl clearfix">
+							<div class="col-sm-6 col-md-6 col-lg-6">
+								<div id="left2" style="height:10vw"></div>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-6 data_tit">
+								<span>覆盖学校率</span>
+								<big><b style="color:#ff6c60">较差</b></big>
+							</div>
+						</div>
+						<div class="data_stage" id="schoolCount">
+							<span>覆盖学校:28所</span>
+							<big></big>
+							<span>受众学校:18所</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-6 top15">
+					<div class="border-grey">
+						<div class="cl clearfix">
+							<div class="col-sm-6 col-md-6 col-lg-6">
+								<div id="left3" style="height:10vw"></div>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-6 data_tit">
+								<span>覆盖班级率</span>
+								<big><b style="color:#3ea6ec">较好</b></big>
+							</div>
+						</div>
+						<div class="data_stage" id="claCount">
+							<span>覆盖班级:24个</span>
+							<big></big>
+							<span>受众班级:18个班</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-6 top15">
+					<div class="border-grey">
+						<div class="cl clearfix">
+							<div class="col-sm-6 col-md-6 col-lg-6">
+								<div id="left4" style="height:10vw"></div>
+							</div>
+							<div class="col-sm-6 col-md-6 col-lg-6 data_tit">
+								<span>覆盖人群率</span>
+								<big><b style="color:#57c8f2">一般</b></big>
+							</div>
+						</div>
+						<div class="data_stage" id="perCount">
+							<span>覆盖人群:586个</span>
+							<big></big>
+							<span>受众人群：300个</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-md-12 col-lg-6 right_panel">
+			<div class="panel panel-secondary cl clearfix">
+				<div class="panel-header">用户订购统计</div>
+				<div class="col-sm-4 col-md-4 col-lg-4 top15">
+					<div class="cl clearfix">
+						<div id="right1" style="height:10vw"></div>
+					</div>
+				</div>
+				<div class="col-sm-8 col-md-8 col-lg-8 top15 right_panel_stage">
+					<div class="col-sm-6 col-md-6 col-lg-6 data">
+						<span>订购人科</span>
+						<font><big>1000</big>人/科</font>
+					</div>
+					<div class="col-sm-6 col-md-6 col-lg-6 data">
+						<span>订购率</span>
+						<font><big>200</big>%</font>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-secondary cl clearfix">
+				<div class="panel-header">财务统计</div>
+				<div class="col-sm-4 col-md-4 col-lg-4 top15">
+					<div class="cl clearfix">
+						<div id="right2" style="height:10vw"></div>
+						<p class="text-c va-m">学校订购率</p>
+					</div>
+				</div>
+				<div class="col-sm-8 col-md-8 col-lg-8 top15">
+					<div class="bar_box" id="userType">
+						<div class="col-sm-3 col-md-3 col-lg-3 bar_item">
+							<div class="bar_total" id="ff">
+								<div class="bar_actual" style="background:#37a1dc;height:0"><span style="color:#37a1dc">0%</span></div>
+							</div>
+							<p style="color:#37a1dc">付费用户</p>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 bar_item">
+							<div class="bar_total" id="sy">
+								<div class="bar_actual" style="background:#ff876c;height:0%"><span style="color:#ff8761">0%</span></div>
+							</div>
+							<p style="color:#ff8761">试用用户</p>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 bar_item">
+							<div class="bar_total" id="pks">
+								<div class="bar_actual" style="background:#b198dc;height:0%"><span style="color:#ba98dc">0%</span></div>
+							</div>
+							<p style="color:#ba98dc">贫困生</p>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 bar_item">
+							<div class="bar_total" id="jszn">
+								<div class="bar_actual" style="background:#57bdde;height:0%"><span style="color:#57bdde">0%</span></div>
+							</div>
+							<p style="color:#57bdde">教师子弟</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-sm-12 col-md-12 col-lg-12 top15">
+		<div class="panel panel-secondary">
+			<div class="panel-header">详情信息
+				<div class="f-r">学校名称：
+					<select class="select long_s" size="1" name="demo1">
+					    <option value="" selected>默认select</option>
+					    <option value="1">菜单一</option>
+					    <option value="2">菜单二</option>
+					    <option value="3">菜单三</option>
+					  </select>
+				年级：
+					<select class="select short_s" size="1" name="demo1">
+					    <option value="" selected>默认select</option>
+					    <option value="1">菜单一</option>
+					    <option value="2">菜单二</option>
+					    <option value="3">菜单三</option>
+					  </select>
+					  <button class="btn search_btn">查询</button>
+				</div>
+			</div>
+			<div class="margin15">
+				<table class="table table-border table-bg table-bordered ">
+				  	<thead>
+				  		<tr class="text-c"><th>ID</th><th>学校名称</th><th>覆盖科级</th><th>订购比（数学/英语）</th><th>订购人科</th><th>订购详情</th></tr>
+				  	</thead>
+				  	<tbody id="WSchoolList">
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  	</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		getClassCount();
+		//getSubjectCount();
+		getSchoolCount();
+		schoolCount();
+		getClaCount();
+		getPerCount();
+		getuserType();
+	})
+	
+	//根据用户类型获取用户数量
+	function getuserType(){
+		$.ajax({
+			url:'${path }/count/getUserType.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					var data = obj.data;
+					var sum = 0;
+					for(var i=0;i<data.length;i++){
+						sum += data[i].count;
+					}
+					for(map in data){
+						if(data[map].typeName=='付费'){
+							$("#ff").empty();
+							var x = (data[map].count)/sum;
+							
+							x = (x*100).toFixed(2) + '%';
+							$("#ff").append('<div class="bar_actual" style="background:#37a1dc;height:'+x+'"><span style="color:#37a1dc">'+x+'</span></div>')
+						}
+						if(data[map].typeName=='试用'){
+							$("#sy").empty();
+							var x = (data[map].count)/sum;
+							x = (x*100).toFixed(2) + '%';
+							$("#sy").append('<div class="bar_actual" style="background:#ff876c;height:'+x+'"><span style="color:#ff8761">'+x+'</span></div>')
+						}
+						if(data[map].typeName=='教师子女'){
+							$("#jszn").empty();
+							var x = (data[map].count)/sum;
+							x = (x*100).toFixed(2) + '%';
+							$("#jszn").append('<div class="bar_actual" style="background:#57bdde;height:'+x+'"><span style="color:#57bdde">'+x+'</span></div>')
+						}
+						if(data[map].typeName=='贫困生'){
+							$("#pks").empty();
+							var x = (data[map].count)/sum;
+							x = (x*100).toFixed(2) + '%';
+							$("#pks").append('<div class="bar_actual" style="background:#b198dc;height:'+x+'"><span style="color:#ba98dc">'+x+'</span></div>')
+						}
+					}
+				}
+			}
+		})
+	}
+	
+	
+	//获取人数
+	function getPerCount(){
+		$.ajax({
+			url:'${path }/count/getPerCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					$("#perCount").empty();
+					$("#perCount").append('<span>覆盖人群:'+obj.rows+'个</span>'+
+												'<big></big>'+
+												'<span>受众人群:'+obj.openRows+'个</span>');
+				}
+			}
+		})
+	}
+	
+	//获取班级的数量
+	function getClaCount() {
+		$.ajax({
+			url:'${path }/count/getClaCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					$("#claCount").empty();
+					$("#claCount").append('<span>覆盖班级:'+obj.rows+'个</span>'+
+												'<big></big>'+
+												'<span>受众班级:'+obj.openRows+'个</span>');
+				}
+			}
+		})
+	}
+	
+	//获取学校的数量
+	function schoolCount() {
+		$.ajax({
+			url:'${path }/count/selectSchoolCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					$("#schoolCount").empty();
+					$("#schoolCount").append('<span>覆盖学校:'+obj.rows+'所</span>'+
+												'<big></big>'+
+												'<span>受众学校:'+obj.openRows+'所</span>');
+				}
+			}
+		})
+	}
+	
+	
+	
+	
+	//获取学校的统计数据
+	function getSchoolCount(){
+		$.ajax({
+			url:'${path }/count/getSchoolCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					var data = obj.data;
+					$("#WSchoolList").empty();
+					for(var i=0;i<data.length;i++){
+						$("#WSchoolList").append('<tr class="text-c">'+
+													'<td>'+data[i].schoolId+'</td>'+
+													'<td>'+data[i].schoolName+'</td>'+
+													'<td>三年级,四年级,五年级</td>'+
+													'<td>'+data[i].mcount+'/'+data[i].ecount+'</td>'+
+													'<td>'+data[i].total+'/人科</td>'+
+													'<td><a class="btn btn-link">详情</a></td>'+
+												'</tr>');
+					}
+				}
+			}
+		})
+	}
+	
+	
+	
+	//获取各科的订购人数
+	function getSubjectCount(){
+		$.ajax({
+			url:'${path }/count/getSubjectCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					var data = obj.data;
+					$("#subjectCount").empty();
+					for(var i=0;i<data.length;i++){
+						$("#subjectCount").append('<div class="col-sm-6 col-md-6 col-lg-6 data">'+
+													'<span id="">'+data[i].name+'订购</span>'+
+													'<font><big>'+data[i].count+'</big>人</font>'+
+													'</div>');
+					}
+				}
+			}
+		})
+	}
+	
+	//获取班级订购数量
+	function getClassCount(){
+		$.ajax({
+			url:'${path }/count/getClassCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					
+					$("#WMCount").empty();
+					$("#WECount").empty();
+					
+					$("#WMCount").append('数学:'+obj.math+'个班级');
+					$("#WECount").append('英语:'+obj.math+'个班级');
+				}
+			}
+		})
+	}
+</script>
+<script>
+	// 基于准备好的dom，初始化echarts实例
+	var left1 = echarts.init(document.getElementById('left1'));
+	var left2 = echarts.init(document.getElementById('left2'));
+	var left3 = echarts.init(document.getElementById('left3'));
+	var left4 = echarts.init(document.getElementById('left4'));
+	var right1 = echarts.init(document.getElementById('right1'));
+	var right2 = echarts.init(document.getElementById('right2'));
+	// 指定图表的配置项和数据
+	var option1 = {
+			tooltip: {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		    },
+		    legend: {
+		        orient: 'vertical',
+		        x: 'left',
+		    },
+		    color:['#0acac8', '#92dc66'] ,
+		    series: [
+		        {
+		            name:'覆盖科级数',
+		            type:'pie',
+		            radius: ['50%', '65%'],
+		            hoverAnimation:false,
+		            label: {
+		                normal: {
+		                    show: true,
+		                    position: 'center',
+		                    formatter:'{c}',
+		                    textStyle:{color:'#606161' },
+		                },
+		            },
+		            data:[
+		                {value:335, name:'覆盖'},
+		                {value:1548, name:'未覆盖'}
+		            ],
+		        }
+		    ]
+		};
+	left1.setOption(option1);
+	var option2 = {
+			tooltip: {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		    },
+		    legend: {
+		        orient: 'vertical',
+		        x: 'left',
+		    },
+		    color:['#ff6c60', '#f1f2f7'] ,
+		    series: [
+		        {
+		            name:'访问来源',
+		            type:'pie',
+		            radius: ['50%', '65%'],
+		            hoverAnimation:false,
+		            label: {
+		                normal: {
+		                    show: true,
+		                    position: 'center',
+		                    formatter:'{d}%',
+		                    textStyle:{color:'#ff6c60' },
+		                },
+		            },
+		            data:[
+		                {value:335, name:'直接访问'},
+		                {value:1548, name:'搜索引擎'}
+		            ]
+		        }
+		    ]
+		};
+	left2.setOption(option2);
+	var option3 = {
+			tooltip: {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		    },
+		    legend: {
+		        orient: 'vertical',
+		        x: 'left',
+		    },
+		    color:['#3ea6ec', '#f1f2f7'] ,
+		    series: [
+		        {
+		            name:'访问来源',
+		            type:'pie',
+		            hoverAnimation:false,
+		            radius: ['50%', '65%'],
+		            label: {
+		                normal: {
+		                    show: true,
+		                    position: 'center',
+		                    formatter:'{d}%',
+		                    textStyle:{color:'#3ea6ec' },
+		                },
+		            },
+		            data:[
+		                {value:335, name:'直接访问'},
+		                {value:1548, name:'搜索引擎'}
+		            ]
+		        }
+		    ]
+		};
+	left3.setOption(option3);
+	var option4 = {
+			tooltip: {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		    },
+		    legend: {
+		        orient: 'vertical',
+		        x: 'left',
+		    },
+		    color:['#57c8f2', '#f1f2f7'] ,
+		    series: [
+		        {
+		            name:'访问来源',
+		            type:'pie',
+		            radius: ['50%', '65%'],
+		            hoverAnimation:false,
+		            label: {
+		                normal: {
+		                    show: true,
+		                    position: 'center',
+		                    formatter:'{d}%',
+		                    textStyle:{color:'#57c8f2' },
+		                },
+		            },
+		            data:[
+		                {value:335, name:'直接访问'},
+		                {value:1548, name:'搜索引擎'}
+		            ]
+		        }
+		    ]
+		};
+	left4.setOption(option4);
+	var option5 = {
+			tooltip : {
+		        formatter: "{a} <br/>{b} : {c}%"
+		    },
+		    series: [
+		        {
+		            type: 'gauge',
+		            title:{show:true},
+		            radius:'100%',
+		            min:0,
+		            max:200000,
+		            startAngle:'190',
+		            endAngle:'-10',
+		            axisLine:{lineStyle:{width:10,color:[[121546/200000, '#00bfe8'],[1, '#aaaaaa']]}},
+		            axisTick:{show:false},
+		            splitLine:{show:false},
+		            axisLabel:{show:false},
+		            detail: {formatter:'{value}'},
+		            data: [{value: 121546, name: '投放区域人数'}]
+		        }
+		    ]
+		};
+	right1.setOption(option5);
+	var option6 = {
+			tooltip : {
+		        formatter: "{a} <br/>{b} : {c}%"
+		    },
+		    series: [
+		        {
+		            type: 'gauge',
+		            title:{show:false},
+		            radius:'100%',
+		            min:0,
+		            max:100,
+		            startAngle:'180',
+		            endAngle:'-179.9999999',
+		            axisLine:{lineStyle:{width:10,color:[[0.72, '#00bfe8'],[1, '#f1f2f7']]}},
+		            axisTick:{show:false},
+		            splitLine:{show:true,length:20},
+		            axisLabel:{show:false},
+		            detail: {formatter:'{value}%',offsetCenter:[0,0],borderRadius:'50%',textStyle:{color:'#00bfe8'}},
+		            data: [{value: 72, name: '投放区域人数'}],
+		            itemStyle:{
+		            	normal:{
+		            		opacity:0.3
+		            	}
+		            }
+		        },
+		        
+		    ]
+		};
+	right2.setOption(option6);
+</script>
+<footer class="mt-20">
+	<div class="footer">Copyright 郑州大牛软件科技有限公司版权所有</div>
+</footer>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+</body>
+</html>

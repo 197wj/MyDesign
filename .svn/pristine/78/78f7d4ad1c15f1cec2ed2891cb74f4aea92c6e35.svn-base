@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.school.UcSubjectMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.school.UcSubject">
+    <id column="subject_code" jdbcType="VARCHAR" property="subjectCode" />
+    <result column="subject_name" jdbcType="VARCHAR" property="subjectName" />
+    <result column="subject_num" jdbcType="VARCHAR" property="subjectNum" />
+    <result column="modifyable" jdbcType="CHAR" property="modifyable" />
+    <result column="is_base_subject" jdbcType="CHAR" property="isBaseSubject" />
+    <result column="simple_code" jdbcType="VARCHAR" property="simpleCode" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="icon1" jdbcType="VARCHAR" property="icon1" />
+    <result column="is_open" jdbcType="CHAR" property="isOpen" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    subject_code, subject_name, subject_num, modifyable, is_base_subject, simple_code, 
+    icon, icon1, is_open
+  </sql>
+  
+  <!-- 分页获取学科信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from uc_subject
+    <where>
+    	<if test="isOpen!=null">
+    		and is_open = #{isOpen,jdbcType=CHAR}
+    	</if>
+    	<if test="subjectName!=null">
+    		and subject_name like concat('%',#{subjectName,jdbcType=VARCHAR},'%')
+    	</if>
+    </where>
+    order by subject_code
+  </select>
+  
+  <!-- 分页获取学科数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select 
+    count(subject_code)
+    from uc_subject
+    <where>
+    	<if test="isOpen!=null">
+    		and is_open = #{isOpen,jdbcType=CHAR}
+    	</if>
+    	<if test="subjectName!=null">
+    		and subject_name like concat('%',#{subjectName,jdbcType=VARCHAR},'%')
+    	</if>
+    </where>
+    order by subject_code
+  </select>
+  
+  
+  
+  <!-- 根据id查询学科 -->
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from uc_subject
+    where subject_code = #{subjectCode,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据id修改学科 -->
+  <update id="updateById" parameterType="com.zhiliao.model.school.UcSubject">
+    update uc_subject
+    <set>
+      <if test="isOpen != null">
+        is_open = #{isOpen,jdbcType=CHAR},
+      </if>
+    </set>
+    where subject_code = #{subjectCode,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

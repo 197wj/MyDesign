@@ -1,0 +1,480 @@
+package com.zhiliao.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.dao.contrast.ContrastMapper;
+import com.zhiliao.model.common.Pagination;
+import com.zhiliao.model.order.Order;
+import com.zhiliao.model.php.ExamVo;
+import com.zhiliao.model.php.Examhistory;
+import com.zhiliao.model.php.Exams;
+import com.zhiliao.model.school.Class;
+import com.zhiliao.model.school.Grade;
+import com.zhiliao.model.school.School;
+import com.zhiliao.model.school.UcGrade;
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.contrast.ContrastService;
+import com.zhiliao.service.school.ClassService;
+import com.zhiliao.service.school.SchoolService;
+import com.zhiliao.service.school.UcGradeService;
+import com.zhiliao.service.user.SysUserService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+/**
+ * 沁教云数据与周周清用户的数据对比(主要用于调班的数据更改)
+ * @author 毕伟谦
+ *
+ */
+@Controller
+@RequestMapping("/contrast")
+public class ContrastController {
+
+	@Autowired
+	private ContrastService contrastService;
+	
+	@Autowired
+	private SysUserService  sysUserService;
+	
+	@Autowired
+	private UcGradeService  gradeService;
+	
+	@Autowired
+	private SchoolService schoolService;
+	
+	@Autowired
+	private ClassService classService;
+	
+	/**
+	 * 跳转到订单异常数据对比页面
+	 * @return
+	 */
+	@RequestMapping("/contrastView.action")
+	public String contrastView(){
+		return "contrast/contrast-list";
+	}
+	
+	/**
+	 * 跳转到试卷异常数据对比页面
+	 * @return
+	 */
+	@RequestMapping("/examView.action")
+	public String examView(){
+		return "contrast/exam-list"; 
+	}
+	/**
+	 * 跳转到发放试卷的页面
+	 * @return
+	 */
+	@RequestMapping("/examsView.action")
+	public String examsView(){
+		return "contrast/exams-list";
+	}
+	
+	/**
+	 * 跳转到修改成绩和学生数量的页面
+	 * @return
+	 */
+	@RequestMapping("/scoreView.action")
+	public String scoreView(){
+		return "contrast/score-list";
+	}
+	
+	
+	/**
+	 * 跳转到订单修改页面
+	 * @param request
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/updateView.action")
+	public String updateView(HttpServletRequest request,
+			@RequestParam(value="userId",required=true)Long userId){
+		
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		SysUser sysUser = this.sysUserService.selectById(userId);
+		if (null!=sysUser) {
+			School school = sysUser.getSchool();
+			Grade grade = sysUser.getGrade();
+			Class sysClass = sysUser.getSysClass();
+			List<UcGrade> ucGrade = null;
+			if(null!=grade){
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("gradeName", grade.getGradeName());
+				ucGrade = this.gradeService.selectList(map);
+			}
+			request.setAttribute("school", school);
+			request.setAttribute("grade", ucGrade.get(0));
+			request.setAttribute("sysClass", sysClass);
+		}
+		request.setAttribute("sysUser", sysUser);
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源		
+		return "contrast/contrast-update";
+	}
+	
+	/**
+	 * 跳转到试卷修改页面
+	 * @param request
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/updateExamView.action")
+	public String updateExamView(HttpServletRequest request,
+			@RequestParam(value="userId",required=true)Long userId){
+		
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		SysUser sysUser = this.sysUserService.selectById(userId);
+		if (null!=sysUser) {
+			School school = sysUser.getSchool();
+			Grade grade = sysUser.getGrade();
+			Class sysClass = sysUser.getSysClass();
+			List<UcGrade> ucGrade = null;
+			if(null!=grade){
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("gradeName", grade.getGradeName());
+				ucGrade = this.gradeService.selectList(map);
+			}
+			request.setAttribute("school", school);
+			request.setAttribute("grade", ucGrade.get(0));
+			request.setAttribute("sysClass", sysClass);
+		}
+		request.setAttribute("sysUser", sysUser);
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源		
+		return "contrast/exam-update";
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 分页获取异常订单数据 
+	 * @return
+	 */
+	@RequestMapping(value="/getContrastByPage.action")
+	@ResponseBody
+	public Map<String, Object> getContrastByPage(@RequestParam(value = "page",defaultValue = "1") Integer page,
+            									 @RequestParam(value = "rows",defaultValue = "20") Integer rows,
+            									 @RequestParam(value = "schoolId",required=false) Integer schoolId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		try {
+			List<Map<String, Object>> resultList = null;
+			int totalRecords = 0;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("schoolId", schoolId);
+			//调用service方法,进行数据的查询
+			Pagination<Map<String, Object>> pagination;
+			MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+			pagination = this.contrastService.getPagingDatas(map, page, rows, "selectCount","selectList",ContrastMapper.class);
+			
+			resultList = pagination.getPageList();//返回数据
+			totalRecords = pagination.getTotalRecords();//返回行数	
+			if(totalRecords>0){
+				resultMap.put("rows", resultList);
+				resultMap.put("total", totalRecords);
+				resultMap.put("status", true);
+				resultMap.put("msg", "获取成功");
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "没有获取到数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		return resultMap;
+	}
+	
+	/**
+	 * 根据用户id修改用户订单信息
+	 * @param order
+	 * @return
+	 */
+	@RequestMapping("/updateOrderByUser.action")
+	@ResponseBody
+	public Map<String, Object> updateOrderByUser(Order order){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		
+		int rows = this.contrastService.updateByUserId(order);
+		if(rows > 0){
+			resultMap.put("status", true);
+			resultMap.put("msg", "修改成功!!");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "修改失败!!");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 根据用户id修改用户订单信息
+	 * @param order
+	 * @return
+	 */
+	@RequestMapping("/updateExamByUser.action")
+	@ResponseBody
+	public Map<String, Object> updateExamByUser(Order order){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Examhistory examhistory = new Examhistory();
+		examhistory.setEhschoolid(order.getSchoolId());
+		examhistory.setEhgradeid(order.getGradeId());
+		examhistory.setEhclassid(order.getClassId());
+		examhistory.setEhuserid(order.getUserId());
+		
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		int rows = this.contrastService.updateByUser(examhistory);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		if(rows > 0){
+			resultMap.put("status", true);
+			resultMap.put("msg", "修改成功!!");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "修改失败!!");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 批量修改订单异常数据
+	 * @param request
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping("/updateOrderByList.action")
+	@ResponseBody
+	public Map<String, Object> updateOrderByList(HttpServletRequest request,
+												 @RequestParam("ids") String ids){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		List<Integer> list = new ArrayList<Integer>();
+		//List<Integer> idList = new ArrayList<Integer>();
+		String[] str = ids.split(",");
+		for (String id : str) {
+            list.add(Integer.parseInt(id));
+        }
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<SysUser> users = this.sysUserService.selectByIds(list);//获取学生信息
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		Map<String, Object> map = new HashMap<String, Object>();
+		//判断获取的用户的数量
+		if (users.size()>0) {
+			int rows = 0;
+			for(SysUser user:users){
+				if (null!=user) {
+					School school = user.getSchool();
+					Grade grade = user.getGrade();
+					Class sysClass = user.getSysClass();
+					List<UcGrade> ucGrade = null;
+					if(null!=grade){
+						map.clear();
+						map.put("gradeName", grade.getGradeName());
+						MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+						ucGrade = this.gradeService.selectList(map);
+						MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+					}
+					//设置订单修改信息
+					Order order = new Order();
+					order.setSchoolId(school.getSchoolId());
+					order.setSchoolName(school.getSchoolName());
+					order.setGradeId(Integer.parseInt(ucGrade.get(0).getGradeCode()));
+					order.setGradeName(grade.getGradeName());
+					order.setClassId(sysClass.getClassId());
+					order.setClassName(sysClass.getClassName());
+					order.setUserId(Integer.parseInt(user.getUserId().toString()));
+					rows+= this.contrastService.updateByUserId(order);//修改订单接口
+				}
+				if (rows > 0) {
+					resultMap.put("status", true);
+					resultMap.put("msg", "修改成功!!");
+					resultMap.put("rows", rows);
+				}
+			}
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "请选择用户");
+		}
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 批量修改试卷异常数据
+	 * @param request
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping("/updateExamByList.action")
+	@ResponseBody
+	public Map<String, Object> updateExamByList(HttpServletRequest request,
+												 @RequestParam("ids") String ids){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		List<Integer> list = new ArrayList<Integer>();
+		String[] str = ids.split(",");
+		for (String id : str) {
+            list.add(Integer.parseInt(id));
+        }
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<SysUser> users = this.sysUserService.selectByIds(list);//获取学生信息
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		Map<String, Object> map = new HashMap<String, Object>();
+		//判断获取的用户的数量
+		if (users.size()>0) {
+			int rows = 0;
+			for(SysUser user:users){
+				if (null!=user) {
+					School school = user.getSchool();
+					Grade grade = user.getGrade();
+					Class sysClass = user.getSysClass();
+					List<UcGrade> ucGrade = null;
+					if(null!=grade){
+						map.clear();
+						map.put("gradeName", grade.getGradeName());
+						MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+						ucGrade = this.gradeService.selectList(map);
+						MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+					}
+					//设置试卷修改信息
+					Examhistory examhistory = new Examhistory();
+					examhistory.setEhschoolid(school.getSchoolId());
+					examhistory.setEhgradeid(Integer.parseInt(ucGrade.get(0).getGradeCode()));
+					examhistory.setEhclassid(sysClass.getClassId());
+					examhistory.setEhuserid(Integer.parseInt(user.getUserId().toString()));
+					
+					MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+					rows += this.contrastService.updateByUser(examhistory);
+					MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+				}
+				if (rows > 0) {
+					resultMap.put("status", true);
+					resultMap.put("msg", "修改成功!!");
+					resultMap.put("rows", rows);
+				}
+			}
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "请选择用户");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 分页获取异常试卷数据 
+	 * @return
+	 */
+	@RequestMapping(value="/getExamByPage.action")
+	@ResponseBody
+	public Map<String, Object> getExamByPage(@RequestParam(value = "page",defaultValue = "1") Integer page,
+            								 @RequestParam(value = "rows",defaultValue = "20") Integer rows,
+            								 @RequestParam(value = "schoolId",required=false) Integer schoolId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		try {
+			List<Map<String, Object>> resultList = null;
+			int totalRecords = 0;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("schoolId", schoolId);
+			//调用service方法,进行数据的查询
+			Pagination<Map<String, Object>> pagination;
+			MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+			pagination = this.contrastService.getPagingDatas(map, page, rows, "selectExCount","selectExList",ContrastMapper.class);
+			
+			resultList = pagination.getPageList();//返回数据
+			totalRecords = pagination.getTotalRecords();//返回行数	
+			if(totalRecords>0){
+				resultMap.put("rows", resultList);
+				resultMap.put("total", totalRecords);
+				resultMap.put("status", true);
+				resultMap.put("msg", "获取成功");
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "没有获取到数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		return resultMap;
+	}
+	
+	/**
+	 * 获取学生数量,成绩和,并修改数据库中的值
+	 * @param schoolId
+	 * @return
+	 */
+	@RequestMapping("/getScore.action")
+	@ResponseBody
+	public Map<String, Object> getScore(@RequestParam(value="schoolId",required=true)Integer schoolId,
+										@RequestParam(value="gradeId",required=true)Integer gradeId,
+										@RequestParam(value="classId",required=false)Integer classId,
+										@RequestParam(value="examId",required=true)Integer examId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		map.put("classId", classId);
+		map.put("examId", examId);
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		List<ExamVo> list = this.contrastService.selectTotal(map);
+		if(list.size()>0){
+			int rows = 0;
+			for (ExamVo exam :list) {
+				rows += this.contrastService.updateByClassId(exam);
+			}
+			if(rows > 0){
+				resultMap.put("status", true);
+				resultMap.put("msg", "修改成功!!");
+			}
+		}
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 获取试卷信息
+	 * @param gradeId
+	 * @return
+	 */
+	@RequestMapping(value="/getExams.action")
+	@ResponseBody
+	public Map<String, Object> getExams(@RequestParam(value="gradeId",required=true)Integer gradeId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		String str = gradeId+","; 
+		map.clear();
+		map.put("gradeId", str);
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		List<Exams> list = this.contrastService.selectByGrade(map);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		if(list.size()>0){
+			resultMap.put("status", true);
+			resultMap.put("data", list);
+			resultMap.put("msg", "获取成功!!!");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "获取失败!!!");
+		}
+		
+		return resultMap;
+	}
+	
+	
+	
+	
+	
+	
+}

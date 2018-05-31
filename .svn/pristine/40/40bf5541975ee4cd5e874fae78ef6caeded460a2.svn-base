@@ -1,0 +1,99 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>修改app信息 </title>
+<meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+</head>
+<body>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-app-edit">
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>app类型：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<span id="typeName"></span>
+			<%-- <input type="text" class="input-text" value="${sysUpdate.versionName}" id="versionName" name="versionName"> --%>
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>版本号：</label>
+		<div class="formControls col-xs-8 col-sm-9"> 
+			<input type="text" class="input-text" value="${sysUpdate.versionCode}" id="versionCode" name="versionCode">
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>版本描述：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="${sysUpdate.description}" id="description" name="description">
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+			<input type="hidden" id="updId" name="updId" value="${sysUpdate.updId}">
+			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	
+	</form>
+</article>
+
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+$(function(){
+	var status = '${sysUpdate.status}';
+	if(status=='1'){
+		$("#typeName").html("教师端");
+	}
+	if(status=='2'){
+		$("#typeName").html("家长端");
+	}
+})
+/**
+ * form表单校验通过后提交
+ */
+$("#form-app-edit").validate({
+	rules:{
+		versionCode:{
+			required:true,
+			digits:true,
+		},
+		description:{
+			required:true,
+		},
+	},
+	onkeyup:false,
+	focusCleanup:true,
+	success:"valid",
+	submitHandler:function(form){
+		$(form).ajaxSubmit({
+			type: 'post',
+			url: "../app/editApp.action",
+			success: function(obj){
+				var data = eval('(' + obj + ')'); 
+				if (data.status == true) {
+					layer.msg(data.msg,{icon:1,time:1000},function(){
+						parent.window.location.href="../app/appView.action";
+						parent.layer.close(1);
+					});
+				} else {
+					layer.msg(data.msg,{icon:2,time:1000});
+				}
+			},
+            error: function(XmlHttpRequest, textStatus, errorThrown){
+				layer.msg("系统出错",{icon:2,time:1000},function(){
+					parent.window.location.href="../app/appView.action";
+					parent.layer.close(1);
+				});
+			}
+		});
+	}
+});
+</script> 
+</body>
+</html>

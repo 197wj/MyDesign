@@ -1,0 +1,668 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>使用统计</title>
+<style>
+/* body{background:#f1f1f1;} */
+  .highcharts-credits{display:none;}
+  .highcharts-point{display:none;}
+  #container{margin-top：30px;}
+  .paiming{display:inline-block;margin-right:30px;}
+  .search_btn{border:1px solid #e0e0e0;}
+  .beijing_bei{background:#3bb4f2;}
+  .ziti_ziti{display:inline-block;height:35px;color:#fff;width:80px;text-align:center;line-height:35px;cursor:pointer;}
+  .ziti_ziti1{display:inline-block;height:35px;width:80px;text-align:center;line-height:35px;cursor:pointer;color:#fff;}
+  .bainkuang{border:1px solid #3bb4f2;padding:0;position:relative;}
+  #active{background:white;color:#000!important;}
+  #activv{background:#8bc34a;}
+  /* .qiehuan{position:relative;top:0;left:0;} */
+  thead,tbody{width:100%;}
+  h4{background:#3bb4f2;color:#fff;font-size:15px;padding-left:20px;margin-top:0;margin-bottom:15px;}
+  .biankuang{padding:0;border:1px solid #3bb4f2;float:left;}
+  .zhusi{display:inline-block;padding-left:20px;margin-bottom:20px;}
+  .xiang-ul{float:right;}
+  .xiang-ul li{float:left;height:22px;margin-right:15px;cursor:pointer;}
+  .xiang-ul li span{display:inline-block;width:40px;height:18px;background:#d1d1d1;float:left;margin-right:5px;margin-top:2px;}
+  .ziziziz{color:#8bc34a;}
+  .xiang-ul li p{display:inline-block;float:left;}
+  .panelheader{margin-bottom:30px;padding-left:15px;}
+  .shuru_kuang{float:right;}
+  .shuru_kuang p{display:inline-block;height:25px;width:40px;text-align:center;cursor:pointer;}
+  .shuru_kuang input{height:25px;border-radius:5px;padding-left:10px;}
+  .layui-layer-title{background:#3bb4f2!important;color:#fff!important;}
+  .right{color:#fff; float:right;margin-right:20px;line-height:32px;}
+  .kuangh{line-height:35px; margin-right:10px;}
+  .cscsh0 thead tr { display:block;}
+  .cscsh0 tbody {display: block;height: 290px; overflow: auto;}
+  .cscsh0 th {width:128px;}
+  .cscsh0 td {width:128px;}
+/*   .cscsh0 thead tr th {text-align: center;} */
+</style>
+
+</head>
+<body>
+   <div class="page-container cl clearfix">
+	<div class="cl clearfix data_panel">
+		<div class="xuexiao" id="plate">	         <!-- 教研室/平台管理员+ -->  
+			<div class="col-sm-12 col-md-12 col-lg-12">
+			    <div class="bainkuang" style="width:49.5%;float:left;height:385px;overflow:hidden;">
+			        <h4>成绩平均分分布图</h4>
+			        <div id="container4" style="width:100%;height:300px"></div>	            
+		        </div>
+			    <div class="bainkuang"  style="margin-left:1%; width:49%;float:left;height:385px;overflow:hidden;">
+			        <div class="beijing_bei">
+					      <span class="ziti_ziti jiajiaiaj0" id="active">语文批改率</span>
+					       <span class="ziti_ziti jiajiaiaj0">数学批改率</span>
+					       <span class="right" id="ecount" >开通人数：</span>
+					       <span class="right" id="mcount">开通人数：</span>
+					</div>
+					
+					<table class="table table-border table-bg cscsh0">
+					  	<thead >
+					  		<tr class="text-c">
+					  		     <th>周测数</th>
+					  		     <th>发卷数</th>
+					  		     <th>发卷率</th>
+					  		     <th>批改数</th>
+					  		     <th>批改率</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody id="engList">
+					  	  
+					  	   				  						  		 
+					  	</tbody>
+					</table>
+					<table class="table table-border table-bg cscsh0">
+					  	<thead>
+					  		<tr class="text-c">
+					  		     <th>周测数</th>
+					  		     <th>发卷数</th>
+					  		     <th>发卷率</th>
+					  		     <th>批改数</th>
+					  		     <th>批改率</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody id="mathList" >
+					  	  		  						  		 
+					  	</tbody>
+					</table>
+			    </div>
+			</div>
+			
+			<div class="col-sm-12 col-md-12 col-lg-12 bainkuang" style="margin-top:50px;">
+			    <div class="beijing_bei">
+				      <span class="ziti_ziti1 jiajiaiaj" id="active">综合</span>
+				      <span class="ziti_ziti1 jiajiaiaj">数学</span>
+				      <span class="ziti_ziti1 jiajiaiaj">语文</span>
+				      <input type="hidden" id="schInfo" value="0"/>
+				      <div class="shuru_kuang">
+				      <a class="hidden" id="downloadExcel1">导出excel</a>
+				      <a class="hidden" id="downloadExcel2">导出excel</a>
+				      <a class="hidden" id="downloadExcel3">导出excel</a>&nbsp;&nbsp;&nbsp;
+			                          请选择：
+						<select class="select long_s kuangh" size="1" name="demo1" id="week">
+						    <option value="1" selected>1周测</option>
+						    <option value="2">2周测</option>
+						    <option value="3">3周测</option>
+						    <option value="4">4周测</option>
+						    <option value="5">5周测</option>
+						    <option value="6">6周测</option>
+						    <option value="7">7周测</option>
+						    <option value="8">8周测</option>
+						    <option value="9">9周测</option>
+						    <option value="10">10周测</option>
+						    <option value="11">11周测</option>
+						    <option value="12">12周测</option>
+						    <option value="13">13周测</option>
+						    <option value="14">14周测</option>
+						    <option value="15">15周测</option>
+						    <option value="16">16周测</option>
+						  </select>
+						   <input type="text" placeholder="请输入学校名称" id="schoolName" />
+						   <p id="seach">确认</p>
+					  </div>
+				</div>
+				
+			    <table id="table1" class="table table-border table-bg cscsh">
+					  	<thead>
+					  		<tr class="text-c">
+					  			 <th>学校编号</th>
+					  		     <th>学校名称</th>
+					  		     <th>开通人数</th>
+					  		     <th>发卷率</th>
+					  		     <th>提交人数</th>
+					  		     <th>提交率</th>
+					  		     <th>平均分</th>
+					  		     <!-- <th>市级排名</th> -->
+					  		     <th>详情</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody id="ZhList">
+					  	   			  		 
+					  	</tbody>
+					</table>
+					<table id="table2" class="table table-border table-bg cscsh" style="margin-top:30px;">
+					  	<thead>
+					  		<tr class="text-c">
+					  			 <th>学校编号</th>
+					  		     <th>学校名称</th>
+					  		     <th>开通人数</th>
+					  		     <th>发卷率</th>
+					  		     <th>提交人数</th>
+					  		     <th>提交率</th>
+					  		     <th>平均分</th>
+					  		    <!--  <th>市级排名</th> -->
+					  		     <th>详情</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody id="MaList">
+					  	   			  		 
+					  	</tbody>
+					</table>
+					<table id="table3" class="table table-border table-bg cscsh" style="margin-top:30px;">
+					  	<thead>
+					  		<tr class="text-c">
+					  			<th>学校编号</th>
+					  		    <th>学校名称</th>
+					  		     <th>开通人数</th>
+					  		     <th>发卷率</th>
+					  		     <th>提交人数</th>
+					  		     <th>提交率</th>
+					  		     <th>平均分</th>
+					  		     <!-- <th>市级排名</th> -->
+					  		     <th>详情</th>
+					  		 </tr>
+					  	</thead>
+					  	<tbody id="EnList">
+					  	   			  		 
+					  	</tbody>
+					</table>
+			   </div>
+		</div>
+	</div>
+   </div>
+
+<%@ include file="../common/_footer.jsp" %> 
+
+<script type="text/javascript">
+
+$(function(){
+	var gradeId = '${gradeId}';
+	var areaId = '${areaId}';
+	var week = $("#week").val();
+	var schoolName = $("#schoolName").val();
+	getCount(gradeId,areaId);
+	getAvg(gradeId,areaId)//获取平均分(折线图使用)
+	getPlatInfo(gradeId,week,schoolName,areaId);
+})
+//点击确认查询
+$("#seach").click(function(){
+	var gradeId = '${gradeId}';
+	var areaId = '${areaId}';
+	var week = $("#week").val();
+	var schoolName = $("#schoolName").val();
+	getPlatInfo(gradeId,week,schoolName,areaId);
+})
+//批概率的获取
+function getCount(gradeId,areaId){
+	$.ajax({
+		url:'../platCount/getCount.action',
+		data:{'gradeId':gradeId,'areaId':areaId},
+		type:'post',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status){
+				//获取语文数据
+				var eng = obj.eng;
+				var engCount = obj.engCount;
+				$("#engList").empty();
+				for(var i=0;i<eng.length;i++){
+					engHtml(eng[i],engCount);
+				}
+				//获取数学数据
+				var math = obj.math;
+				var mathCount = obj.mathCount;
+				$("#mathList").empty();
+				for(var i=0;i<math.length;i++){
+					mathHtml(math[i],mathCount);
+				} 
+				
+				$("#ecount").empty();
+				$("#ecount").append('开通人数:'+engCount);
+				$("#mcount").empty();
+				$("#mcount").append('开通人数:'+mathCount);
+			}
+		}
+	})
+}
+//数学批改率
+function mathHtml(info,count){
+	var grAvg = 0;
+	if(count!=0){
+		grAvg = (info.grantCount/count)*100;
+	}
+	var reAvg = 0;
+	if(count!=0){
+		reAvg = (info.referCount/count)*100;
+	}
+	var html='<tr class="text-c">';
+	html+=' <td>第'+info.week+'周测</td>';
+	html+='<td>'+info.grantCount+'</td>';
+	html+='<td>'+grAvg.toFixed(1)+'%</td>';
+	html+='<td>'+info.referCount+'</td>';
+	html+='<td>'+reAvg.toFixed(1)+'%</td>';
+	html+='</tr>';
+	
+	$("#mathList").append(html);
+}
+
+//语文批改率
+function engHtml(info,count){
+	var grAvg = 0;
+	if(count!=0){
+		grAvg = (info.grantCount/count)*100;
+	}
+	var reAvg = 0;
+	if(count!=0){
+		reAvg = (info.referCount/count)*100;
+	}
+	var html='<tr class="text-c" style="width:100%;">';
+	html+=' <td>第'+info.week+'周测</td>';
+	html+='<td>'+info.grantCount+'</td>';
+	html+='<td>'+grAvg.toFixed(1)+'%</td>';
+	html+='<td>'+info.referCount+'</td>';
+	html+='<td>'+reAvg.toFixed(1)+'%</td>';
+	html+='</tr>';
+	
+	$("#engList").append(html);
+}
+
+
+
+
+//获取数量
+function getPlatInfo(gradeId,week,schoolName,areaId){
+	$.ajax({
+		url:'../platCount/getCountInfo.action',
+		data:{'gradeId':gradeId,'week':week,'schoolName':schoolName,'areaId':areaId},
+		type:'post',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status){
+				//获取综合数据
+				var ZHData = obj.data;
+				var zAvg = obj.zAvg;
+				$("#ZhList").empty();
+				for(var i=0;i<ZHData.length;i++){
+					ZHHtml(ZHData[i],zAvg)
+				}
+				//获取语文数据
+				var ENData = obj.eng;
+				var eAvg = obj.eAvg;
+				$("#EnList").empty();
+				for(var i=0;i<ENData.length;i++){
+					ENHtml(ENData[i],eAvg);
+				}
+				//获取数学数据
+				var MAData = obj.math;
+				var mAvg = obj.mAvg;
+				$("#MaList").empty();
+				for(var i=0;i<MAData.length;i++){
+					MAHtml(MAData[i],mAvg);
+				}
+			}
+		}
+	})
+}
+//综合数据的Html
+function ZHHtml(info,zAvg){
+	var avg ;
+	if(info.referCount == 0){
+		avg = 0;
+	}else{
+		avg = info.totalScore/(info.referCount);
+	}
+	
+	var avg1=0;
+	if(info.openCount!=0){
+		avg1 = (info.grantCount/info.openCount)*100;
+	}
+	var avg2 = 0;
+	if(info.grantCount!=0){
+		avg2 = (info.referCount/info.openCount)*100;
+	}
+	
+	
+	var html='<tr class="text-c">';
+		html+=' <td>'+info.schoolId+'</td>';
+	 	html+=' <td>'+info.schoolName+'</td>';
+		html+='	<td>'+info.openCount+'</td>';
+		html+='	<td>'+avg1.toFixed(1)+'%</td>';
+		html+='	<td>'+info.referCount+'</td>';
+		html+='	<td>'+avg2.toFixed(1)+'%</td>';
+		html+='	<td>'+avg.toFixed(1)+'</td>';
+		/* html+='	<td>'+info.cityRank+'</td>'; */
+		html+='	<td><a href="../schCount/schoolCount.action?schoolId='+info.schoolId+'&gradeId=${gradeId}&week='+info.week+'" target="_self" href="javascript:void(0)">查看</a></td>';
+		html+='</tr>';
+	$("#ZhList").append(html);
+}
+//语文数据的Html
+function ENHtml(info,eAvg){
+	var avg ;
+	if(info.referCount == 0){
+		avg = 0;
+	}else{
+		avg = info.totalScore/(info.referCount);
+	}
+	
+	var avg1=0;
+	if(info.openCount!=0){
+		avg1 = (info.grantCount/info.openCount)*100;
+	}
+	var avg2 = 0;
+	if(info.grantCount!=0){
+		avg2 = (info.referCount/info.openCount)*100;
+	}
+	var html='<tr class="text-c">';
+		html+=' <td>'+info.schoolId+'</td>';
+	 	html+=' <td>'+info.schoolName+'</td>';
+	 	html+='	<td>'+info.openCount+'</td>';
+	 	html+='	<td>'+avg1.toFixed(1)+'%</td>';
+	 	html+='	<td>'+info.referCount+'</td>';
+		html+='	<td>'+avg2.toFixed(1)+'%</td>';
+		html+='	<td>'+avg.toFixed(1)+'</td>';
+		/* html+='	<td>'+info.cityRank+'</td>'; */
+		html+='	<td><a href="../schCount/schoolCount.action?schoolId='+info.schoolId+'&gradeId=${gradeId}&week='+info.week+'" target="_self" href="javascript:void(0)">查看</a></td>';
+		html+='</tr>';
+	$("#EnList").append(html);
+}
+//数学数据的Html
+function MAHtml(info,mAvg){
+	var avg ;
+	if(info.referCount == 0){
+		avg = 0;
+	}else{
+		avg = info.totalScore/(info.referCount);
+	}
+	
+	var avg1=0;
+	if(info.openCount!=0){
+		avg1 = (info.grantCount/info.openCount)*100;
+	}
+	var avg2 = 0;
+	if(info.grantCount!=0){
+		avg2 = (info.referCount/info.openCount)*100;
+	}
+	var html='<tr class="text-c">';
+		html+=' <td>'+info.schoolId+'</td>';
+	 	html+=' <td>'+info.schoolName+'</td>';
+	 	html+='	<td>'+info.openCount+'</td>';
+	 	html+='	<td>'+avg1.toFixed(1)+'%</td>';
+	 	html+='	<td>'+info.referCount+'</td>';
+		html+='	<td>'+avg2.toFixed(1)+'%</td>';
+		html+='	<td>'+avg.toFixed(1)+'</td>';
+		/* html+='	<td>'+info.cityRank+'</td>'; */
+		html+='	<td><a href="../schCount/schoolCount.action?schoolId='+info.schoolId+'&gradeId=${gradeId}&week='+info.week+'" target="_self" href="javascript:void(0)">查看</a></td>';
+		html+='</tr>';
+	$("#MaList").append(html);
+}
+
+
+
+</script>
+<script type="text/javascript">
+   $('.qiehuan').hide();
+    $('.qiehuan').eq(0).show();
+    $('.dainji_qiehuan').on('click',function(){
+    	var index=$('.dainji_qiehuan').index(this);
+    	$('.dainji_qiehuan').attr('id','')
+    	$('.dainji_qiehuan').eq(index).attr('id','active')
+    	$('.qiehuan').hide();
+    	$('.qiehuan').eq(index).show();
+    })
+    $('.cscsh').hide();
+    $('.cscsh').eq(0).show();
+    $('.cscsh0').hide();
+    $('.cscsh0').eq(0).show();
+    $('.right').hide();
+    $('.right').eq(0).show();
+    
+    $('.jiajiaiaj').on('click',function(){
+    	var index=$('.jiajiaiaj').index(this);
+    	$('.jiajiaiaj').attr('id','')
+    	$('.jiajiaiaj').eq(index).attr('id','active')
+    	$("#schInfo").val(index);
+    	$('.cscsh').hide();
+    	$('.cscsh').eq(index).show();
+    	if(index==0){
+    		$("#downloadExcel1").removeClass("hidden")
+    		$("#downloadExcel2").addClass("hidden")
+    		$("#downloadExcel3").addClass("hidden")
+    	}
+    	if(index==1){
+    		$("#downloadExcel2").removeClass("hidden")
+    		$("#downloadExcel1").addClass("hidden")
+    		$("#downloadExcel3").addClass("hidden")
+    	}
+    	if(index==2){
+    		$("#downloadExcel3").removeClass("hidden")
+    		$("#downloadExcel2").addClass("hidden")
+    		$("#downloadExcel1").addClass("hidden")
+    	}
+    	
+    	
+    	
+    });
+    $('.jiajiaiaj0').on('click',function(){
+    	var index=$('.jiajiaiaj0').index(this);
+    	$('.jiajiaiaj0').attr('id','')
+    	$('.jiajiaiaj0').eq(index).attr('id','active')
+    	$('.cscsh0').hide();
+    	$('.cscsh0').eq(index).show();
+    	$('.right').hide();
+    	$('.right').eq(index).show();
+    })
+    /* 班主角色切换表格 */
+    $('.bao_gege').hide();
+    $('.bao_gege').eq(0).show();
+    $('.ban_qieiqei span').on('click',function(){
+    	var index=$('.ban_qieiqei span').index(this);
+    	$('.ban_qieiqei span').attr('id','');
+    	$('.ban_qieiqei span').eq(index).attr('id','active');
+    	$('.bao_gege').hide();
+    	$('.bao_gege').eq(index).show();
+    })
+    
+    /* 切换班主任角色平均分 */
+    $('.pinhjunfen_ul li').on('click',function(){
+    	var index=$('.pinhjunfen_ul li').index(this);
+    	$('.pinhjunfen_ul li span').attr('id','');
+    	$('.pinhjunfen_ul li span').eq(index).attr('id','activv');
+    	$('.pinhjunfen_ul li p').attr('class','');
+    	$('.pinhjunfen_ul li p').eq(index).attr('class','ziziziz');
+    	$('.zhexiantu').css('display','none');
+    	$('.zhexiantu').eq(index).css('display','block');
+    })    
+    /* 切换班主任角色排名 */
+    $('.paiming_ul li').on('click',function(){
+    	var index=$('.paiming_ul li').index(this);
+    	$('.paiming_ul li span').attr('id','');
+    	$('.paiming_ul li span').eq(index).attr('id','activv');
+    	$('.paiming_ul li p').attr('class','');
+    	$('.paiming_ul li p').eq(index).attr('class','ziziziz');
+    	$('.zhexiantu_pai').css('display','none');
+    	$('.zhexiantu_pai').eq(index).css('display','block');
+    })
+    
+
+ //平均分折线图   
+function getAvg(gradeId,areaId){ 	
+    	//获取教师数学平均分
+    	var city = [];
+    	var sch = [];
+    	var cla =[];
+    	var week = [];
+    	$.ajax({
+    		url:'../platCount/getAvgInfo.action',
+    		data:{'gradeId':gradeId,'areaId':areaId},
+    		type:'get',
+    		dataType:'json',
+    		success:function(obj){
+    			for(var i=0;i<16;i++){
+					if(city[i] == undefined){
+						city[i]=0;
+					}
+					
+					if(sch[i] == undefined){
+						sch[i]=0;
+					}
+					if(cla[i] == undefined){
+						cla[i]=0;
+					}
+				}
+    			if(obj.status){
+    				var data = obj.data;
+    				for(var k=0;k<data.length;k++){
+    					sch[data[k].week-1]=data[k].schoolAvg;//获取班级的综合平均分
+    				}
+    				var math = obj.math;
+    				for(var k=0;k<math.length;k++){
+    					cla[math[k].week-1]=math[k].schoolAvg;//获取班级的数学平均分
+    				}
+    				var eng = obj.eng;
+    				for(var k=0;k<eng.length;k++){
+    					city[eng[k].week-1]=eng[k].schoolAvg;//获取班级的语文平均分
+    				}
+    				
+    							
+	var chart = new Highcharts.Chart('container4', {
+	    title: {
+	        text: '',
+	        x: -20
+	    },
+	    subtitle: {
+	        text: '',
+	        x: -20
+	    },
+	    xAxis: {
+	        categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+	    },
+	    yAxis: {
+	    	
+	    	tickPositions: [80,85,90,95,100],
+	        title: {
+	            text: ''
+	        },
+	        plotLines: [{
+	            value: 0,
+	            width: 1,
+	            color: '#808080'
+	        }],       
+	    },
+	    tooltip: {
+	        valueSuffix: ''
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	       verticalAlign: 'top', 
+	        borderWidth: 0
+	    },
+	    series: [{	        
+	        name: '数学',
+	        data: [cla[0], cla[1], cla[2], cla[3], cla[4], cla[5], cla[6], cla[7], cla[8], cla[9], cla[10], cla[11], cla[12], cla[13], cla[14], cla[15]]
+	    }, {	     
+	        name: '语文',
+	        data: [city[0], city[1], city[2], city[3], city[4], city[5], city[6], city[7], city[8], city[9], city[10], city[11], city[12], city[13], city[14], city[15]]
+	    }, {
+	        name: '综合',
+	        data: [sch[0],sch[1],sch[2],sch[3], sch[4],sch[5], sch[6], sch[7],sch[8], sch[9],sch[10], sch[11], sch[12], sch[13], sch[14], sch[15]]
+	    }]
+	});
+    			}
+    		},
+    		
+    	})
+};
+</script>
+<script type="text/javascript">
+//导出excel
+$(function () {
+  $('#downloadExcel1').removeClass("hidden")
+  $('#downloadExcel1').ExportExcel('table1');
+  $('#downloadExcel2').ExportExcel('table2');
+  $('#downloadExcel3').ExportExcel('table3');
+})
+</script>
+<script type="text/javascript">
+(function ($) {
+	   Date.prototype.Format = function (fmt) {
+		  var o = {
+			 "M+": this.getMonth() + 1, //月份 
+			 "d+": this.getDate(), //日 
+			 "h+": this.getHours(), //小时 
+			 "m+": this.getMinutes(), //分 
+			 "s+": this.getSeconds(), //秒 
+			 "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+			 "S": this.getMilliseconds() //毫秒 
+		  };
+		  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		  for (var k in o)
+			 if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		  return fmt;
+	   }        
+
+	   $.fn.ExportExcel = function (tab_id, options) {
+		  var defaults = {
+			 height: '24px',
+			 'line-height': '24px',
+			 margin: '0 5px',
+			 padding: '0 11px',
+			 color: '#000',
+			 background: '#02bafa',
+			 border: '1px #26bbdb solid',
+			 'border-radius': '3px',
+			 /*color': '#fff;*/
+			 display: 'inline-block',
+			 'text-decoration': 'none',
+			 'font-size': '12px',
+			 outline: 'none',
+			 cursor: 'pointer'
+		  }
+		  var options = $.extend(defaults, options);
+		  return this.each(function () {
+			 var currentObject = $(this); //获取当前对象 
+			 currentObject.css(defaults);
+			 currentObject.onmouseover = function () {
+				$(this).css('cursor', 'hand');
+			 };
+
+			 currentObject.click(function () {
+				//From:jsfiddle.net/h42y4ke2/16/
+				var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+				tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+
+				tab_text = tab_text + '<x:Name> 使用统计 </x:Name>';
+
+				tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+				tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+
+				tab_text = tab_text + "<table border='1px'>";
+				tab_text = tab_text + $('#' + tab_id).html();
+				tab_text = tab_text + '</table></body></html>';
+
+				var data_type = 'data:application/vnd.ms-excel';
+
+				var timeStr = new Date().Format('yyyyMMddhhmmss');
+				$(this).attr('href', data_type + ', ' + encodeURIComponent(tab_text));
+				$(this).attr('download', '使用统计' + timeStr + '.xls');
+			 });
+		  })
+	   }
+	})(jQuery);
+</script>
+
+</body>
+</html>

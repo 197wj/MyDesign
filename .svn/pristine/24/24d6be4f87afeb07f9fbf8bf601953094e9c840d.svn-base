@@ -1,0 +1,49 @@
+package com.zhiliao.service.school.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.school.TbSchoolMapper;
+import com.zhiliao.model.school.TbSchool;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.school.TbSchoolService;
+
+@Service 
+public class TbSchoolServiceImpl extends BaseServiceImpl<TbSchool, Map<String, Object>> implements TbSchoolService  {
+
+	@Autowired
+	private TbSchoolMapper tbSchoolMapper;
+	
+	@Override
+	public int insert(TbSchool record) {
+		// TODO Auto-generated method stub
+		int rows = this.tbSchoolMapper.insert(record);
+		return rows;
+	}
+	
+	@Override
+	public TbSchool selectById(Integer id) {
+		// TODO Auto-generated method stub
+		TbSchool tbSchool = this.tbSchoolMapper.selectById(id);
+		return tbSchool;
+	}
+	
+	@Override
+	public int updateById(TbSchool record) {
+		// TODO Auto-generated method stub
+		int rows = this.tbSchoolMapper.updateById(record);
+		return rows;
+	}
+	
+	@Override
+	public List<TbSchool> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<TbSchool> list = this.tbSchoolMapper.selectList(map);
+		return list;
+	}
+	
+	
+}

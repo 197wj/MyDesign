@@ -1,0 +1,262 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>统计</title>
+</head>
+<body style="background:#f1f1f1">
+<div class="page-container cl clearfix">
+	<div class="cl clearfix data_panel">
+		<div class="col-sm-6 col-md-6 col-lg-6">
+			<div class="panel panel-secondary cl clearfix">
+				<div class="panel-header">产品覆盖统计</div>
+				<div class="col-sm-6 col-md-6 col-lg-6 top15">
+					<div class="border-blue">
+						<div class="cl clearfix">
+							<div class="col-sm-5 col-md-5 col-lg-5">
+								<div class="img_box">
+									<img src="../../assistant/res/image/book.png">
+								</div>
+							</div>
+							<div class="col-sm-7 col-md-7 col-lg-7 data_tit">
+								<span>覆盖班级数</span>
+								<big><b style="color:#57c8f2" id="classTotal">1546</b></big>
+							</div>
+						</div>
+						<div class="data_stage">
+							<span id="MaCount">数学:106个班</span>
+							<big></big>
+							<span id="EnCount">英语:54个班</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-6 top15">
+					<div>
+						<div class="cl clearfix">
+							<div class="col-sm-12 col-md-12 col-lg-12">
+								<div id="left1" style="height:10vw;width:100%"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-6 col-lg-6 right_panel right_panel2">
+			<div class="panel panel-secondary cl clearfix">
+				<div class="panel-header">学生订购统计</div>
+				<div class="col-sm-4 col-md-4 col-lg-4 top15">
+					<div class="cl clearfix">
+						<div id="right1" style="height:10vw"></div>
+					</div>
+				</div>
+				<div class="col-sm-8 col-md-8 col-lg-8 top15 right_panel_stage" id="subjectCount">
+					<div class="col-sm-6 col-md-6 col-lg-6 data">
+						<span>数学订购</span>
+						<font><big>1000</big>人</font>
+					</div>
+					<div class="col-sm-6 col-md-6 col-lg-6 data">
+						<span>语文订购</span>
+						<font><big>200</big>人</font>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-sm-12 col-md-12 col-lg-12 top15">
+		<div class="panel panel-secondary">
+			<div class="panel-header">详情信息
+				<div class="f-r">学校名称：
+					<select class="select long_s" size="1" name="demo1">
+					    <option value="" selected>默认select</option>
+					    <option value="1">菜单一</option>
+					    <option value="2">菜单二</option>
+					    <option value="3">菜单三</option>
+					  </select>
+				年级：
+					<select class="select short_s" size="1" name="demo1">
+					    <option value="" selected>默认select</option>
+					    <option value="1">菜单一</option>
+					    <option value="2">菜单二</option>
+					    <option value="3">菜单三</option>
+					  </select>
+					  <button class="btn search_btn">查询</button>
+					  <button class="btn btn-primary search_btn">返回</button>
+				</div>
+			</div>
+			<div class="margin15">
+				<table class="table table-border table-bg table-bordered ">
+				  	<thead>
+				  		<tr class="text-c"><th>ID</th><th>学校名称</th><th>覆盖年级</th><th>订购比（数学/英语）</th><th>订购人科</th><th>订购详情</th></tr>
+				  	</thead>
+				  	<tbody id="schoollist">
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  	</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		getClassCount();
+		getSubjectCount();
+		getSchoolCount()
+	})
+	//获取学校的统计数据
+	function getSchoolCount(){
+		$.ajax({
+			url:'../count/getSchoolCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					var data = obj.data;
+					$("#schoollist").empty();
+					for(var i=0;i<data.length;i++){
+						$("#schoollist").append('<tr class="text-c">'+
+													'<td>'+data[i].schoolId+'</td>'+
+													'<td>'+data[i].schoolName+'</td>'+
+													'<td>三年级,四年级,五年级</td>'+
+													'<td>'+data[i].mcount+'/'+data[i].ecount+'</td>'+
+													'<td>'+data[i].total+'/人科</td>'+
+													'<td><a class="btn btn-link">详情</a></td>'+
+												'</tr>');
+					}
+				}
+			}
+		})
+	}
+	
+	
+	
+	//获取各科的订购人数
+	function getSubjectCount(){
+		$.ajax({
+			url:'../count/getSubjectCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					var data = obj.data;
+					$("#subjectCount").empty();
+					for(var i=0;i<data.length;i++){
+						$("#subjectCount").append('<div class="col-sm-6 col-md-6 col-lg-6 data">'+
+													'<span id="">'+data[i].name+'订购</span>'+
+													'<font><big>'+data[i].count+'</big>人</font>'+
+													'</div>');
+					}
+				}
+			}
+		})
+	}
+	
+	//获取班级订购数量
+	function getClassCount(){
+		$.ajax({
+			url:'../count/getClassCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					$("#classTotal").empty();
+					$("#MaCount").empty();
+					$("#EnCount").empty();
+					$("#classTotal").append(obj.total);
+					$("#MaCount").append('数学:'+obj.math);
+					$("#EnCount").append('英语:'+obj.math);
+				}
+			}
+		})
+	}
+</script>
+<script>
+	// 基于准备好的dom，初始化echarts实例
+	var left1 = echarts.init(document.getElementById('left1'));
+	var right1 = echarts.init(document.getElementById('right1'));
+	// 指定图表的配置项和数据
+	var option = {
+			tooltip: {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		    },
+		    legend: {
+		        orient: 'vertical',
+		        x: 'right',
+		        data:['付费用户','试用用户','教师子弟','贫困生',]
+		    },
+		    series: [
+		        {
+		            name:'覆盖人群',
+		            type:'pie',
+		            radius: ['50%', '70%'],
+		            center:['30%','50%'],
+		            avoidLabelOverlap: false,
+		            label: {
+		                normal: {
+		                    show: false,
+		                    position: 'center'
+		                },
+		                emphasis: {
+		                    show: true,
+		                    textStyle: {
+		                        fontSize: '14',
+		                        fontWeight: 'bold'
+		                    }
+		                }
+		            },
+		            labelLine: {
+		                normal: {
+		                    show: false
+		                }
+		            },
+		            data:[
+		                {value:335, name:'付费用户'},
+		                {value:310, name:'试用用户'},
+		                {value:234, name:'教师子弟'},
+		                {value:135, name:'贫困生'},
+		            ],
+		            color:['#ffc400','#b39ddb', '#38a4dd', '#ed9981'],
+		            itemStyle:{
+		            	normal:{
+		            		borderWidth:'1',
+		            		borderColor:'#fff'
+		            	}
+		            }
+		        }
+		    ]
+		};
+	left1.setOption(option);
+	var option5 = {
+			tooltip : {
+		        formatter: "{a} <br/>{b} : {c}%"
+		    },
+		    series: [
+		        {
+		            type: 'gauge',
+		            title:{show:true},
+		            radius:'100%',
+		            min:0,
+		            max:100,
+		            startAngle:'190',
+		            endAngle:'-10',
+		            axisLine:{lineStyle:{width:10,color:[[0.6, '#00bfe8'],[1, '#aaaaaa']]}},
+		            axisTick:{show:false},
+		            splitLine:{show:false},
+		            axisLabel:{show:false},
+		            detail: {formatter:'{value}%'},
+		            data: [{value:60, name: '订购率'}]
+		        }
+		    ]
+		};
+	right1.setOption(option5);
+</script>
+<footer class="mt-20">
+	<div class="footer">Copyright 郑州大牛软件科技有限公司版权所有</div>
+</footer>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+</body>
+</html>

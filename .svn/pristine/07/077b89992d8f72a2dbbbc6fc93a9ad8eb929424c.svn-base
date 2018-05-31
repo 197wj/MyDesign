@@ -1,0 +1,60 @@
+package com.zhiliao.service.user.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.user.UserTypeMapper;
+import com.zhiliao.model.user.UserType;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.user.UserTypeService;
+@Service 
+public class UserTypeServiceImpl extends BaseServiceImpl<UserType, Map<String, Object>> implements UserTypeService {
+
+	@Autowired
+	private UserTypeMapper userTypeMapper;
+	
+	@Override
+	public int deleteById(Integer typeId) {
+		// TODO Auto-generated method stub
+		int rows = this.userTypeMapper.deleteById(typeId);
+		return rows;
+	}
+	
+	@Override
+	public int deleteTypeList(List<Integer> list) {
+		// TODO Auto-generated method stub
+		int rows = this.userTypeMapper.deleteTypeList(list);
+		return rows;
+	}
+	
+	@Override
+	public int insert(UserType record) {
+		// TODO Auto-generated method stub
+		int rows = this.userTypeMapper.insert(record);
+		return rows;
+	}
+	
+	@Override
+	public UserType selectById(Integer typeId) {
+		// TODO Auto-generated method stub
+		UserType userType = this.userTypeMapper.selectById(typeId);
+		return userType;
+	}
+	
+	@Override
+	public List<UserType> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<UserType> list = this.userTypeMapper.selectList(map);
+		return list;
+	}
+	
+	@Override
+	public int updateById(UserType record) {
+		// TODO Auto-generated method stub
+		int rows = this.userTypeMapper.updateById(record);
+		return rows;
+	}
+}

@@ -1,0 +1,26 @@
+package com.zhiliao.util;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+/**
+ * 生成订单号当前年月日时+五位随机数
+ * @author 毕伟谦
+ *
+ */
+public class GetOrderNum {
+	public static String getRandomFileName() {
+		SimpleDateFormat simpleDateFormat;
+		simpleDateFormat = new SimpleDateFormat("yyyyMMddHH");
+		Date date = new Date();
+		String str = simpleDateFormat.format(date);
+		Random random = new Random();
+		int rannum = (int) (random.nextDouble() * (99999 - 10000 + 1)) + 10000;// 获取5位随机数
+		return str + rannum;// 当前时间
+	}
+
+	public static void main(String[] args) {
+		String fileName = GetOrderNum.getRandomFileName();
+		System.out.println(fileName);// 8835920140307
+	}
+}

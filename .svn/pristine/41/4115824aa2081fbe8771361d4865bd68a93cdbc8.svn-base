@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.school.GradeMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.school.Grade">
+    <id column="school_grade_id" jdbcType="INTEGER" property="schoolGradeId" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    school_grade_id, school_id, grade_code, create_time, grade_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_grade
+    where school_grade_id = #{schoolGradeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_grade
+    where school_grade_id = #{schoolGradeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhiliao.model.school.Grade">
+    insert into sys_grade (school_grade_id, school_id, grade_code, 
+      create_time, grade_name)
+    values (#{schoolGradeId,jdbcType=INTEGER}, #{schoolId,jdbcType=INTEGER}, #{gradeCode,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{gradeName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhiliao.model.school.Grade">
+    insert into sys_grade
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="schoolGradeId != null">
+        school_grade_id,
+      </if>
+      <if test="schoolId != null">
+        school_id,
+      </if>
+      <if test="gradeCode != null">
+        grade_code,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="gradeName != null">
+        grade_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="schoolGradeId != null">
+        #{schoolGradeId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolId != null">
+        #{schoolId,jdbcType=INTEGER},
+      </if>
+      <if test="gradeCode != null">
+        #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gradeName != null">
+        #{gradeName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhiliao.model.school.Grade">
+    update sys_grade
+    <set>
+      <if test="schoolId != null">
+        school_id = #{schoolId,jdbcType=INTEGER},
+      </if>
+      <if test="gradeCode != null">
+        grade_code = #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gradeName != null">
+        grade_name = #{gradeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where school_grade_id = #{schoolGradeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhiliao.model.school.Grade">
+    update sys_grade
+    set school_id = #{schoolId,jdbcType=INTEGER},
+      grade_code = #{gradeCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      grade_name = #{gradeName,jdbcType=VARCHAR}
+    where school_grade_id = #{schoolGradeId,jdbcType=INTEGER}
+  </update>
+</mapper>

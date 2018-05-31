@@ -1,0 +1,17 @@
+package com.zhiliao.dao.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.UcSubject;
+
+public interface UcSubjectMapper {
+
+    public UcSubject selectById(String subjectCode);
+
+    public int updateById(UcSubject record);
+
+    public List<UcSubject> selectList(Map<String, Object>map);
+
+	public List<UcSubject> getListByMap(Map<String, Object> map);
+}

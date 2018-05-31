@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.php.PhpCountMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.php.SchCount">
+    <result column="schoolId" jdbcType="INTEGER" property="schoolId" />
+    <result column="gradeId" jdbcType="INTEGER" property="gradeId" />
+    <result column="classId" jdbcType="INTEGER" property="classId" />
+    <result column="examId" jdbcType="VARCHAR" property="examId" />
+    <result column="week" jdbcType="INTEGER" property="week" />
+    <result column="schoolName" jdbcType="VARCHAR" property="schoolName" />
+    <result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+    <result column="className" jdbcType="VARCHAR" property="className" />
+    <result column="teaName" jdbcType="VARCHAR" property="teaName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="schoolRank" jdbcType="INTEGER" property="schoolRank" />
+    <result column="totalScore" jdbcType="INTEGER" property="totalScore" />
+    <result column="avgScore" jdbcType="FLOAT" property="avgScore" />
+    <result column="schoolAvg" jdbcType="FLOAT" property="schoolAvg" />
+    <result column="cityAvg" jdbcType="FLOAT" property="cityAvg" />
+    <result column="cityRank" jdbcType="INTEGER" property="cityRank" />
+  </resultMap>
+  
+  
+  <!-- 获取平均分 -->	
+  <select id="getAvgInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT x2.schoolid schoolId,ss.school_name schoolName ,x2.gradeid gradeId ,
+		ug.grade_name gradeName,x2.number week,
+  	sum(x2.students) referCount,sum(x2.totalscore) totalScore 
+	FROM x2_examstatistics x2
+	LEFT JOIN tms_els_test.uc_grade ug ON ug.grade_code = x2.gradeid
+	LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.schoolid
+
+  	<where>
+  		x2.schoolid <![CDATA[ <> ]]> 176
+  		and x2.schoolid <![CDATA[ <> ]]> 166
+  		<if test="areaId!=null">
+  			and ss.area_id = #{areaId}
+  		</if>
+  		<if test="gradeId!=null">
+  			and x2.gradeid = #{gradeId}
+  		</if>
+  		<if test="subject!=null">
+  			and x2.`subject` = #{subject}
+  		</if>
+  		<if test="week!=null">
+  			and x2.number = #{week}
+  		</if>
+  	</where>
+	GROUP BY x2.schoolid 
+	ORDER BY totalScore DESC
+  </select>
+  
+  <!-- 获取平均分 -->	
+  <select id="getAvgClass" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT x2.schoolid schoolId,
+	ss.school_name schoolName,
+	x2.gradeid gradeId,
+	ug.grade_name gradeName,
+	x2.classid classId,
+	sc.class_name className,
+	x2.number WEEK,
+	sum(x2.students) referCount,
+	sum(x2.totalscore) totalScore
+	FROM x2_examstatistics x2
+	LEFT JOIN tms_els_test.uc_grade ug ON ug.grade_code = x2.gradeid
+	LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.schoolid
+	LEFT JOIN tms_els_test.sys_class sc ON sc.class_id = x2.classid
+  	<where>
+  		x2.schoolid <![CDATA[ <> ]]> 176
+  		and x2.schoolid <![CDATA[ <> ]]> 166
+  		<if test="areaId!=null">
+  			and ss.area_id = #{areaId}
+  		</if>
+  		<if test="gradeId!=null">
+  			and x2.gradeid = #{gradeId}
+  		</if>
+  		<if test="subject!=null">
+  			and x2.`subject` = #{subject}
+  		</if>
+  		<if test="week!=null">
+  			and x2.number = #{week}
+  		</if>
+  	</where>
+	GROUP BY x2.schoolid ,x2.classid
+	ORDER BY totalScore DESC
+  </select>
+  
+  <!-- 获取周提交率 -->	
+  <select id="getRateSchool" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT x2.schoolid schoolId,
+	ss.school_name schoolName,
+	x2.gradeid gradeId,
+	ug.grade_name gradeName,
+	x2.classid classId,
+	sc.class_name className,
+	x2.number WEEK,
+	sum(x2.students) referCount,
+	sum(x2.totalscore) totalScore
+	FROM x2_examstatistics x2
+	LEFT JOIN tms_els_test.uc_grade ug ON ug.grade_code = x2.gradeid
+	LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.schoolid
+	LEFT JOIN tms_els_test.sys_class sc ON sc.class_id = x2.classid
+  	<where>
+  		x2.schoolid <![CDATA[ <> ]]> 176
+  		and x2.schoolid <![CDATA[ <> ]]> 166
+  		<if test="areaId!=null">
+  			and ss.area_id = #{areaId}
+  		</if>
+  		<if test="gradeId!=null">
+  			and x2.gradeid = #{gradeId}
+  		</if>
+  		<if test="subject!=null">
+  			and x2.`subject` = #{subject}
+  		</if>
+  		<if test="week!=null">
+  			and x2.number = #{week}
+  		</if>
+  	</where>
+	GROUP BY x2.number
+	ORDER BY totalScore DESC
+  </select>
+  
+  
+  
+  
+  
+  
+</mapper>

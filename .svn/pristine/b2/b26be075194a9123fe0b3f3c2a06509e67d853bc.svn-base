@@ -1,0 +1,18 @@
+package com.zhiliao.dao.sys;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.sys.MoneySet;
+
+public interface MoneySetMapper {
+    int deleteById(Integer id);
+
+    int insert(MoneySet record);
+
+    MoneySet selectById(Integer id);
+
+    int updateById(MoneySet record);
+    
+    List<MoneySet> selectList(Map<String, Object> map);
+}

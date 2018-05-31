@@ -1,0 +1,33 @@
+package com.zhiliao.dao.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.SchCount;
+
+public interface PhpCountMapper {
+
+	/**
+	 * 获取平均分
+	 * @Title: getAvgInfo 
+	 * @param @param map
+	 * @return List<SchCount>
+	 */
+	public List<SchCount> getAvgInfo(Map<String, Object> map);
+	
+	/**
+	 * 获取班级信息
+	 * @Title: getAvgClass 
+	 * @param @param map
+	 * @return List<SchCount>
+	 */
+	public List<SchCount> getAvgClass(Map<String, Object> map);
+	
+	/**
+	 * 获取每周提交率
+	 * @Title: getRateSchool 
+	 * @param @param map
+	 * @return List<SchCount>
+	 */
+	public List<SchCount> getRateSchool(Map<String, Object> map);
+}

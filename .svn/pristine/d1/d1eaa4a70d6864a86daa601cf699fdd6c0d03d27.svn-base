@@ -1,0 +1,31 @@
+package com.zhiliao.service.school.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.school.SchoolGradeMapper;
+import com.zhiliao.model.school.SchoolGrade;
+import com.zhiliao.service.school.SchoolGradeService;
+@Service
+public class SchoolGradeServcieImpl implements SchoolGradeService {
+
+	@Autowired
+	private SchoolGradeMapper gradeMapper;
+	
+	@Override
+	public List<SchoolGrade> getGradeBySchoolId(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchoolGrade> list = this.gradeMapper.getGradeBySchoolId(map);
+		return list;
+	}
+	
+	@Override
+	public SchoolGrade getGrade(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		SchoolGrade grade = this.gradeMapper.getGrade(map);
+		return grade;
+	}
+}

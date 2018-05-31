@@ -1,0 +1,13 @@
+package com.zhiliao.service.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.teacherClass;
+import com.zhiliao.service.BaseService;
+
+public interface teacherClassService extends BaseService<teacherClass, Map<String, Object>>{
+
+	List<teacherClass> getListByMap(Map<String, Object> map);
+
+}

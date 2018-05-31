@@ -1,0 +1,46 @@
+package com.zhiliao.service.log.impl;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.log.LogMapper;
+import com.zhiliao.model.log.Log;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.log.LogService;
+
+/**
+ * 实现类
+ * @author 毕伟谦
+ *
+ */
+@Service
+public class LogServiceImpl extends BaseServiceImpl<Log, Map<String, Object>> implements LogService {
+
+	@Autowired
+	private LogMapper logMapper;
+	
+	@Override
+	public int insert(Log record) {
+		// TODO Auto-generated method stub
+		int rows = this.logMapper.insert(record);
+		return rows;
+	}
+	
+	@Override
+	public Log selectById(Integer logId) {
+		// TODO Auto-generated method stub
+		Log log = this.logMapper.selectById(logId);
+		return log;
+	}
+	
+	@Override
+	public int updateById(Log record) {
+		// TODO Auto-generated method stub
+		int rows = this.logMapper.updateById(record);
+		return rows;
+	}
+	
+	
+}

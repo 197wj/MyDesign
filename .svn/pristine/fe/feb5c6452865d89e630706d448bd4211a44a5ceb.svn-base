@@ -1,0 +1,515 @@
+package com.zhiliao.controller.php;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.model.php.PlatCount;
+import com.zhiliao.service.order.OrderService;
+import com.zhiliao.service.php.PlatCountService;
+import com.zhiliao.util.ListSortUtil;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+@Controller
+@RequestMapping("platCount")
+public class platCountController {
+
+	@Autowired
+	private PlatCountService countService;
+	
+	@Autowired
+	private OrderService orderService;
+	/**
+	 * 跳转到教师统计页面
+	 * @return
+	 */
+	@RequestMapping("/platCount.action")
+	public String platCountView(HttpServletRequest request,
+								@RequestParam(value="gradeId",required=false)Integer gradeId,
+								@RequestParam(value="areaId",required=false)Integer areaId){
+		request.getSession().setAttribute("gradeId", gradeId);
+		request.getSession().setAttribute("areaId", areaId);
+		return "count/platCount";
+	}
+	
+	
+	
+	@RequestMapping("/getCountInfo.action")
+	@ResponseBody
+	public Map<String, Object> getCountInfo(@RequestParam(value="gradeId",required=false)Integer gradeId,
+											@RequestParam(value="week",required=false)Integer week,
+											@RequestParam(value="areaId",required=false)Integer areaId,
+											@RequestParam(value="schoolName" ,required=false)String schoolName){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		map.clear();
+		map.put("subject", 10);
+		map.put("week", week);
+		map.put("areaId", areaId);
+		map.put("gradeId", gradeId);
+		map.put("schoolName", schoolName);
+		List<PlatCount> engList = this.countService.getCountInfo(map);//获取英语统计数量
+		for(PlatCount count:engList){
+			map.clear();
+			//map.put("subject", 10);
+			//map.put("gradeId", gradeId);
+			//map.put("number", count.getWeek());
+			//map.put("schoolId", count.getSchoolId());
+			//map.put("tableName", " x2_examhistory_"+areaId+" as x2");
+			//sql语句
+			String sql = "SELECT count(ehuserid) FROM x2_examhistory_"+areaId+" as x2 "
+					+ " LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.ehschoolid "
+					+ " where ehschoolid <> 176 ";
+			if(null!=gradeId){
+				sql+=" AND ehgradeid ="+gradeId;
+			}
+			if(null!=count.getWeek()){
+				sql+=" and ehzhou ="+count.getWeek();
+			}
+			if(null!= count.getSchoolId()){
+				sql+=" AND ehschoolid ="+count.getSchoolId();
+			}
+			sql+=" and ehsubject =10";
+			map.clear();
+			map.put("sql", sql);
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		
+		
+		
+		
+		map.clear();
+		map.put("subject", 11);
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		map.put("week", week);
+		map.put("schoolName", schoolName);
+		List<PlatCount> mathList = this.countService.getCountInfo(map);//获取数学统计数量
+		for(PlatCount count:mathList){
+			map.clear();
+			//map.put("subject", 11);
+			//map.put("gradeId", gradeId);
+			//map.put("number", count.getWeek());
+			//map.put("schoolId", count.getSchoolId());
+			//map.put("tableName", " x2_examhistory_"+areaId+" as x2");
+			//sql语句
+			String sql = "SELECT count(ehuserid) FROM x2_examhistory_"+areaId+" as x2 "
+					+ " LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.ehschoolid "
+					+ " where ehschoolid <> 176 ";
+			if(null!=gradeId){
+				sql+=" AND ehgradeid ="+gradeId;
+			}
+			if(null!=count.getWeek()){
+				sql+=" and ehzhou ="+count.getWeek();
+			}
+			if(null!= count.getSchoolId()){
+				sql+=" AND ehschoolid ="+count.getSchoolId();
+			}
+			sql+=" and ehsubject =11";
+			map.clear();
+			map.put("sql", sql);
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		
+		
+		
+		
+		
+		
+		map.clear();
+		map.put("week", week);
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		map.put("schoolName", schoolName);
+		List<PlatCount> list = this.countService.getCountInfo(map);//获取全部
+		for(PlatCount count:list){
+			map.clear();
+			//map.put("number", count.getWeek());
+			//map.put("gradeId", gradeId);
+			//map.put("schoolId", count.getSchoolId());
+			//map.put("tableName", " x2_examhistory_"+areaId+" as x2");
+			//sql语句
+			String sql = "SELECT count(ehuserid) FROM x2_examhistory_"+areaId+" as x2 "
+					+ " LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.ehschoolid "
+					+ " where ehschoolid <> 176 ";
+			if(null!=gradeId){
+				sql+=" AND ehgradeid ="+gradeId;
+			}
+			if(null!=count.getWeek()){
+				sql+=" and ehzhou ="+count.getWeek();
+			}
+			if(null!= count.getSchoolId()){
+				sql+=" AND ehschoolid ="+count.getSchoolId();
+			}
+			map.clear();
+			map.put("sql", sql);
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		//获取英语的开通数量
+		for(PlatCount count:engList){
+			map.clear();
+			map.put("subject", 10);
+			map.put("gradeId", gradeId);
+			map.put("schoolId", count.getSchoolId());
+			int rows = this.orderService.getOrderCount(map);
+			count.setOpenCount(rows);
+		}
+		//获取数学的开通数量
+		for(PlatCount count:mathList){
+			map.clear();
+			map.put("subject", 11);
+			map.put("gradeId", gradeId);
+			map.put("schoolId", count.getSchoolId());
+			int rows = this.orderService.getOrderCount(map);
+			count.setOpenCount(rows);
+		}
+		//获取综合的开通数量
+		for(PlatCount count:list){
+			map.clear();
+			map.put("gradeId", gradeId);
+			map.put("schoolId", count.getSchoolId());
+			
+			int rows = this.orderService.getOrderCount(map);
+			count.setOpenCount(rows);
+		}
+		
+		sort(list);//综合排序
+		sort(engList);//英语排序
+		sort(mathList);//数学排序
+		
+		
+		resultMap.put("status", true);
+		resultMap.put("data", list);
+		resultMap.put("eng", engList);
+		resultMap.put("math", mathList);
+
+		return resultMap;
+	}
+	
+	/**
+	 * 进行排序
+	 * @param list
+	 */
+	public void sort(List<PlatCount> list){
+		
+		//获取平均分
+		for (PlatCount count:list) {
+			if(count.getSchoolId()==166){
+				count.setSchoolAvg((float)-1);
+			}else {
+				if(count.getReferCount()!=0){
+					count.setSchoolAvg((float)count.getTotalScore()/count.getReferCount());
+				}else {
+					count.setSchoolAvg((float)0);
+				}
+			}
+		}
+		//排序
+		ListSortUtil<PlatCount> sortUtil = new ListSortUtil<PlatCount>();
+		
+		sortUtil.sort(list, "schoolAvg", "desc");
+		
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setCityRank(i+1);
+		}
+	}
+	
+	
+	/**
+	 * 获取平均分,产生折线图
+	 * @param schoolId
+	 * @param gradeId
+	 * @return
+	 */
+	@RequestMapping("/getAvgInfo.action")
+	@ResponseBody
+	public Map<String, Object> getAvgInfo(@RequestParam(value="gradeId",required = false)Integer gradeId,
+										  @RequestParam(value="areaId",required=false)Integer areaId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		//获取数学平均分
+		map.clear();
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		map.put("subject",11);
+		List<PlatCount> mathList = this.countService.getAvgInfo(map);
+		for(PlatCount count :mathList){//计算平均分
+			if(count.getReferCount()!=0){
+				count.setSchoolAvg((float)count.getTotalScore()/count.getReferCount());
+			}else {
+				count.setSchoolAvg((float)0);
+			}
+		}
+		//获取英语平均分
+		map.clear();
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		map.put("subject",10);
+		List<PlatCount> engList = this.countService.getAvgInfo(map);
+		for(PlatCount count :engList){//计算平均分
+			if(count.getReferCount()!=0){
+				count.setSchoolAvg((float)count.getTotalScore()/count.getReferCount());
+			}else {
+				count.setSchoolAvg((float)0);
+			}
+		}
+		//获取综合平均分
+		map.clear();
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		List<PlatCount> list = this.countService.getAvgInfo(map);
+		for(PlatCount count :list){//计算平均分
+			if(count.getReferCount()!=0){
+				count.setSchoolAvg((float)count.getTotalScore()/count.getReferCount());
+			}else {
+				count.setSchoolAvg((float)0);
+			}
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		resultMap.put("status", true);
+		resultMap.put("data", list);
+		resultMap.put("eng", engList);
+		resultMap.put("math", mathList);
+		return resultMap;
+	}
+	
+	/**
+	 * 获取学校的排名折线图
+	 * @param schoolId
+	 * @param gradeId
+	 * @return
+	 */
+	@RequestMapping("/getSchoolRank.action")
+	@ResponseBody
+	public Map<String, Object> getSchoolRank(@RequestParam(value="schoolId",required = false)Integer schoolId,
+											 @RequestParam(value="gradeId",required = false)Integer gradeId,
+											 @RequestParam(value="areaId",required=false)Integer areaId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		//获取数学信息
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		map.put("subject", 11);
+		List<PlatCount> mathList = this.countService.getSchoolRank(map);
+		List<List<PlatCount>> mathRank = new ArrayList<List<PlatCount>>();
+		for (PlatCount count:mathList) {
+			map.clear();
+			map.put("week", count.getWeek());
+			List<PlatCount> cityRank = this.countService.getCountInfo(map);
+			mathRank.add(cityRank);
+		}
+		//排序
+		for (int i = 0; i < mathRank.size(); i++) {
+			sort(mathRank.get(i));
+		}
+		for (int i = 0; i < mathRank.size(); i++) {
+			for(PlatCount platCount:mathRank.get(i)){
+				for(PlatCount count:mathList){
+					if(count.getSchoolId()==platCount.getSchoolId() && count.getWeek()==platCount.getWeek()){
+						count.setCityRank(platCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		
+		//获取英语信息
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		map.put("subject", 10);
+		List<PlatCount> engList = this.countService.getSchoolRank(map);
+		List<List<PlatCount>> engRank = new ArrayList<List<PlatCount>>();
+		for (PlatCount count:engList) {
+			map.clear();
+			map.put("week", count.getWeek());
+			List<PlatCount> cityRank = this.countService.getCountInfo(map);
+			engRank.add(cityRank);
+		}
+		//排序
+		for (int i = 0; i < engRank.size(); i++) {
+			sort(engRank.get(i));
+		}
+		for (int i = 0; i < engRank.size(); i++) {
+			for(PlatCount platCount:engRank.get(i)){
+				for(PlatCount count:engList){
+					if(count.getSchoolId()==platCount.getSchoolId() && count.getWeek()==platCount.getWeek()){
+						count.setCityRank(platCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		//获取综合
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		List<PlatCount> list = this.countService.getSchoolRank(map);
+		List<List<PlatCount>> listRank = new ArrayList<List<PlatCount>>();
+		for (PlatCount count:list) {
+			map.clear();
+			map.put("week", count.getWeek());
+			List<PlatCount> cityRank = this.countService.getCountInfo(map);
+			listRank.add(cityRank);
+		}
+		//排序
+		for (int i = 0; i < listRank.size(); i++) {
+			sort(listRank.get(i));
+		}
+		for (int i = 0; i < listRank.size(); i++) {
+			for(PlatCount platCount:listRank.get(i)){
+				for(PlatCount count:list){
+					if(count.getSchoolId()==platCount.getSchoolId() && count.getWeek()==platCount.getWeek()){
+						count.setCityRank(platCount.getCityRank());
+						continue;
+					}
+				}
+			}
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		resultMap.put("status", true);
+		resultMap.put("data", list);
+		resultMap.put("eng",engList);
+		resultMap.put("math", mathList);
+		return resultMap;
+	}
+	
+	/**
+	 * 获取批改率
+	 * @param gradeId
+	 * @return
+	 */
+	@RequestMapping("/getCount.action")
+	@ResponseBody
+	public Map<String, Object> getCount (@RequestParam(value="gradeId",required=false)Integer gradeId,
+			                             @RequestParam(value="areaId",required=false)Integer areaId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		List<PlatCount> mathList = new ArrayList<PlatCount>();
+		List<PlatCount> engList = new ArrayList<PlatCount>();
+		//获取数学
+		map.clear();
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		map.put("subject", 11);
+		List<PlatCount> mathRefer = this.countService.getReferCount(map);
+		//map.put("tableName", " x2_examhistory_"+areaId+" as x2" );
+		//sql语句
+		String sql = "select count(ehuserid) grantCount,ehzhou week "
+				+ " from x2_examhistory_"+areaId+" x2 "
+				+ " LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.ehschoolid "
+				+ " where ehschoolid <>166";
+		if(null!=gradeId){
+			sql+=" AND ehgradeid ="+gradeId;
+		}
+		if(null!=areaId){
+			sql+=" AND ss.area_id ="+areaId;
+		}
+		sql+=" and ehsubject = 11 GROUP BY ehzhou ORDER BY ehzhou DESC";
+		map.clear();
+		map.put("sql", sql);
+		List<PlatCount> mathGrant = this.countService.getGrantInfo(map);
+		
+		//获取英语
+		map.clear();
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		map.put("subject", 10);
+		List<PlatCount> engRefer = this.countService.getReferCount(map);
+		//map.put("tableName", " x2_examhistory_"+areaId+" as x2");
+		sql="";//sql语句
+		sql = "select count(ehuserid) grantCount,ehzhou week "
+				+ " from x2_examhistory_"+areaId+" x2 "
+				+ " LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = x2.ehschoolid "
+				+ " where ehschoolid <>166";
+		if(null!=gradeId){
+			sql+=" AND ehgradeid ="+gradeId;
+		}
+		if(null!=areaId){
+			sql+=" AND ss.area_id ="+areaId;
+		}
+		sql+=" and ehsubject = 11 GROUP BY ehzhou ORDER BY ehzhou DESC";
+		map.clear();
+		map.put("sql", sql);//拼接sql语句
+		List<PlatCount> engGrant = this.countService.getGrantInfo(map);
+		
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		//获取开通数(英语)
+		map.clear();
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		map.put("subject", 10);
+		int engRow = this.orderService.getOrderCount(map);
+		
+		//获取开通数(数学)
+		map.clear();
+		map.put("gradeId", gradeId);
+		map.put("areaId", areaId);
+		map.put("subject", 11);
+		int mathRow = this.orderService.getOrderCount(map);
+		
+		//英语
+		for(PlatCount platCount:engRefer){
+			for(PlatCount count:engGrant){
+				if(platCount.getWeek()==count.getWeek()){
+					PlatCount plat = new PlatCount();
+					plat.setGrantCount(count.getGrantCount());
+					plat.setReferCount(platCount.getReferCount());
+					plat.setWeek(count.getWeek());
+					engList.add(plat);
+					continue;
+				}
+			}
+		}
+		//数学
+		for(PlatCount platCount:mathRefer){
+			for(PlatCount count:mathGrant){
+				if(platCount.getWeek()==count.getWeek()){
+					PlatCount plat = new PlatCount();
+					plat.setGrantCount(count.getGrantCount());
+					plat.setReferCount(platCount.getReferCount());
+					plat.setWeek(count.getWeek());
+					mathList.add(plat);
+					continue;
+				}
+			}
+		}
+		
+		resultMap.put("status", true);
+		resultMap.put("eng",engList);
+		resultMap.put("engCount",engRow);
+		resultMap.put("math", mathList);
+		resultMap.put("mathCount",mathRow);
+		return resultMap;
+	}
+	
+	
+	
+	
+	
+	
+	
+}

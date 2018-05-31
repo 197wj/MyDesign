@@ -1,0 +1,230 @@
+package com.zhiliao.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+import com.zhiliao.model.php.Examstatistics;
+import com.zhiliao.model.php.PhpCount;
+import com.zhiliao.service.php.PhpCountService;
+import com.zhiliao.util.SendPostandGet;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+
+/**
+ * 根据接口获取数据
+ * @author 毕伟谦
+ * 跨域获取数据
+ */
+@Controller
+@RequestMapping("inte")
+public class InterfaceController {
+	
+	@Autowired
+	private PhpCountService countService;
+	
+	@RequestMapping("/getTeacherCountInfo.action")
+	@ResponseBody
+	public Map<String, Object> getTeacherCountInfo(@RequestParam(value="schoolId",required=true)Integer schoolId,
+												   @RequestParam(value="gradeId" ,required=true)Integer gradeId,
+												   @RequestParam(value="classId",required=true)Integer classId,
+												   @RequestParam(value="subject",required=false)Integer subject){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		map.put("classId", classId);
+		map.put("subject", subject);
+		List<Examstatistics> dList = this.countService.selectInfo(map);//单科或者综合
+		
+		map.clear();
+		map.put("gradeId", gradeId);
+		map.put("classId", classId);
+		map.put("subject", subject);
+		List<Examstatistics> cityList = this.countService.selectInfo(map);//市级
+		
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		List<Examstatistics> schList = this.countService.selectInfoZ(map);//学校
+        MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		
+        List<PhpCount> list = new ArrayList<PhpCount>();
+        for(Examstatistics ex:dList){//单科成绩或综合
+        	PhpCount count = new PhpCount();
+        	//取单科值
+        	count.setBook(ex.getBook());//设置上下学期
+        	count.setWeek(ex.getNumber());//设置周测数
+        	if(ex.getStudents()!=0){
+        		count.setClassSynthesizeScorre(ex.getTotalscore()/ex.getStudents());
+        	}else {
+				count.setClassSynthesizeScorre(0);
+			}
+        	count.setClassSynthesizeSubmit(ex.getStudents());
+        	list.add(count);
+        }
+        
+        List<PhpCount> cityCounts = new ArrayList<PhpCount>();
+        //市级
+        for(Examstatistics ex:cityList){
+        	PhpCount count = new PhpCount();
+        	//取单科值
+        	count.setBook(ex.getBook());//设置上下学期
+        	count.setWeek(ex.getNumber());//设置周测数
+        	if(ex.getStudents()!=0){
+        		count.setCitySynthesizeScorre(ex.getTotalscore()/ex.getStudents());
+        	}else {
+				count.setCitySynthesizeScorre(0);
+			}
+        	count.setCitySynthesizeSubmit(ex.getStudents());
+        	cityCounts.add(count);
+        }
+        //学校
+        List<PhpCount> zCounts = new ArrayList<PhpCount>();
+        for(Examstatistics ex:schList){
+        	PhpCount count = new PhpCount();
+        	//取单科值
+        	count.setBook(ex.getBook());//设置上下学期
+        	count.setWeek(ex.getNumber());//设置周测数
+        	if(ex.getStudents()!=0){
+        		count.setSchoolSynthesizeScorre(ex.getTotalscore()/ex.getStudents());
+        	}else {
+				count.setSchoolSynthesizeScorre(0);
+			}
+        	count.setSchoolSynthesizeSubmit(ex.getStudents());
+        	zCounts.add(count);
+        }
+        //将成绩数据合并起来
+        List<PhpCount> cList = new ArrayList<PhpCount>();
+        for(PhpCount count:list){
+        	for(PhpCount count2:cityCounts){
+        		if(count.getWeek()==count2.getWeek() && count.getBook()==count2.getBook()){
+        			count.setCitySynthesizeSubmit(count2.getCitySynthesizeSubmit());
+        			count.setCitySynthesizeScorre(count2.getCitySynthesizeScorre());
+        			cList.add(count);
+        			continue;
+        		}
+        		
+        	}
+        }
+        List<PhpCount> totaList = new ArrayList<PhpCount>();
+        for(PhpCount count:cList){
+        	for(PhpCount count2:zCounts){
+        		if(count.getWeek()==count2.getWeek() && count.getBook()==count2.getBook()){
+        			count.setSchoolSynthesizeSubmit(count2.getSchoolSynthesizeSubmit());
+        			count.setSchoolSynthesizeScorre(count2.getSchoolSynthesizeScorre());
+        			totaList.add(count);
+        			continue;
+        		}
+        		
+        	}
+        }
+        if(totaList.size()>0){
+        	resultMap.put("status", true);
+        	resultMap.put("data", totaList);
+        	resultMap.put("msg", "获取成功");
+        }else {
+        	resultMap.put("status", false);
+        	resultMap.put("msg", "获取失败");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 获取班级的排名
+	 * @param schoolId
+	 * @param gradeId
+	 * @param classId
+	 * @param subject
+	 * @return
+	 */
+	@RequestMapping("/getClassRank.action")
+	@ResponseBody
+	public Object getClassRank(@RequestParam(value="schoolId",required=true)Integer schoolId,
+										    @RequestParam(value="gradeId" ,required=true)Integer gradeId,
+										    @RequestParam(value="classId",required=true)Integer classId,
+										    @RequestParam(value="subject",required=false)Integer subject){
+		String url ="http://192.168.1.241/zhijiaoyun/index.php/Home/Port/rank";
+		String param = "&schoolId="+schoolId+"&gradeId="+gradeId+"&classId="+classId+"&subjectId="+subject;
+    	StringBuffer result = SendPostandGet.submitPost(url, param, "utf-8");
+		return JSON.parseObject(result.toString());
+	}
+	
+	
+	/**
+	 * 获取学校的排名
+	 * @param schoolId
+	 * @param gradeId
+	 * @param subject
+	 * @return
+	 */
+	@RequestMapping("/getSchoolRank.action")
+	@ResponseBody
+	public Object getSchoolRank(@RequestParam(value="schoolId",required=true)Integer schoolId,
+										    @RequestParam(value="gradeId" ,required=true)Integer gradeId,
+										    @RequestParam(value="subject",required=false)Integer subject){
+		String url ="http://192.168.1.241/zhijiaoyun/index.php/Home/Port/schoolRK";
+		String param = "&schoolId="+schoolId+"&gradeId="+gradeId+"&subjectId="+subject;
+    	StringBuffer result = SendPostandGet.submitPost(url, param, "utf-8");
+		return JSON.parseObject(result.toString());
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	public Map<String, Object> getSchoolCountInfo(@RequestParam(value="schoolId",required=true)Integer schoolId,
+//												   @RequestParam(value="gradeId" ,required=true)Integer gradeId,
+//												   @RequestParam(value="classId",required=true)Integer classId,
+//												   @RequestParam(value="subject",required=false)Integer subject){
+//		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		
+//		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+//		
+//		map.clear();
+//		map.put("schoolId", schoolId);
+//		map.put("gradeId", gradeId);
+//		map.put("subject", subject);
+//		List<Examstatistics> dList = this.countService.selectInfo(map);//单科或者综合
+//		
+//		map.clear();
+//		map.put("gradeId", gradeId);
+//		map.put("subject", subject);
+//		List<Examstatistics> cityList = this.countService.selectInfo(map);//市级
+//		
+//		map.clear();
+//		map.put("schoolId", schoolId);
+//		map.put("gradeId", gradeId);
+//		List<Examstatistics> schList = this.countService.selectInfoZ(map);//学校
+//        MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+//		
+//		
+//		
+//		
+//		return resultMap;
+//	}
+	
+	
+	
+	
+	
+	
+}

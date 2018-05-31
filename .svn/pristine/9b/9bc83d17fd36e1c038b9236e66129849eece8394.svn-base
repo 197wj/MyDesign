@@ -1,0 +1,306 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>我的桌面</title>
+</head>
+<body style="background:#f1f1f1">
+<div class="page-container cl clearfix" style="box-sizing:border-box">
+	<div class="welcome_bar">
+		<div>
+			<font>欢迎进入周周清学情分析平台 !</font>
+			<span>您现在所处的位置：<a>全部</a><a class="disabled">沁阳市教育局</a><a class="disabled">濮阳教育局</a></span>
+		</div>
+	</div>
+	<div class="cl clearfix data_panel">
+		<div class="col-sm-12 col-md-12 col-lg-4" style="padding:0">
+			<div class="col-sm-6 col-md-6 col-lg-12">
+				<div class="panel panel-secondary cl clearfix">
+					<div class="panel-header">综合统计</div>
+					<div class="cl clearfix total_count_panel">
+						<div class="col-sm-6">
+							<img src="../../assistant/res/image/total1.png">
+							<div>
+								<span id="sch">48</span>
+								<p>学校数量</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<img src="../../assistant/res/image/total2.png">
+							<div>
+								<span id="cla">48</span>
+								<p>班级数量</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<img src="../../assistant/res/image/total3.png">
+							<div>
+								<span id="tel">48</span>
+								<p>教师数量</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<img src="../../assistant/res/image/total4.png">
+							<div>
+								<span id="stu">48</span>
+								<p>学生数量</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<img src="../../assistant/res/image/total5.png">
+							<div>
+								<span id="sub">48</span>
+								<p>题目数量</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<img src="../../assistant/res/image/total6.png">
+							<div>
+								<span id="ref">48</span>
+								<p>提交总数</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-6 col-lg-12">
+				<div class="panel panel-secondary cl clearfix">
+					<div class="panel-header">订购统计</div>
+					<div class="cl clearfix total_count_panel">
+						<div class="col-sm-4">
+							<img src="../../assistant/res/image/total1.png">
+							<div>
+								<span>48</span>
+								<p>销售总额</p>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<img src="../../assistant/res/image/total2.png">
+							<div>
+								<span>48</span>
+								<p>订单数</p>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<img src="../../assistant/res/image/total3.png">
+							<div>
+								<span>48</span>
+								<p>人均消费</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-md-12 col-lg-8">
+			<div class="panel panel-secondary cl clearfix">
+				<div class="panel-header">提交人数曲线图 <span class="time"></span>
+					<p class="f-r chart_switch"><a class="today active">当天</a><a class="this_month">当月</a><a class="this_year">全年</a></p>
+				</div>
+				<div class="cl clearfix" style="height:455px">
+					<div id="charts" style="width:100%;height:453px;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-sm-12 col-md-12 col-lg-12 top15">
+		<div class="panel panel-secondary">
+			<div class="panel-header">详情信息
+				<div class="f-r">学校名称：
+					<select class="select long_s" size="1" name="demo1">
+					    <option value="" selected>默认select</option>
+					    <option value="1">菜单一</option>
+					    <option value="2">菜单二</option>
+					    <option value="3">菜单三</option>
+					  </select>
+				年级：
+					<select class="select short_s" size="1" name="demo1">
+					    <option value="" selected>默认select</option>
+					    <option value="1">菜单一</option>
+					    <option value="2">菜单二</option>
+					    <option value="3">菜单三</option>
+					  </select>
+					  <button class="btn search_btn">查询</button>
+				</div>
+			</div>
+			<div class="margin15">
+				<table class="table table-border table-bg table-bordered ">
+				  	<thead>
+				  		<tr class="text-c"><th>ID</th><th>学校名称</th><th>覆盖科级</th><th>订购比（数学/英语）</th><th>订购人科</th><th>订购详情</th></tr>
+				  	</thead>
+				  	<tbody id="WSchoolList">
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  		<tr class="text-c"><td>1</td><td>沁阳市第一小学</td><td>覆盖年级</td><td>52/52</td><td>1552/人科</td><td><a class="btn btn-link">详情</a></td></tr>
+				  	</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		getCount(null);
+		
+	})
+	
+	
+	//获取班级的数量
+	function getCount(areaId) {
+		$.ajax({
+			url:'${path }/getCount.action',
+			type:'get',
+			dataType:'json',
+			success:function(obj){
+				if(obj.status){
+					var data = obj.data;
+					$("#sch").html(data.schCount);
+					$("#cla").html(data.claCount);
+					$("#tel").html(data.telCount);
+					$("#stu").html(data.stuCount);
+					$("#sub").html(0);
+					$("#ref").html(0);
+				}
+			}
+		})
+	}
+	
+	
+</script>
+<script>
+$(function () {
+	var hours = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
+	var days = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+	var months = [1,2,3,4,5,6,7,8,9,10,11,12];
+	var hoursdata1 = [3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2];
+	var hoursdata2 = [2, 3, 5, 7, 60,2, 3, 5, 7, 60,2, 3,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2];
+	var hoursdata3 = [4, 3, 3, 9, 0,4, 3, 3, 9, 0,4, 3,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2];
+	var hoursdata4 = [4, 3, 3, 9, 0,4, 3, 3, 9, 0,4, 3,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2];
+	var hoursdata5 = [3, 2.67, 3, 6.33, 40,3, 2.67, 3, 6.33, 40,3, 2.67,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2];
+	var daysdata1 = [3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2,2, 1, 3, 4,3, 2];
+	var daysdata2 = [2, 3, 5, 7, 60,2, 3, 5, 7, 60,2, 3,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2,2, 1, 3, 4,3, 2];
+	var daysdata3 = [4, 3, 3, 9, 0,4, 3, 3, 9, 0,4, 3,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2,2, 1, 3, 4,3, 2];
+	var daysdata4 = [4, 3, 3, 9, 0,4, 3, 3, 9, 0,4, 3,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2,2, 1, 3, 4,3, 2];
+	var daysdata5 = [3, 2.67, 3, 6.33, 40,3, 2.67, 3, 6.33, 40,3, 2.67,3, 2, 1, 3, 4,3, 2, 1, 3, 4,3, 2,2, 1, 3, 4,3, 2];
+	var monthsdata1 = [3, 2.67, 3, 6.33, 40,3, 2.67, 3, 6.33,2.67, 3, 6.33];
+	var monthsdata2 = [3, 2.67, 3, 6.33, 40,3, 2.67, 3, 6.33,2.67, 3, 6.33];
+	var monthsdata3 = [3, 2.67, 3, 6.33, 40,3, 2.67, 3, 6.33,2.67, 3, 6.33];
+	var monthsdata4 = [3, 2.67, 3, 6.33, 40,3, 2.67, 3, 6.33,2.67, 3, 6.33];
+	var monthsdata5 = [3, 2.67, 3, 6.33, 40,3, 2.67, 3, 6.33,2.67, 3, 6.33];
+	var today = new Date().getDate();
+	var month = new Date().getMonth()+1;
+	var year = new Date().getFullYear();
+	$(".time").text("当前时间："+year+'年'+month+'月'+today+'日')
+	$(".chart_switch").on("click","a",function(){
+		$(this).parents("p").find("a").removeClass("active");
+		if($(this).attr("class")=="today"){
+			chart(hours,hoursdata1,hoursdata2,hoursdata3,hoursdata4,hoursdata5,'当天 '+ month+'月'+today+'日')
+		}else if($(this).attr("class")=="this_month"){
+			chart(days,daysdata1,daysdata2,daysdata3,daysdata4,daysdata5,'当月 '+ year+'年'+month+'月')
+		}else{
+			chart(months,monthsdata1,monthsdata2,monthsdata3,monthsdata4,monthsdata5,'当年 '+ year+'年')
+		}
+		$(this).addClass("active");
+		
+	});
+	chart(hours,hoursdata1,hoursdata2,hoursdata3,hoursdata4,hoursdata5,'当天 '+ month+'月'+today+'日');
+	function chart(xdata,ydata1,ydata2,ydata3,ydata4,ydata5,type){
+		$('#charts').highcharts({
+	        title: {
+	            text: type,
+	            align:'left',
+	            style:{color: "#12afed",fontSize:'18px'},
+	        },
+	        subtitle:{
+	        	text:'(人数)',
+	        	align:'left',
+	        	x:0,
+	        	y:40
+	        },
+	        colors: ['#ffc314', '#a3d55f', '#a3c6d4', '#3db5e6'],
+	        chart:{
+	        	spacingTop:10
+	        },
+	        xAxis: {
+	            categories: xdata,
+	            title:{
+	        		text:'（时间）',
+	        		align: 'high',
+	        		style:{fontSize:'14px'},
+	        		y:-10
+	        	},
+	        },
+	        credits:{
+	        	enabled:false
+	        },
+	        yAxis: {
+	        	title:{
+	        		text:'',
+	        		align: 'high',
+	        	},
+	        },
+	        plotOptions: {
+	            series: {
+	                stacking: 'normal'
+	            }
+	        },
+	        labels: {
+	            items: [{
+	                style: {
+	                    left: '100px',
+	                    top: '18px',
+	                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+	                }
+	            }]
+	        },
+	        legend: {
+	        	align:'right',
+	        	verticalAlign: 'top',
+	        	y:0
+	        },
+	        series: [{
+	            type: 'column',
+	            name: '三年级',
+	            data: ydata1
+	        }, {
+	            type: 'column',
+	            name: '四年级',
+	            data: ydata2
+	        }, {
+	            type: 'column',
+	            name: '五年级',
+	            data: ydata3
+	        },{
+	            type: 'column',
+	            name: '六年级',
+	            data: ydata4
+	        }, {
+	            type: 'spline',
+	            name: '平均',
+	            data: ydata5,
+	            color:'#f00000',
+	            marker: {
+	                lineWidth: 2,
+	                lineColor: Highcharts.getOptions().colors[3],
+	                fillColor: 'white'
+	            }
+	        }]
+	    });
+	};
+    
+});
+</script>
+<footer class="mt-20">
+	<div class="footer">Copyright 郑州大牛软件科技有限公司版权所有</div>
+</footer>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+</body>
+</html>

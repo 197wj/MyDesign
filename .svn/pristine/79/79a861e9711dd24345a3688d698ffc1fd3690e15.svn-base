@@ -1,0 +1,11 @@
+package com.zhiliao.dao.excel;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.excel.UserExcel;
+
+public interface ExcelMapper {
+
+	public List<UserExcel> selectList(Map<String, Object>map);
+}

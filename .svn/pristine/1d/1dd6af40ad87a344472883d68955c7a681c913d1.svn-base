@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.sys.tbServiceMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.sys.tbService">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="area_id" jdbcType="INTEGER" property="areaId" />
+    <result column="areaName" jdbcType="VARCHAR" property="areaName" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, area_id, phone, qq, add_time, modify_time, status
+  </sql>
+  
+  <!-- 客服联系的分页获取 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select 
+    ts.*,sa.areaname areaName
+    from tb_service ts
+    left join tms_els_test.sys_area sa on sa.area_id = ts.area_id 
+   <where>
+   		<if test="phone!=null">
+   			and phone like concat('%',#{phone,jdbcType=VARCHAR},'%')
+   		</if>
+   		<if test="qq!=null">
+   			and qq like concat('%',#{qq,jdbcType=VARCHAR},'%')
+   		</if>
+   </where>
+  </select>
+  
+  <!-- 分页获取客服信息 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select 
+    count(id)
+    from tb_service ts
+    left join tms_els_test.sys_area sa on sa.area_id = ts.area_id
+   <where>
+   		<if test="phone!=null">
+   			and phone like concat('%',#{phone,jdbcType=VARCHAR},'%')
+   		</if>
+   		<if test="qq!=null">
+   			and qq like concat('%',#{qq,jdbcType=VARCHAR},'%')
+   		</if>
+   </where>
+  </select>
+  
+  
+  
+  <!-- 根据id删除客服信息 -->
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from tb_service
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 批量删除客服信息 -->
+  <delete id="deleteList" parameterType="java.util.List">
+    delete from tb_service 
+   	where id in
+    <foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+        #{idList}
+    </foreach>
+  </delete>
+  
+  <!-- 根据id获取客服信息 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_service
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据id获取客服信息 -->
+  <select id="selectByAreaId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_service
+    where area_id = #{areaId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 增加客服信息 -->
+  <insert id="insert" parameterType="com.zhiliao.model.sys.tbService">
+    insert into tb_service (id, area_id, phone, 
+      qq, add_time, modify_time, 
+      status)
+    values (#{id,jdbcType=INTEGER}, #{areaId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  
+  <!-- 根据id修改客服信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.sys.tbService">
+    update tb_service
+    <set>
+      <if test="areaId != null">
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null">
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

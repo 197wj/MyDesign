@@ -1,0 +1,30 @@
+package com.zhiliao.controller.invoice;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 发票controller
+ * @author yuanhuawei
+ *2018-02-06
+ */
+@Controller
+@RequestMapping(value="/invoice")
+public class invoiceController {
+
+	
+	/**
+	 * 跳转到发票列表页面
+	 */
+	@RequestMapping(value="/invoice-list.action")
+	public String invoiceList(HttpServletRequest request,ModelMap model){
+	
+		
+		
+		return "invoice/invoice-list";
+	}
+	
+}

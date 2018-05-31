@@ -1,0 +1,47 @@
+package com.zhiliao.service.order.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.order.TradeMapper;
+import com.zhiliao.model.order.Trade;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.order.TradeService;
+/**
+ * 交易记录的服务层的实现类
+ * @author 毕伟谦
+ *
+ */
+@Service 
+public class TradeServiceImpl extends BaseServiceImpl<Trade, Map<String, Object>> implements TradeService {
+
+	@Autowired
+	private TradeMapper tradeMapper;
+	
+	@Override
+	public int insert(Trade record) {
+		// TODO Auto-generated method stub
+		int rows = this.tradeMapper.insert(record);
+		return rows;
+	}
+	
+	@Override
+	public Trade selectById(Integer id) {
+		// TODO Auto-generated method stub
+		Trade trade = this.tradeMapper.selectById(id);
+		return trade;
+	}
+	
+	@Override
+	public List<Trade> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<Trade> list = this.tradeMapper.selectList(map);
+		return list;
+	}
+	
+	
+	
+}

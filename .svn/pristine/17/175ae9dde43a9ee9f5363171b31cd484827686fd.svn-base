@@ -1,0 +1,19 @@
+package com.zhiliao.service.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.TeaCount;
+
+public interface TeaCountService {
+
+	public List<TeaCount> getCountInfo(Map<String, Object> map);
+	
+	public List<TeaCount> getScoreInfo(Map<String, Object> map);
+	
+	public List<TeaCount> getCityRank(Map<String, Object> map);//获取市排名
+	
+	public List<TeaCount> getCityRankZ(Map<String, Object> map);//获取是排名的综合
+	
+	public List<TeaCount> getAvgInfo(Map<String, Object> map);//获取平均分(折线图使用)
+}

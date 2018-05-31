@@ -1,0 +1,15 @@
+package com.zhiliao.dao.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.Class;
+
+public interface ClassMapper {
+
+	public Class selectById(Integer classId);
+
+	public int updateById(Class record);
+
+    public List<Class> selectList(Map<String, Object>map);
+}

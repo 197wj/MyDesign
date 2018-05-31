@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.php.ExamhistoryMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.php.Examhistory">
+    <id column="ehid" jdbcType="INTEGER" property="ehid" />
+    <result column="ehexamid" jdbcType="VARCHAR" property="ehexamid" />
+    <result column="ehexam" jdbcType="VARCHAR" property="ehexam" />
+    <result column="ehtype" jdbcType="INTEGER" property="ehtype" />
+    <result column="ehbasicid" jdbcType="INTEGER" property="ehbasicid" />
+    <result column="ehtime" jdbcType="INTEGER" property="ehtime" />
+    <result column="ehscore" jdbcType="REAL" property="ehscore" />
+    <result column="ehuserid" jdbcType="INTEGER" property="ehuserid" />
+    <result column="ehusername" jdbcType="VARCHAR" property="ehusername" />
+    <result column="ehstarttime" jdbcType="INTEGER" property="ehstarttime" />
+    <result column="ehendtime" jdbcType="INTEGER" property="ehendtime" />
+    <result column="ehkeyword" jdbcType="VARCHAR" property="ehkeyword" />
+    <result column="ehstatus" jdbcType="INTEGER" property="ehstatus" />
+    <result column="ehzhou" jdbcType="INTEGER" property="ehzhou" />
+    <result column="ehdecide" jdbcType="INTEGER" property="ehdecide" />
+    <result column="ehopenid" jdbcType="VARCHAR" property="ehopenid" />
+    <result column="ehstate" jdbcType="INTEGER" property="ehstate" />
+    <result column="ehgradeid" jdbcType="INTEGER" property="ehgradeid" />
+    <result column="ehclassid" jdbcType="INTEGER" property="ehclassid" />
+    <result column="ehsubject" jdbcType="VARCHAR" property="ehsubject" />
+    <result column="ehrank" jdbcType="INTEGER" property="ehrank" />
+    <result column="ehschoolid" jdbcType="INTEGER" property="ehschoolid" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zhiliao.model.php.Examhistory">
+    <result column="ehquestion" jdbcType="LONGVARCHAR" property="ehquestion" />
+    <result column="ehsetting" jdbcType="LONGVARCHAR" property="ehsetting" />
+    <result column="ehscorelist" jdbcType="LONGVARCHAR" property="ehscorelist" />
+    <result column="ehuseranswer" jdbcType="LONGVARCHAR" property="ehuseranswer" />
+    <result column="ehtimelist" jdbcType="LONGVARCHAR" property="ehtimelist" />
+    <result column="image1" jdbcType="LONGVARCHAR" property="image1" />
+    <result column="image2" jdbcType="LONGVARCHAR" property="image2" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ehid, ehexamid, ehexam, ehtype, ehbasicid, ehtime, ehscore, ehuserid, ehusername, 
+    ehstarttime, ehendtime, ehkeyword, ehstatus, ehzhou, ehdecide, ehopenid, ehstate, 
+    ehgradeid, ehclassid, ehsubject, ehrank, ehschoolid
+  </sql>
+  <sql id="Blob_Column_List">
+    ehquestion, ehsetting, ehscorelist, ehuseranswer, ehtimelist, image1, image2
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from x2_examhistory_33
+    where ehid = #{ehid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from x2_examhistory_33
+    where ehid = #{ehid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zhiliao.model.php.Examhistory">
+    insert into x2_examhistory_33 (ehid, ehexamid, ehexam, 
+      ehtype, ehbasicid, ehtime, 
+      ehscore, ehuserid, ehusername, 
+      ehstarttime, ehendtime, ehkeyword, 
+      ehstatus, ehzhou, ehdecide, 
+      ehopenid, ehstate, ehgradeid, 
+      ehclassid, ehsubject, ehrank, 
+      ehschoolid, ehquestion, ehsetting, 
+      ehscorelist, ehuseranswer, ehtimelist, 
+      image1, image2)
+    values (#{ehid,jdbcType=INTEGER}, #{ehexamid,jdbcType=VARCHAR}, #{ehexam,jdbcType=VARCHAR}, 
+      #{ehtype,jdbcType=INTEGER}, #{ehbasicid,jdbcType=INTEGER}, #{ehtime,jdbcType=INTEGER}, 
+      #{ehscore,jdbcType=REAL}, #{ehuserid,jdbcType=INTEGER}, #{ehusername,jdbcType=VARCHAR}, 
+      #{ehstarttime,jdbcType=INTEGER}, #{ehendtime,jdbcType=INTEGER}, #{ehkeyword,jdbcType=VARCHAR}, 
+      #{ehstatus,jdbcType=INTEGER}, #{ehzhou,jdbcType=INTEGER}, #{ehdecide,jdbcType=INTEGER}, 
+      #{ehopenid,jdbcType=VARCHAR}, #{ehstate,jdbcType=INTEGER}, #{ehgradeid,jdbcType=INTEGER}, 
+      #{ehclassid,jdbcType=INTEGER}, #{ehsubject,jdbcType=VARCHAR}, #{ehrank,jdbcType=INTEGER}, 
+      #{ehschoolid,jdbcType=INTEGER}, #{ehquestion,jdbcType=LONGVARCHAR}, #{ehsetting,jdbcType=LONGVARCHAR}, 
+      #{ehscorelist,jdbcType=LONGVARCHAR}, #{ehuseranswer,jdbcType=LONGVARCHAR}, #{ehtimelist,jdbcType=LONGVARCHAR}, 
+      #{image1,jdbcType=LONGVARCHAR}, #{image2,jdbcType=LONGVARCHAR})
+  </insert>
+  
+  <select id="selectByUserId" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+  	select * from
+  	x2_examhistory_33
+  	<where>
+  		<if test="userId!=null">
+  			and ehuserid = #{userId,jdbcType=INTEGER}
+  		</if>
+  		<if test="examId!=null">
+  			and ehexamid =  #{examId,jdbcType=VARCHAR}
+  		</if>
+  	</where>
+  </select>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhiliao.model.php.Examhistory">
+    update x2_examhistory_33
+    <set>
+      <if test="ehexamid != null">
+        ehexamid = #{ehexamid,jdbcType=VARCHAR},
+      </if>
+      <if test="ehexam != null">
+        ehexam = #{ehexam,jdbcType=VARCHAR},
+      </if>
+      <if test="ehtype != null">
+        ehtype = #{ehtype,jdbcType=INTEGER},
+      </if>
+      <if test="ehbasicid != null">
+        ehbasicid = #{ehbasicid,jdbcType=INTEGER},
+      </if>
+      <if test="ehtime != null">
+        ehtime = #{ehtime,jdbcType=INTEGER},
+      </if>
+      <if test="ehscore != null">
+        ehscore = #{ehscore,jdbcType=REAL},
+      </if>
+      <if test="ehuserid != null">
+        ehuserid = #{ehuserid,jdbcType=INTEGER},
+      </if>
+      <if test="ehusername != null">
+        ehusername = #{ehusername,jdbcType=VARCHAR},
+      </if>
+      <if test="ehstarttime != null">
+        ehstarttime = #{ehstarttime,jdbcType=INTEGER},
+      </if>
+      <if test="ehendtime != null">
+        ehendtime = #{ehendtime,jdbcType=INTEGER},
+      </if>
+      <if test="ehkeyword != null">
+        ehkeyword = #{ehkeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="ehstatus != null">
+        ehstatus = #{ehstatus,jdbcType=INTEGER},
+      </if>
+      <if test="ehzhou != null">
+        ehzhou = #{ehzhou,jdbcType=INTEGER},
+      </if>
+      <if test="ehdecide != null">
+        ehdecide = #{ehdecide,jdbcType=INTEGER},
+      </if>
+      <if test="ehopenid != null">
+        ehopenid = #{ehopenid,jdbcType=VARCHAR},
+      </if>
+      <if test="ehstate != null">
+        ehstate = #{ehstate,jdbcType=INTEGER},
+      </if>
+      <if test="ehgradeid != null">
+        ehgradeid = #{ehgradeid,jdbcType=INTEGER},
+      </if>
+      <if test="ehclassid != null">
+        ehclassid = #{ehclassid,jdbcType=INTEGER},
+      </if>
+      <if test="ehsubject != null">
+        ehsubject = #{ehsubject,jdbcType=VARCHAR},
+      </if>
+      <if test="ehrank != null">
+        ehrank = #{ehrank,jdbcType=INTEGER},
+      </if>
+      <if test="ehschoolid != null">
+        ehschoolid = #{ehschoolid,jdbcType=INTEGER},
+      </if>
+      <if test="ehquestion != null">
+        ehquestion = #{ehquestion,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ehsetting != null">
+        ehsetting = #{ehsetting,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ehscorelist != null">
+        ehscorelist = #{ehscorelist,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ehuseranswer != null">
+        ehuseranswer = #{ehuseranswer,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ehtimelist != null">
+        ehtimelist = #{ehtimelist,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="image1 != null">
+        image1 = #{image1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="image2 != null">
+        image2 = #{image2,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ehid = #{ehid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zhiliao.model.php.Examhistory">
+    update x2_examhistory_33
+    set ehexamid = #{ehexamid,jdbcType=VARCHAR},
+      ehexam = #{ehexam,jdbcType=VARCHAR},
+      ehtype = #{ehtype,jdbcType=INTEGER},
+      ehbasicid = #{ehbasicid,jdbcType=INTEGER},
+      ehtime = #{ehtime,jdbcType=INTEGER},
+      ehscore = #{ehscore,jdbcType=REAL},
+      ehuserid = #{ehuserid,jdbcType=INTEGER},
+      ehusername = #{ehusername,jdbcType=VARCHAR},
+      ehstarttime = #{ehstarttime,jdbcType=INTEGER},
+      ehendtime = #{ehendtime,jdbcType=INTEGER},
+      ehkeyword = #{ehkeyword,jdbcType=VARCHAR},
+      ehstatus = #{ehstatus,jdbcType=INTEGER},
+      ehzhou = #{ehzhou,jdbcType=INTEGER},
+      ehdecide = #{ehdecide,jdbcType=INTEGER},
+      ehopenid = #{ehopenid,jdbcType=VARCHAR},
+      ehstate = #{ehstate,jdbcType=INTEGER},
+      ehgradeid = #{ehgradeid,jdbcType=INTEGER},
+      ehclassid = #{ehclassid,jdbcType=INTEGER},
+      ehsubject = #{ehsubject,jdbcType=VARCHAR},
+      ehrank = #{ehrank,jdbcType=INTEGER},
+      ehschoolid = #{ehschoolid,jdbcType=INTEGER},
+      ehquestion = #{ehquestion,jdbcType=LONGVARCHAR},
+      ehsetting = #{ehsetting,jdbcType=LONGVARCHAR},
+      ehscorelist = #{ehscorelist,jdbcType=LONGVARCHAR},
+      ehuseranswer = #{ehuseranswer,jdbcType=LONGVARCHAR},
+      ehtimelist = #{ehtimelist,jdbcType=LONGVARCHAR},
+      image1 = #{image1,jdbcType=LONGVARCHAR},
+      image2 = #{image2,jdbcType=LONGVARCHAR}
+    where ehid = #{ehid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhiliao.model.php.Examhistory">
+    update x2_examhistory_33
+    set ehexamid = #{ehexamid,jdbcType=VARCHAR},
+      ehexam = #{ehexam,jdbcType=VARCHAR},
+      ehtype = #{ehtype,jdbcType=INTEGER},
+      ehbasicid = #{ehbasicid,jdbcType=INTEGER},
+      ehtime = #{ehtime,jdbcType=INTEGER},
+      ehscore = #{ehscore,jdbcType=REAL},
+      ehuserid = #{ehuserid,jdbcType=INTEGER},
+      ehusername = #{ehusername,jdbcType=VARCHAR},
+      ehstarttime = #{ehstarttime,jdbcType=INTEGER},
+      ehendtime = #{ehendtime,jdbcType=INTEGER},
+      ehkeyword = #{ehkeyword,jdbcType=VARCHAR},
+      ehstatus = #{ehstatus,jdbcType=INTEGER},
+      ehzhou = #{ehzhou,jdbcType=INTEGER},
+      ehdecide = #{ehdecide,jdbcType=INTEGER},
+      ehopenid = #{ehopenid,jdbcType=VARCHAR},
+      ehstate = #{ehstate,jdbcType=INTEGER},
+      ehgradeid = #{ehgradeid,jdbcType=INTEGER},
+      ehclassid = #{ehclassid,jdbcType=INTEGER},
+      ehsubject = #{ehsubject,jdbcType=VARCHAR},
+      ehrank = #{ehrank,jdbcType=INTEGER},
+      ehschoolid = #{ehschoolid,jdbcType=INTEGER}
+    where ehid = #{ehid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,15 @@
+package com.zhiliao.service.school;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.school.Grade;
+import com.zhiliao.service.BaseService;
+
+public interface gradeService extends BaseService<Grade, Map<String, Object>>{
+
+	List<Grade> getListByMap(Map<String, Object> map);
+
+	Grade selectById(Integer schoolGradeId);
+
+}

@@ -1,0 +1,5 @@
+package com.zhiliao.dao.php;
+
+public interface PhpCountMapper {
+
+}

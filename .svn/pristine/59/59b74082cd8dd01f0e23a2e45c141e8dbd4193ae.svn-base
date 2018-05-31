@@ -1,0 +1,18 @@
+package com.zhiliao.service.sys;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.sys.TbComment;
+import com.zhiliao.service.BaseService;
+
+public interface CommentService extends BaseService<TbComment, Map<String, Object>> {
+
+	public int deleteList(List<Integer> list);
+
+	public int insert(TbComment record);
+
+	public TbComment selectById(Integer id);
+
+	public int updateById(TbComment record);
+}

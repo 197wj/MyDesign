@@ -1,0 +1,76 @@
+package com.zhiliao.model.param;
+
+import java.util.Date;
+
+public class SysParam {
+    private Integer paramId;
+
+    private String paramName;
+
+    private String paramType;
+
+    private Integer sort;
+
+    private String remark;
+
+    private Date addTime;
+    
+    private String isDelete;
+
+
+	public String getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(String isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	public Integer getParamId() {
+        return paramId;
+    }
+
+    public void setParamId(Integer paramId) {
+        this.paramId = paramId;
+    }
+
+    public String getParamName() {
+        return paramName;
+    }
+
+    public void setParamName(String paramName) {
+        this.paramName = paramName == null ? null : paramName.trim();
+    }
+
+    public String getParamType() {
+        return paramType;
+    }
+
+    public void setParamType(String paramType) {
+        this.paramType = paramType == null ? null : paramType.trim();
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+}

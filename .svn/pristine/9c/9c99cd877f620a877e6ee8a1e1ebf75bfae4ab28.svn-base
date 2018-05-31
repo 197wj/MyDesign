@@ -1,0 +1,51 @@
+package com.zhiliao.dao.user;
+
+import java.util.List;
+
+import com.zhiliao.model.user.Area;
+/**
+ * 
+ * @ClassName: AreaMapper 
+ * @Description: 区域信息的dao层
+ * @author 毕伟谦 
+ * @date 2017年11月29日 上午10:18:38 
+ *
+ */
+public interface AreaMapper {
+
+	/**
+	 * 
+	 * @Title: insert 
+	 * @Description: 增加区域信息(暂时用不到) 
+	 * @param record
+	 * @return int    
+	 */
+    public int insert(Area record);
+
+    /**
+     * 
+     * @Title: selectById 
+     * @Description: 根据id查询区域信息 
+     * @param @param areaId
+     * @return Area
+     */
+    public Area selectById(String areaId);
+
+    /**
+     * 
+     * @Title: updateById 
+     * @Description: 根据id修改区域信息
+     * @param @param record
+     * @return int
+     */
+    public int updateById(Area record);
+
+    /**
+     * @Title: selectByArea 
+     * @Description: 根据区域的某个字段获取区域信息 
+     * @param @param area
+     * @param @return 
+     * @return List<Area>
+     */
+    public List<Area> selectByArea(Area area);
+}

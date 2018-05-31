@@ -1,0 +1,13 @@
+package com.zhiliao.service.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.Examhistory;
+
+public interface PhpHistService {
+	
+	int insert(Examhistory record);
+	
+	List<Examhistory> selectByUserId(Map<String, Object> map);
+}

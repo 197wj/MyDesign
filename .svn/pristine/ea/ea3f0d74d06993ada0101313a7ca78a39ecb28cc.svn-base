@@ -1,0 +1,11 @@
+package com.zhiliao.service.excel;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.excel.UserExcel;
+
+public interface ExcelService {
+
+	public List<UserExcel> selectList(Map<String, Object>map);
+}

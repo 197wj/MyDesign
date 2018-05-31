@@ -1,0 +1,327 @@
+﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+
+<link rel="stylesheet" href="${path }res/css/bootstrap.min.css" />
+<script src="../../js/jquery-3.2.1.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<title>周周清管理系统</title>
+
+<meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<style>
+	.qin li:hover .zi{
+	display:block !important;
+	}
+	.ti{
+	height:1px;background:white;
+	} 
+</style>
+</head>
+<body>
+<header class="navbar-wrapper">
+	<div class="navbar navbar-fixed-top">
+		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" ><img src="../res/image/admin_tit.png"/></a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="/aboutHui.shtml">H-ui</a> 
+			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+				<ul class="cl">
+					<li>${role.actorname }</li>
+					<li class="dropDown dropDown_hover">
+						<a href="#" class="dropDown_A">${user.userName } <i class="Hui-iconfont">&#xe6d5;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
+							<li><a href="../login.action">切换账户</a></li>
+							<li><a href="../login/loginOut.action">退出</a></li>
+					</ul>
+				</li>
+					
+			</ul>
+		</nav>
+	</div>
+</div>
+</header>
+<aside class="Hui-aside">
+	<div class="menu_dropdown bk_2 hidden" id="menu1">
+		<dl id="menu-article">
+			<dt><i class="Hui-iconfont">&#xe620;</i> 产品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="${path }/subject/subjectView.action" data-title="科目管理" href="javascript:void(0)">科目管理</a></li>
+					<li><a data-href="${path }/term/termView.action" data-title="学期管理" href="javascript:void(0)">学期管理</a></li>
+					<li><a data-href="${path }/grade/gradeView.action" data-title="年级管理" href="javascript:void(0)">年级管理</a></li>
+					<li><a data-href="${path }/product/productView.action" data-title="产品管理" href="javascript:void(0)">产品管理</a></li>
+					<li><a data-href="${path }/meal/mealView.action" data-title="套餐管理" href="javascript:void(0)">套餐管理</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-picture">
+			<dt><i class="Hui-iconfont">&#xe60d;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="${path }/type/userTypeView.action" data-title="开通类型" href="javascript:void(0)">开通类型</a></li>
+					<li><a data-href="${path }/user/userView.action" data-title="用户管理" href="javascript:void(0)">用户管理</a></li>
+				</ul>
+			</dd>
+		</dl>
+	<dl id="menu-product">
+		<dt><i class="Hui-iconfont">&#xe620;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+			<ul>
+				<li><a data-href="${path }/order/orderView.action" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
+			</ul>
+		</dd>
+	</dl>
+	<dl id="menu-data">
+		<dt><i class="Hui-iconfont">&#xe620;</i> 异常数据处理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+			<ul>
+				<li><a data-href="${path }/contrast/contrastView.action" data-title="订单异常数据对比" href="javascript:void(0)">订单异常数据对比</a></li>
+				<li><a data-href="${path }/contrast/examView.action" data-title="试卷异常数据对比" href="javascript:void(0)">试卷异常数据对比</a></li>
+				<li><a data-href="${path }/contrast/examsView.action" data-title="发放试卷" href="javascript:void(0)">发放试卷</a></li>
+				<li><a data-href="${path }/contrast/scoreView.action" data-title="成绩数据修改" href="javascript:void(0)">成绩数据修改</a></li>
+			</ul>
+		</dd>
+	</dl>
+	<dl id="menu-comments">
+		<dt><i class="Hui-iconfont">&#xe622;</i> 区域管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+				<ul >
+					<li><a data-href="${path }/school/schoolTypeView.action" data-title="学校类型" href="javascript:void(0)">学校类型</a></li>
+					<li><a data-href="${path }/school/schoolView.action" data-title="学校投放详情" href="javascript:void(0)">学校投放详情</a></li>
+					
+				</ul>
+		</dd>
+	</dl>
+		
+	<dl id="menu-tongji">
+		<dt><i class="Hui-iconfont">&#xe61a;</i> 系统统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+		<ul class="qin">
+			<li><a data-href="${path }/count/countView.action" data-title="销售统计" href="javascript:void(0)">销售统计</a></li>
+			<li><a>沁阳</a>
+				<ul class="zi" style="display:none">					
+					<li><a data-href="${path }/platCount/platCount.action?gradeId=14" data-title="四年级" href="javascript:void(0)">使用统计(平台4年级)</a></li>
+					<li><a data-href="${path }/platCount/platCount.action?gradeId=15" data-title="五年级" href="javascript:void(0)">使用统计(平台5年级)</a></li>
+					<li class="ti"></li>
+				</ul>
+			</li>
+			<li><a>濮阳</a>
+				<ul class="zi" style="display:none">
+					<li><a data-href="${path }/platCount/platCount.action?gradeId=14" data-title="四年级" href="javascript:void(0)">使用统计(平台4年级)</a></li>
+					<li><a data-href="${path }/platCount/platCount.action?gradeId=15" data-title="五年级" href="javascript:void(0)">使用统计(平台5年级)</a></li>
+					<li class="ti"></li>
+				</ul>
+			</li>
+		</ul>
+			
+		</dd>
+	</dl>
+		<dl id="menu-system">
+			<dt><i class="Hui-iconfont">&#xe62e;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="${path }/app/appView.action" data-title="app管理" href="javascript:void(0)">app管理</a></li>
+					<li><a data-href="${path }/tbServer/serverView.action" data-title="客服电话" href="javascript:void(0)">客服电话</a></li>
+					<li><a data-href="${path }/comType/typeView.action" data-title="反馈类型" href="javascript:void(0)">反馈类型</a></li>
+					<li><a data-href="${path }/comment/commentView.action" data-title="意见反馈" href="javascript:void(0)">意见反馈</a></li>
+					<li><a data-href="${path }/log/logView.action" data-title="系统日志" href="javascript:void(0)">系统日志</a></li>
+			</ul>
+		</dd>
+	</dl>
+</div>
+<%-- </>
+	<dl id="menu-tongji">
+		<dt><i class="Hui-iconfont">&#xe61a;</i> 系统统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+			<ul>
+				<li><a data-href="${path }/useCount/useCountView.action" data-title="使用统计" href="javascript:void(0)">使用统计</a></li>
+			</ul>
+		</dd>
+	</dl>
+</div> --%>
+<div  class="menu_dropdown bk_2 hidden" id="menu3" >
+	<dl id="menu-tongji">
+		<dt id="dt"><i class="Hui-iconfont">&#xe61a;</i> 系统统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+			<ul>
+				<li id="tea"><a data-href="${path }/teaCount/teacherCount.action?classId=${user.classId}" data-title="班级统计" href="javascript:void(0)">班级统计</a></li>
+				<li id="sch1"><a data-href="${path }/schCount/schoolCount.action?gradeId=14&schoolId=${user.schoolId}" data-title="四年级" href="javascript:void(0)">四年级</a></li>
+				<li id="sch2"><a data-href="${path }/schCount/schoolCount.action?gradeId=15&schoolId=${user.schoolId}" data-title="五年级" href="javascript:void(0)">五年级</a></li>
+				<li id="plt1"><a data-href="${path }/platCount/platCount.action?gradeId=14&areaId=${user.areaId}" data-title="四年级" href="javascript:void(0)">四年级</a></li>
+				<li id="plt2"><a data-href="${path }/platCount/platCount.action?gradeId=15&areaId=${user.areaId}" data-title="五年级" href="javascript:void(0)">五年级</a></li>
+			</ul>
+		</dd>
+	</dl>
+</div>
+</aside>
+
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<section class="Hui-article-box">
+	<div id="Hui-tabNav" class="Hui-tabNav hidden-xs" >
+		<div class="Hui-tabNav-wp">
+			<ul id="min_title_list" class="acrossTab cl">
+				<li class="active" id ="des">
+					<span title="我的桌面" data-href="${path }/welcome.action">我的桌面</span>
+					<em></em>
+				</li>
+		</ul>
+	</div>
+		<div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d7;</i></a></div>
+</div>
+<div id="iframe_box" class="Hui-article">
+	<div class="show_iframe">
+		<div style="display:none" class="loading"></div>
+		<div id="inde">
+			<iframe scrolling="yes" frameborder="0" src="${path }/welcome.action"></iframe>
+		</div>
+	</div>
+</div>
+</section>
+
+<div class="contextMenu" id="Huiadminmenu">
+	<ul>
+		<li id="closethis">关闭当前 </li>
+		<li id="closeall">关闭全部 </li>
+</ul>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+
+<script type="text/javascript">
+//根据用户登录,判断显示什么页面
+$(function(){
+	var name = '${role.actorname}';
+	var role = '${role.vchar2}'
+	//超级管理员(所有东西都可以看)
+	if(role=='superadmin'){
+		$("#menu1").removeClass("hidden");
+		$("#menu3").addClass("hidden");
+	}
+	//平台管理员(只能看到平台管理的数据统计)
+	if(role=='platadmin'){
+		$("#menu1").addClass("hidden");
+		$("#menu3").removeClass("hidden");
+		$("#dt").click();
+		//控制显示连接
+		$("#tea").addClass("hidden");
+		$("#sch1").addClass("hidden");
+		$("#sch2").addClass("hidden");
+		$("#plt1").removeClass("hidden");
+		$("#plt2").removeClass("hidden");
+		//默认桌面显示页面
+		$("#des").empty();
+		$("#des").append('<span title="四年级" data-href="${path }/platCount/platCount.action?gradeId=14&areaId=${user.areaId}">四年级</span><em></em>');
+		
+		$("#inde").empty();//桌面的默认页面(显示4年级)
+		$("#inde").append('<iframe scrolling="yes" frameborder="0" src="${path }/platCount/platCount.action?gradeId=14&areaId=${user.areaId}"></iframe>')
+	}
+	//学校管理员(只能看到学校的数据统计)
+	if(role=='schooladmin'){
+		$("#menu1").addClass("hidden");
+		$("#menu3").removeClass("hidden");
+		$("#dt").click();
+		//控制显示连接
+		$("#tea").addClass("hidden");
+		$("#plt1").addClass("hidden");
+		$("#plt2").addClass("hidden");
+		$("#sch1").removeClass("hidden");
+		$("#sch2").removeClass("hidden");
+		//默认桌面显示页面
+		$("#des").empty();
+		$("#des").append('<span title="四年级" data-href="${path }/schCount/schoolCount.action?gradeId=14&schoolId=${user.schoolId}">四年级</span><em></em>');
+		
+		$("#inde").empty();//桌面的默认页面(显示4年级)
+		$("#inde").append('<iframe scrolling="yes" frameborder="0" src="${path }/schCount/schoolCount.action?gradeId=14&schoolId=${user.schoolId}"></iframe>')
+	}
+	//教师和班级管理员(只能看到本班级的数据统计)
+	if(role=='teacher'||role=='classadmin'){
+		$("#menu1").addClass("hidden");
+		$("#menu3").removeClass("hidden");
+		//控制显示连接
+		$("#sch1").addClass("hidden");
+		$("#sch2").addClass("hidden");
+		$("#plt1").addClass("hidden");
+		$("#plt2").addClass("hidden");
+		$("#tea").removeClass("hidden");
+		//默认桌面显示页面
+		$("#des").empty();
+		$("#des").append('<span title="班级统计" data-href="${path }/teaCount/teacherCount.action?classId=${user.classId}">班级统计</span><em></em>');
+		
+		$("#inde").empty();//桌面的默认页面(显示4年级)
+		$("#inde").append('<iframe scrolling="yes" frameborder="0" src="${path }/teaCount/teacherCount.action?classId=${user.classId}"></iframe>')
+	}
+	
+})
+</script>
+
+<script type="text/javascript">
+$("mui-table-view-cell").on("click",function(){
+	$(".mui-collapse-content").css("display","block")
+});
+$(function(){
+	/*$("#min_title_list li").contextMenu('Huiadminmenu', {
+		bindings: {
+			'closethis': function(t) {
+				console.log(t);
+				if(t.find("i")){
+					t.find("i").trigger("click");
+				}		
+			},
+			'closeall': function(t) {
+				alert('Trigger was '+t.id+'\nAction was Email');
+			},
+		}
+	});*/
+});
+/*个人信息*/
+function myselfinfo(){
+	layer.open({
+		type: 1,
+		area: ['300px','200px'],
+		fix: false, //不固定
+		maxmin: true,
+		shade:0.4,
+		title: '查看信息',
+		content: '<div>${user.userName}</div><br><div>Tel:${user.userAccount}</div>'
+	});
+}
+
+/*资讯-添加*/
+function article_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*图片-添加*/
+function picture_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*产品-添加*/
+function product_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+
+</script> 
+
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+package com.zhiliao.service.php.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.php.ExamstatisticsMapper;
+import com.zhiliao.model.php.Examstatistics;
+import com.zhiliao.service.php.PhpCountService;
+
+@Service
+public class PhpCountServiceImpl implements PhpCountService {
+
+	@Autowired
+	private ExamstatisticsMapper examstatisticsMapper;
+
+	@Override
+	public List<Examstatistics> selectInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.examstatisticsMapper.selectInfo(map);
+	}
+
+	@Override
+	public List<Examstatistics> selectInfoZ(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.examstatisticsMapper.selectInfoz(map);
+	}
+	
+	@Override
+	public List<Examstatistics> getClassRank(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.examstatisticsMapper.getClassRank(map);
+	}
+	
+	
+	
+}

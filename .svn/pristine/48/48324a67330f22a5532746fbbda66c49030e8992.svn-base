@@ -1,0 +1,293 @@
+package com.zhiliao.model.php;
+
+public class Examhistory {
+    private Integer ehid;
+
+    private Integer ehexamid;
+
+    private String ehexam;
+
+    private Integer ehtype;
+
+    private Integer ehbasicid;
+
+    private Integer ehtime;
+
+    private Float ehscore;
+
+    private Integer ehuserid;
+
+    private String ehusername;
+
+    private Integer ehstarttime;
+
+    private Integer ehendtime;
+
+    private String ehkeyword;
+
+    private Integer ehstatus;
+
+    private Integer ehzhou;
+
+    private Integer ehdecide;
+
+    private String ehopenid;
+
+    private Integer ehstate;
+
+    private Integer ehgradeid;
+
+    private Integer ehclassid;
+
+    private String ehsubject;
+
+    private Integer ehrank;
+
+    private Integer ehschoolid;
+
+    private String ehquestion;
+
+    private String ehsetting;
+
+    private String ehscorelist;
+
+    private String ehuseranswer;
+
+    private String ehtimelist;
+
+    private String image1;
+
+    private String image2;
+
+    public Integer getEhid() {
+        return ehid;
+    }
+
+    public void setEhid(Integer ehid) {
+        this.ehid = ehid;
+    }
+
+    public Integer getEhexamid() {
+        return ehexamid;
+    }
+
+    public void setEhexamid(Integer ehexamid) {
+        this.ehexamid = ehexamid;
+    }
+
+    public String getEhexam() {
+        return ehexam;
+    }
+
+    public void setEhexam(String ehexam) {
+        this.ehexam = ehexam == null ? null : ehexam.trim();
+    }
+
+    public Integer getEhtype() {
+        return ehtype;
+    }
+
+    public void setEhtype(Integer ehtype) {
+        this.ehtype = ehtype;
+    }
+
+    public Integer getEhbasicid() {
+        return ehbasicid;
+    }
+
+    public void setEhbasicid(Integer ehbasicid) {
+        this.ehbasicid = ehbasicid;
+    }
+
+    public Integer getEhtime() {
+        return ehtime;
+    }
+
+    public void setEhtime(Integer ehtime) {
+        this.ehtime = ehtime;
+    }
+
+    public Float getEhscore() {
+        return ehscore;
+    }
+
+    public void setEhscore(Float ehscore) {
+        this.ehscore = ehscore;
+    }
+
+    public Integer getEhuserid() {
+        return ehuserid;
+    }
+
+    public void setEhuserid(Integer ehuserid) {
+        this.ehuserid = ehuserid;
+    }
+
+    public String getEhusername() {
+        return ehusername;
+    }
+
+    public void setEhusername(String ehusername) {
+        this.ehusername = ehusername == null ? null : ehusername.trim();
+    }
+
+    public Integer getEhstarttime() {
+        return ehstarttime;
+    }
+
+    public void setEhstarttime(Integer ehstarttime) {
+        this.ehstarttime = ehstarttime;
+    }
+
+    public Integer getEhendtime() {
+        return ehendtime;
+    }
+
+    public void setEhendtime(Integer ehendtime) {
+        this.ehendtime = ehendtime;
+    }
+
+    public String getEhkeyword() {
+        return ehkeyword;
+    }
+
+    public void setEhkeyword(String ehkeyword) {
+        this.ehkeyword = ehkeyword == null ? null : ehkeyword.trim();
+    }
+
+    public Integer getEhstatus() {
+        return ehstatus;
+    }
+
+    public void setEhstatus(Integer ehstatus) {
+        this.ehstatus = ehstatus;
+    }
+
+    public Integer getEhzhou() {
+        return ehzhou;
+    }
+
+    public void setEhzhou(Integer ehzhou) {
+        this.ehzhou = ehzhou;
+    }
+
+    public Integer getEhdecide() {
+        return ehdecide;
+    }
+
+    public void setEhdecide(Integer ehdecide) {
+        this.ehdecide = ehdecide;
+    }
+
+    public String getEhopenid() {
+        return ehopenid;
+    }
+
+    public void setEhopenid(String ehopenid) {
+        this.ehopenid = ehopenid == null ? null : ehopenid.trim();
+    }
+
+    public Integer getEhstate() {
+        return ehstate;
+    }
+
+    public void setEhstate(Integer ehstate) {
+        this.ehstate = ehstate;
+    }
+
+    public Integer getEhgradeid() {
+        return ehgradeid;
+    }
+
+    public void setEhgradeid(Integer ehgradeid) {
+        this.ehgradeid = ehgradeid;
+    }
+
+    public Integer getEhclassid() {
+        return ehclassid;
+    }
+
+    public void setEhclassid(Integer ehclassid) {
+        this.ehclassid = ehclassid;
+    }
+
+    public String getEhsubject() {
+        return ehsubject;
+    }
+
+    public void setEhsubject(String ehsubject) {
+        this.ehsubject = ehsubject == null ? null : ehsubject.trim();
+    }
+
+    public Integer getEhrank() {
+        return ehrank;
+    }
+
+    public void setEhrank(Integer ehrank) {
+        this.ehrank = ehrank;
+    }
+
+    public Integer getEhschoolid() {
+        return ehschoolid;
+    }
+
+    public void setEhschoolid(Integer ehschoolid) {
+        this.ehschoolid = ehschoolid;
+    }
+
+    public String getEhquestion() {
+        return ehquestion;
+    }
+
+    public void setEhquestion(String ehquestion) {
+        this.ehquestion = ehquestion == null ? null : ehquestion.trim();
+    }
+
+    public String getEhsetting() {
+        return ehsetting;
+    }
+
+    public void setEhsetting(String ehsetting) {
+        this.ehsetting = ehsetting == null ? null : ehsetting.trim();
+    }
+
+    public String getEhscorelist() {
+        return ehscorelist;
+    }
+
+    public void setEhscorelist(String ehscorelist) {
+        this.ehscorelist = ehscorelist == null ? null : ehscorelist.trim();
+    }
+
+    public String getEhuseranswer() {
+        return ehuseranswer;
+    }
+
+    public void setEhuseranswer(String ehuseranswer) {
+        this.ehuseranswer = ehuseranswer == null ? null : ehuseranswer.trim();
+    }
+
+    public String getEhtimelist() {
+        return ehtimelist;
+    }
+
+    public void setEhtimelist(String ehtimelist) {
+        this.ehtimelist = ehtimelist == null ? null : ehtimelist.trim();
+    }
+
+    public String getImage1() {
+        return image1;
+    }
+
+    public void setImage1(String image1) {
+        this.image1 = image1 == null ? null : image1.trim();
+    }
+
+    public String getImage2() {
+        return image2;
+    }
+
+    public void setImage2(String image2) {
+        this.image2 = image2 == null ? null : image2.trim();
+    }
+}

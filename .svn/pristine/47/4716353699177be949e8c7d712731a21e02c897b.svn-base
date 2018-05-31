@@ -1,0 +1,109 @@
+package com.zhiliao.controller;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.model.order.Order;
+import com.zhiliao.model.php.Examhistory;
+import com.zhiliao.model.php.Exams;
+import com.zhiliao.service.contrast.ContrastService;
+import com.zhiliao.service.order.OrderService;
+import com.zhiliao.service.php.PhpHistService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+@RequestMapping("/exam")
+@Controller
+public class ExamController {
+
+	@Autowired
+	private PhpHistService phpHistService;
+	
+	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
+	private ContrastService contrastService;
+	
+	@RequestMapping("/insert.action")
+	@ResponseBody
+	public Map<String , Object> insertExam(@RequestParam(value="schoolId",required=true)Integer schoolId,
+										   @RequestParam(value="gradeId",required=true)Integer gradeId,
+										   @RequestParam(value="classId",required=false)Integer classId,
+										   @RequestParam(value="examId",required=true)Integer examId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		Exams exams = this.contrastService.selectById(examId);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		String subject = null;
+		if (null!=exams) {
+			String examsubject = exams.getExamsubject();
+			subject = examsubject.split(",")[1];
+		}
+		
+		map.clear();
+		map.put("schoolId",schoolId);
+		map.put("gradeId",gradeId);//15
+		map.put("classId",classId);
+		map.put("subject",subject);
+		List<Order> list = this.orderService.selectList(map);
+		
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		
+		for(Order order:list){
+			map.clear();
+			map.put("userId", order.getUserId());
+			map.put("examId", exams.getExamid());
+			List<Examhistory> exList = this.phpHistService.selectByUserId(map);
+			int rows = 0;
+			if (exList.size()>0) {
+				continue;
+			}else {
+				Examhistory examhistory = new Examhistory();
+				
+				examhistory.setEhuserid(order.getUserId());
+				examhistory.setEhusername(order.getUserName());
+				examhistory.setEhgradeid(order.getGradeId());
+				examhistory.setEhclassid(order.getClassId());
+				examhistory.setEhschoolid(order.getSchoolId());
+				examhistory.setEhexamid(exams.getExamid());
+				examhistory.setEhexam(exams.getExam());
+				examhistory.setEhtype(0);
+				examhistory.setEhbasicid(0);
+				examhistory.setEhquestion("0");
+				examhistory.setEhtime(0);
+				examhistory.setEhscore(0f);
+				examhistory.setEhstarttime(0);
+				examhistory.setEhendtime(0);
+				examhistory.setEhopenid("0");
+				examhistory.setEhstatus(0);
+				examhistory.setEhstate(0);
+				examhistory.setEhzhou(Integer.parseInt(exams.getExamkeyword()));
+				examhistory.setEhdecide(0);
+				examhistory.setEhsubject(subject);
+				examhistory.setEhtimelist("0");
+				rows += this.phpHistService.insert(examhistory);
+				
+			}
+			if(rows>0){
+				resultMap.put("status", true);
+				resultMap.put("msg", "发放成功!!");
+			}
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		return resultMap;
+	}
+	
+	
+	
+	
+	
+	
+}

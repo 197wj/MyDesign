@@ -1,0 +1,343 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>添加订单</title>
+<meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<style type="text/css">
+	.input-week{box-sizing: border-box;border: solid 1px #ddd;width: 45%;font-size: 14px;
+   				height: 31px;line-height: 1.42857;padding: 4px;}
+</style>
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		
+		<!-- 科目 -->
+		<div class="row cl">
+		<input value="${ids}" name="ids" style="display: none"/>
+		<input value="${schoolId}" name="schoolId" style="display: none"/>
+		<input value="${gradeId}" name="gradeId" style="display: none"/>
+		<input value="${classId}" name="classId" style="display: none"/>
+			<label class="form-label col-xs-4 col-sm-3">科目：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="subject" id="subject">
+						<option value="" selected>请选择科目</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		
+		<!-- 教师 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">教师：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="teacherId" id="teacherId">
+						<option value="" selected>请选择教师</option>
+					</select>
+				</span>
+			</div>
+			<input type="text" style="display: none" id="teacherName" name="teacherName" >
+			<input type="text" style="display: none" id="teacherTel" name="teacherTel" >
+		</div>
+		<!-- 套餐 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">套餐：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="mealId" id="mealId">
+						<option value="" selected>请选择套餐</option>
+						
+					</select>
+				</span>
+			</div>
+		</div>
+		<!-- 订单类型 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">订单类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="typeId" id="typeId">
+						<option value="" selected>请选套餐类型</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<!-- 价格 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>价格：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="price" name="price">
+				<input type="text" style="display: none;" value="2" id="isEffect" name="isEffect">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+$(function(){
+	var schoolId = "${schoolId}";
+	var gradeId = "${gradeId}";
+	var classId = "${classId}";
+	
+	//获取科目
+	getSubject();
+	//获取订单类型
+	getType();
+});
+
+	
+
+
+
+
+
+//根据科目查询教师和套餐
+$(document).on("change","#subject",function(){
+	var gradeId = "${gradeId}";
+	var classId = "${classId}";
+	var subject = $("#subject").val();
+	$("#teacherId").empty();
+	$("#teacherId").append("<option lev='' value=''>请选择教师</option>");
+	$("#mealId").empty();
+	$("#mealId").append("<option lev='' value=''>请选择套餐</option>");
+	getTeacher(subject,classId);//获取教师
+	getMeal(gradeId,subject);//获取套餐
+})
+
+//选择教师
+$(document).on("change","#teacherId",function(){
+	var name = $("#teacherId").find("option:selected").text();
+	var tel = $("#teacherId").find("option:selected").attr("lev");
+	$("#teacherName").val(name);
+	$("#teacherTel").val(tel);
+})
+
+
+//获取教师
+function getTeacher(subjectCode,classId){
+	$.ajax({
+		url:'../user/getTeacherList.action',
+		type:'get',
+		data:{'subjectCode':subjectCode,'classId':classId},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#teacherId").empty();
+				$("#teacherId").append("<option lev='' value='' selected>请选择教师</option>")
+				for(var i=0;i<data.length;i++){
+					$("#teacherId").append("<option lev='"+data[i].userTelephone+"' value='"+data[i].userId+"'>"+data[i].userName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取学生
+function getStudent(schoolId,classId){
+	$.ajax({
+		url:'../user/getUserList.action',
+		type:'get',
+		data:{'schoolId':schoolId,'classId':classId},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#userId").empty();
+				$("#userId").append("<option lev='' value='' selected>请选择学生</option>")
+				for(var i=0;i<data.length;i++){
+					$("#userId").append("<option lev='"+data[i].userAccount+"' value='"+data[i].userId+"'>"+data[i].userName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取班级
+function getClass(schoolId,gradeCode){
+	$.ajax({
+		url:'../class/getClassList.action',
+		type:'get',
+		data:{'schoolId':schoolId,'gradeCode':gradeCode},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#classId").empty();
+				$("#classId").append("<option value='' selected>请选择班级</option>")
+				for(var i=0;i<data.length;i++){
+					$("#classId").append("<option value='"+data[i].classId+"'>"+data[i].className+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取学校
+function getSchool(){
+	$.ajax({
+		url:'../school/getSchoolList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#schoolId").empty();
+				$("#schoolId").append("<option value='' selected>请选择学校</option>")
+				for(var i=0;i<data.length;i++){
+					$("#schoolId").append("<option value='"+data[i].schoolId+"'>"+data[i].schoolName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+//获取年级
+function getGrade(){
+	$.ajax({
+		url:'../grade/getGradeList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#gradeId").empty();
+				$("#gradeId").append("<option value='' selected>请选择年级</option>")
+				for(var i=0;i<data.length;i++){
+					$("#gradeId").append("<option value='"+data[i].gradeCode+"'>"+data[i].gradeName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取学科信息
+function getSubject(){
+	$.ajax({
+		url:'../subject/getSubjectList.action',
+		type:'get',
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#subject").empty();
+				$("#subject").append("<option value='' selected>请选择学科</option>")
+				for(var i=0;i<data.length;i++){
+					$("#subject").append("<option value='"+data[i].subjectCode+"'>"+data[i].subjectName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取套餐
+function getMeal(grade,subject){
+	$.ajax({
+		url:'../meal/getMealList.action',
+		type:'get',
+		data:{'grade':grade,'subject':subject},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#mealId").empty();
+				$("#mealId").append("<option lev='' value='' selected>请选择套餐</option>")
+				for(var i=0;i<data.length;i++){
+					$("#mealId").append("<option lev='"+data[i].mealId+"' value='"+data[i].mealId+"'>"+data[i].mealName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+//获取订单类型
+function getType(){
+	$.ajax({
+		url:'../type/getTypeList.action',
+		type:'get',
+		data:{},
+		dataType:'json',
+		success:function(obj){
+			if(obj.status==true){
+				var data = obj.data;
+				$("#typeId").empty();
+				$("#typeId").append("<option lev='' value='' selected>请选择类型</option>")
+				for(var i=0;i<data.length;i++){
+					$("#typeId").append("<option lev='"+data[i].typeId+"' value='"+data[i].typeId+"'>"+data[i].typeName+"</option>")
+				}
+			}
+		},
+		error:function(){}
+	})
+}
+
+
+</script>
+
+<script type="text/javascript">
+
+	$("#form-member-add").validate({
+		rules:{
+			termYear:{
+				required:true,
+				digits:true,
+			},
+			term:{
+				required:true,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				url:'../order/addListOrder.action',
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							parent.window.location.href="../user/userView.action";
+							parent.layer.close(1);
+						});
+					}else{
+						layer.msg(data.msg,{icon:2,time:1000});
+						
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						parent.window.location.href="../user/userView.action";
+					});
+				}
+			});
+		}
+	});
+
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

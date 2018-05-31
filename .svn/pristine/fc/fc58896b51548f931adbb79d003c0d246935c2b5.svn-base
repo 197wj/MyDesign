@@ -1,0 +1,110 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>修改订单</title>
+<meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<style type="text/css">
+	.input-week{box-sizing: border-box;border: solid 1px #ddd;width: 45%;font-size: 14px;
+   				height: 31px;line-height: 1.42857;padding: 4px;}
+</style>
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		<!-- 学校 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">学校：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span>${school.schoolName }</span>
+				<%-- <input type="text" value="${school.schoolName }" readonly="readonly"/> --%>
+			</div>
+			<input type="text" style="display: none" value="${school.schoolId }" name="schoolId" >
+			<input type="text" style="display: none" value="${school.schoolName }" name="schoolName" >
+		</div>
+		<!-- 年级 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">年级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span>${grade.gradeName }</span>
+				<%-- <input type="text" value="${grade.gradeName }" readonly="readonly"/> --%>
+			</div>
+			<input type="text" style="display: none" value="${grade.gradeCode }" name="gradeId" >
+			<input type="text" style="display: none" value="${grade.gradeName }" name="gradeName" >
+		</div>
+		
+		<!-- 班级 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">班级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span>${sysClass.className }</span>
+				<%-- <input type="text" value="${sysClass.className }" readonly="readonly"/> --%>
+			</div>
+			<input type="text" style="display: none" value="${sysClass.classId }" name="classId" >
+			<input type="text" style="display: none" value="${sysClass.className }" name="className" >
+		</div>
+		
+		
+		
+		<div class="row cl" style="margin-bottom: 20px">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input style="display: none;" value="${sysUser.userId }" name="userId" id="userId"/>
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+
+
+<script type="text/javascript">
+
+	$("#form-member-add").validate({
+		rules:{
+			termYear:{
+				required:true,
+				digits:true,
+			},
+			term:{
+				required:true,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				url:'../contrast/updateOrderByUser.action',
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							parent.window.location.href="../contrast/contrastView.action";
+							parent.layer.close(1);
+						});
+					}else{
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							parent.window.location.href="../contrast/contrastView.action";
+							parent.layer.close(1);
+						});
+						
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						parent.window.location.href="../contrast/contrastView.action";
+					});
+				}
+			});
+		}
+	});
+
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

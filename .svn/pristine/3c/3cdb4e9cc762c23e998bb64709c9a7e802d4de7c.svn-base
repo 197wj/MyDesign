@@ -1,0 +1,137 @@
+package com.zhiliao.model.product;
+
+import java.util.Date;
+
+import com.zhiliao.model.param.TbTerm;
+
+public class Meal {
+    private Integer mealId;
+
+    private String mealName;
+
+    private Integer productId;
+
+    private Float mealPrice;
+
+    private Float discount;
+
+    private String subject;
+
+    private String grade;
+
+    private String week;
+
+    private String isDelete;
+
+    private Date addTime;
+
+    private String remark;
+    
+    private TbTerm term;
+    
+    private Product product;
+
+    public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public String getWeek() {
+		return week;
+	}
+
+	public void setWeek(String week) {
+		this.week = week;
+	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public TbTerm getTerm() {
+		return term;
+	}
+
+	public void setTerm(TbTerm term) {
+		this.term = term;
+	}
+
+	public Integer getMealId() {
+        return mealId;
+    }
+
+    public void setMealId(Integer mealId) {
+        this.mealId = mealId;
+    }
+
+    public String getMealName() {
+        return mealName;
+    }
+
+    public void setMealName(String mealName) {
+        this.mealName = mealName == null ? null : mealName.trim();
+    }
+
+    public Float getMealPrice() {
+        return mealPrice;
+    }
+
+    public void setMealPrice(Float mealPrice) {
+        this.mealPrice = mealPrice;
+    }
+
+    public Float getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Float discount) {
+        this.discount = discount;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject == null ? null : subject.trim();
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade == null ? null : grade.trim();
+    }
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete == null ? null : isDelete.trim();
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+}

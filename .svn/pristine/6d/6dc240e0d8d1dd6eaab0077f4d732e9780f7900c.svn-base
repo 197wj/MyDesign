@@ -1,0 +1,54 @@
+package com.zhiliao.service.app;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.zhiliao.model.app.SysApp;
+import com.zhiliao.service.BaseService;
+
+public interface AppService extends BaseService<SysApp, Map<String, Object>> {
+
+
+	/**
+	 * 获取最新版本
+	 * @Title: getNewVersion 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param @return 
+	 * @return SysApp
+	 */
+	public SysApp getNewVersion(Map<String, Object> map);
+	
+	/**
+	 * 获取所有App升级版本包
+	 */
+	public List<SysApp> getList(Map<String,Object> map);
+	
+	
+	/**
+	 * 通过Id获取App应用信息
+	 */
+	public SysApp getById(Integer updId);
+	
+	 
+    /**
+	 * 获取App应用信息
+	 */
+    public SysApp getByMap(Map<String,Object> map);
+    
+    /**
+     * 批量或者单条删除
+     */
+    public int deleteList(List<Integer> ids);
+    
+    /**
+	 * 上传App应用
+	 */
+	public int insertApp(SysApp sysApp,MultipartFile file,String uploadPath) throws IOException;
+    
+	public int updateById(SysApp record);
+	
+	public int deleteById(Integer updId);
+}

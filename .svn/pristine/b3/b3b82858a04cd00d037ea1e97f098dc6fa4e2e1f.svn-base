@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.sys.TbCommentMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.sys.TbComment">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="typeName" jdbcType="VARCHAR" property="typeName" />
+    <result column="image1" jdbcType="VARCHAR" property="image1" />
+    <result column="image2" jdbcType="VARCHAR" property="image2" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zhiliao.model.sys.TbComment">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="images" jdbcType="LONGVARCHAR" property="images" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, type_id, image1, image2, add_time, status
+  </sql>
+  <sql id="Blob_Column_List">
+    content, images
+  </sql>
+  
+  
+  <!-- 分页获取反馈意见信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+  	select tc.*,ct.type_name typeName,su.user_name userName
+  	from tb_comment tc
+  	left join comment_type ct on ct.type_id = tc.type_id
+  	left join tms_els_test.sys_user su on su.user_id = tc.user_id
+  	<where>
+  		tc.status = 1
+   		<if test="typeName!=null">
+   			and ct.type_name like concat('%',#{typeName,jdbcType=VARCHAR},'%')
+   		</if>
+   </where>
+   order by tc.add_time desc
+  </select>
+  
+  <!-- 分页获取意见反馈信息 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(tc.id)
+  	from tb_comment tc
+  	left join comment_type ct on ct.type_id = tc.type_id
+  	left join tms_els_test.sys_user su on su.user_id = tc.user_id
+  	<where>
+  		tc.status = 1
+   		<if test="typeName!=null">
+   			and ct.type_name like concat('%',#{typeName,jdbcType=VARCHAR},'%')
+   		</if>
+   </where>
+   order by tc.add_time desc
+  </select>
+  
+  
+  <!-- 批量删除反馈意见 -->
+  <update id="deleteList" parameterType="java.util.List">
+    update tb_comment
+    set status = 0
+    where id in
+     <foreach item="idList" index="index" collection="list" open="(" separator="," close=")">
+        #{idList}
+    </foreach>
+  </update>
+  
+  <!-- 根据id获取反馈意见 -->
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select tc.*,ct.type_name typeName,su.user_name userName
+  	from tb_comment tc
+  	left join comment_type ct on ct.type_id = tc.type_id
+  	left join tms_els_test.sys_user su on su.user_id = tc.user_id
+    where tc.status = 1 and id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 增加反馈意见 -->
+  <insert id="insert" parameterType="com.zhiliao.model.sys.TbComment">
+    insert into tb_comment (id, type_id, add_time, 
+      status, content, images, 
+      image1, image2)
+    values (#{id,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR}, #{content,jdbcType=LONGVARCHAR}, #{images,jdbcType=LONGVARCHAR}, 
+      #{image1,jdbcType=VARCHAR}, #{image2,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 根据id修改反馈意见信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.sys.TbComment">
+    update tb_comment
+    <set>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="images != null">
+        images = #{images,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="image1 != null">
+        image1 = #{image1,jdbcType=VARCHAR},
+      </if>
+      <if test="image2 != null">
+        image2 = #{image2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

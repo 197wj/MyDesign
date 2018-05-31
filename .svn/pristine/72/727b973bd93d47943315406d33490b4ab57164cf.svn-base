@@ -1,0 +1,80 @@
+package com.zhiliao.controller;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.model.count.WelCount;
+import com.zhiliao.service.count.WelCountService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+/**
+ * 首页控制层
+ * @author 毕伟谦
+ *
+ */
+@Controller
+public class IndexController {
+	
+	@Autowired
+	private WelCountService countService;
+	
+	/*@RequestMapping("/index.action")
+	public String index(){
+		return "index/index";
+	}*/
+	
+	@RequestMapping(value="/welcome.action")
+	public String welcome(){
+		return "index/welcome";
+	}
+	
+	/**
+	 * 获取首页统计数量
+	 * @Title: getCount 
+	 * @param @param areaId
+	 * @return Map<String,Object>
+	 */
+	@RequestMapping("/getCount.action")
+	@ResponseBody
+	public Map<String, Object> getCount(@RequestParam(value="areaId",required=false)Integer areaId){
+		Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("areaId", areaId);
+		
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		//获取学校数量
+		int schCount = this.countService.selectSchCount(map);
+		//获取班级数量
+		int claCount = this.countService.selectClaCount(map);
+		//获取教师数量
+		int telCount = this.countService.getTelCount(map);
+		//获取学生数量 
+		int stuCount = this.countService.getStuCount(map);
+		
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		WelCount count = new WelCount();
+		count.setClaCount(claCount);
+		count.setSchCount(schCount);
+		count.setStuCount(stuCount);
+		count.setTelCount(telCount);
+		
+		resultMap.put("status", true);
+		resultMap.put("data", count);
+		return resultMap;
+	}
+	
+	
+	
+	
+	
+	
+	
+}

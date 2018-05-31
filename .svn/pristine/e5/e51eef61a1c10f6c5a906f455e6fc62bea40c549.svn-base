@@ -1,0 +1,325 @@
+package com.zhiliao.controller.school;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.aop.SysLog;
+import com.zhiliao.dao.school.SchoolMapper;
+import com.zhiliao.model.common.Pagination;
+import com.zhiliao.model.product.Meal;
+import com.zhiliao.model.school.School;
+import com.zhiliao.model.school.SchoolGrade;
+import com.zhiliao.model.school.UcGrade;
+import com.zhiliao.model.school.UcSubject;
+import com.zhiliao.service.product.MealService;
+import com.zhiliao.service.school.SchoolGradeService;
+import com.zhiliao.service.school.SchoolService;
+import com.zhiliao.service.school.UcGradeService;
+import com.zhiliao.service.school.UcSubjectService;
+import com.zhiliao.util.StringUtil;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+/**
+ * 学校管理的控制层
+ * @author biweiqian
+ *
+ */
+@RequestMapping(value="/school")
+@Controller
+public class SchoolController {
+
+	@Autowired
+	private MealService mealService;
+	
+	@Autowired
+	private SchoolService schoolService;
+	
+	@Autowired
+	private UcGradeService ucGradeService;
+	
+	@Autowired
+	private UcSubjectService ucSubjectService;
+	
+	@Autowired
+	private SchoolGradeService gradeService;//获取学校的开通年级
+
+	
+	/**
+	 * 跳转到学校类型列表页
+	 * @return
+	 */
+	@RequestMapping(value="/schoolTypeView.action")
+	public String schoolTypeView(){
+		return "school/schoolType-list";
+	}
+	
+	@RequestMapping("/schoolMealView.action")
+	public String SchoolMeal(HttpServletRequest request,
+							 @RequestParam(value="schoolId")Integer schoolId){
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		//根据学校id获取学校信息
+		School school = this.schoolService.selectById(schoolId);
+		String mealIds = school.getMealId();
+		String []ids = mealIds.split(",");
+		List<Integer> MIds = new ArrayList<Integer>(); 
+		for(int i=0;i<ids.length;i++){
+			if (StringUtil.isEmpty(ids[i])) {
+				continue;
+			}else {
+				MIds.add(Integer.parseInt(ids[i]));
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.clear();
+		map.put("list", MIds);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		List<Meal> list = this.mealService.selectListByIds(map);
+		
+		request.setAttribute("school", school);
+		request.setAttribute("data", list);	
+		
+		return "school/schoolMeal-list";
+	}
+	
+	
+	
+	/**
+	 * 跳转到学校开通选择项
+	 * @Title: schoolOpenView 
+	 * @param @param request
+	 * @param @param schoolId
+	 * @return String
+	 */
+	@RequestMapping(value="/schoolOpenView.action")
+	public String schoolOpenView(HttpServletRequest request,
+			@RequestParam(value="schoolId")Integer schoolId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("schoolId", schoolId);
+		map.put("isOpen", 1);
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<SchoolGrade> list = this.gradeService.getGradeBySchoolId(map);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		request.setAttribute("data", list);
+		request.setAttribute("schoolId", schoolId);
+		return "school/school-open";
+	}
+	
+	
+	/**
+	 * 跳转到学校开通详情页面
+	 * @return
+	 */
+	@RequestMapping(value="/schoolView.action")
+	public String schoolView(){
+		return "school/school-list";
+	}
+	/**
+	 * 学校详情页
+	 * @param request
+	 * @param schoolId
+	 * @return
+	 */
+	@RequestMapping(value="/schoolInfoView.action")
+	public String schoolInfoView(HttpServletRequest request,
+						@RequestParam(value="schoolId",required=true) Integer schoolId){
+		request.setAttribute("data", schoolId);
+		return "school/school-info";
+	}
+	
+	
+	/**
+	 * 学校开通的页面
+	 * @return
+	 */
+	@RequestMapping(value="/schoolAddView.action")
+	public String schoolAddView(){
+		return "school/school-add";
+	}
+	
+	
+	/**
+	 * 分页获取学校类型
+	 * @return
+	 */
+	@RequestMapping(value="/getSchoolTypeByPage.action")
+	@ResponseBody
+	public Map<String, Object> getSchoolTypeByPage(@RequestParam(value = "page",defaultValue = "1") Integer page,
+            								       @RequestParam(value = "rows",defaultValue = "20") Integer rows,
+            								       @RequestParam(value = "areaId",required = false)Integer areaId,
+            								       @RequestParam(value = "schoolName",required = false)String schoolName,
+            								       @RequestParam(value = "isOpen",required = false) Integer isOpen){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		try {
+			List<Map<String, Object>> resultList = null;
+			int totalRecords = 0;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("areaId", areaId);
+			map.put("schoolName", schoolName);
+			map.put("isOpen", isOpen);
+//			map.put("subjectCode", subjectCode);
+			
+			//调用service方法,进行数据的查询
+			Pagination<Map<String, Object>> pagination;
+			MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+			pagination = this.schoolService.getPagingDatas(map, page, rows, "selectCount","selectList",SchoolMapper.class);
+			resultList = pagination.getPageList();//返回数据
+			totalRecords = pagination.getTotalRecords();//返回行数	
+			if(totalRecords>0){
+				resultMap.put("rows", resultList);
+				resultMap.put("total", totalRecords);
+				resultMap.put("status", true);
+				resultMap.put("msg", "获取成功");
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "没有获取到数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		return resultMap;
+	}
+	
+	/**
+	 * 分页获取学校投放详情
+	 * @return
+	 */
+	@RequestMapping(value="/getSchoolByPage.action")
+	@ResponseBody
+	public Map<String, Object> getSchoolByPage(@RequestParam(value = "page",defaultValue = "1") Integer page,
+            								   @RequestParam(value = "rows",defaultValue = "20") Integer rows,
+            								   @RequestParam(value = "areaId",required = false)Integer areaId,
+        								       @RequestParam(value = "schoolName",required = false)String schoolName,
+            								   @RequestParam(value = "isOpen",defaultValue = "1") Integer isOpen){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		try {
+			List<Map<String, Object>> resultList = null;
+			int totalRecords = 0;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("isOpen", isOpen);
+			map.put("areaId", areaId);
+			map.put("schoolName", schoolName);
+//			map.put("gradeCode", gradeCode);
+//			map.put("subjectCode", subjectCode);
+			
+			//调用service方法,进行数据的查询
+			Pagination<Map<String, Object>> pagination;
+			MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+			pagination = this.schoolService.getPagingDatas(map, page, rows, "selectCount","selectList",SchoolMapper.class);
+			resultList = pagination.getPageList();//返回数据
+			totalRecords = pagination.getTotalRecords();//返回行数	
+			List<UcGrade> grades = this.ucGradeService.selectList(map);
+			List<UcSubject> subjects = this.ucSubjectService.selectList(map);
+			if(totalRecords>0){
+				resultMap.put("rows", resultList);
+				resultMap.put("total", totalRecords);
+				resultMap.put("grade", grades);
+				resultMap.put("subject", subjects);
+				resultMap.put("status", true);
+				resultMap.put("msg", "获取成功");
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "没有获取到数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 修改学校信息
+	 * @param request
+	 * @param param
+	 * @return
+	 */
+	@SysLog(operObject="学校",operPath="school/updateSchool.action",operType="学校开通")
+	@RequestMapping(value="/updateSchool.action")
+	@ResponseBody
+	public Map<String, Object> updateSchool(HttpServletRequest request,School school){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		int rows = this.schoolService.updateById(school);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		if (rows > 0) {
+			resultMap.put("status", true);
+			resultMap.put("msg", "修改成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "修改失败");
+		}
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 获取学校信息
+	 * @param schoolId
+	 * @return
+	 */
+	@RequestMapping(value="/getSchoolById.action")
+	@ResponseBody
+	public Map<String, Object> getSchoolById(@RequestParam(value="schoolId",required=true) Integer schoolId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		School school = this.schoolService.selectById(schoolId);
+		if(school!=null){
+			resultMap.put("data", school);
+			resultMap.put("status", true);
+			resultMap.put("msg", "获取成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "没有获取到数据");
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		return resultMap;
+	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 获取根据类型获学校信息
+	 * @param paramType
+	 * @return
+	 */
+	@RequestMapping(value="/getSchoolList.action")
+	@ResponseBody
+	public Map<String, Object> getSchoolList(@RequestParam(value = "isOpen",defaultValue="1") String isOpen,
+											 @RequestParam(value = "areaId",required = false) Integer areaId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("isOpen", isOpen);
+		map.put("areaId", areaId);
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<School> list = this.schoolService.selectList(map);
+		if (list.size()>0) {
+			resultMap.put("data", list);
+			resultMap.put("status", true);
+			resultMap.put("msg", "获取成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "没有获取到数据");
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		return resultMap;
+	}
+	
+}

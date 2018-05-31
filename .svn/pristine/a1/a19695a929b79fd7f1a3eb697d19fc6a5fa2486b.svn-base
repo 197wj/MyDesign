@@ -1,0 +1,260 @@
+package com.zhiliao.controller.areaSale;
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.zhiliao.model.order.Order;
+import com.zhiliao.model.school.Class;
+import com.zhiliao.model.school.Grade;
+import com.zhiliao.model.school.School;
+import com.zhiliao.model.school.UcSubject;
+import com.zhiliao.model.school.teacherClass;
+import com.zhiliao.model.user.Area;
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.order.OrderService;
+import com.zhiliao.service.school.ClassService;
+import com.zhiliao.service.school.SchoolService;
+import com.zhiliao.service.school.UcSubjectService;
+import com.zhiliao.service.school.gradeService;
+import com.zhiliao.service.user.AreaService;
+import com.zhiliao.service.user.SysUserService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+/**
+ * 区域销售统计controller
+ * @author yuanhuawei
+ *2018-02-06
+ */
+@Controller
+@RequestMapping(value="/areaCount")
+public class areaSaleCountController {
+	@Resource
+	private AreaService areaService;
+	@Resource
+	private SchoolService schoolService;
+	@Resource
+	private gradeService gradeService;
+	@Resource
+	private ClassService classService;
+	@Resource
+	private UcSubjectService ucSubjectService;
+	@Resource
+	private OrderService orderService;
+	@Resource
+	private SysUserService sysUserService;
+	@Resource
+	private com.zhiliao.service.school.teacherClassService teacherClassService;
+	
+	
+	
+	/**
+	 * yuanhuawei
+	 * 数据库转换代码如下：
+	 * 默认为主数据源
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源，对应数据库qy_phpems_new
+	 */
+	
+	/**
+	 * 跳转到销量结算页面
+	 */
+	@RequestMapping(value="/saleCount.action")
+	public String saleCount(HttpServletRequest request,ModelMap model){
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 接收参数
+		String areaId =request.getParameter("areaId");//区域ID
+		String schoolId =request.getParameter("schoolId");//学校ID
+		String schoolGradeId =request.getParameter("schoolGradeId");//年级ID
+		String classId =request.getParameter("classId");//班级ID
+		String subjectCode =request.getParameter("subjectCode");//科目ID
+		String teacherName =request.getParameter("teacherName");//教师姓名
+		String mark =request.getParameter("mark");//第一次进入页面标记
+		model.put("areaId", areaId);
+		model.put("schoolId", schoolId);
+		model.put("schoolGradeId", schoolGradeId);
+		model.put("classId", classId);
+		model.put("subjectCode", subjectCode);
+		model.put("teacherName", teacherName);
+		if(null==mark||mark=="") {
+			model.put("mark", 0);
+		}else {
+			model.put("mark", 1);
+		}
+		//****************************公共部分开始****************************************************
+		// 获取所有的区域
+		map.clear();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+		List<Area> AreaList = areaService.getListByMap(map);
+		model.put("AreaList", AreaList);
+		// 获取所有的学校
+		map.clear();
+		List<School> SchoolList = schoolService.getListByMap(map);
+		model.put("SchoolList", SchoolList);
+		// 获取所有的年级
+		map.clear();
+		List<Grade> GradeList = gradeService.getListByMap(map);
+		model.put("GradeList", GradeList);
+		// 获取所有的班级
+		map.clear();
+		List<Class> ClassList = classService.getListByMap(map);
+		model.put("ClassList", ClassList);
+		// 获取所有的科目
+		map.clear();
+		List<UcSubject> UcSubjectList = ucSubjectService.getListByMap(map);
+		model.put("UcSubjectList", UcSubjectList);
+		//****************************公共部分结束****************************************************
+		if(null!=mark&&mark!="") {
+			//获取选定条件下的所有班级
+			map.clear();
+			if(!areaId.equals("0")) {
+				map.put("areaId", Integer.valueOf(areaId));
+			}
+			if(!schoolId.equals("0")) {
+				map.put("schoolId", Integer.valueOf(schoolId));
+			}
+			if(!schoolGradeId.equals("0")) {
+				map.put("schoolGradeId", Integer.valueOf(schoolGradeId));
+			}
+			if(!classId.equals("0")) {
+				map.put("classId", Integer.valueOf(classId));
+			}
+			if(null!=teacherName&&!teacherName.equals("")) {
+				map.put("teacherName", teacherName);
+			}
+			List<Class> allClassCountList = classService.getListByMap(map);//获取选定条件下的所有班级
+			if(allClassCountList.size()>0) {
+				model.put("haveClass", 0);//选定条件下有班级
+				//选定条件下的所有班级不一定全部都有订单，所以需要获取这些班级中有订单的班级
+				List<Integer> allClassIdList=new ArrayList<Integer>();
+				for(int m=0;m<allClassCountList.size();m++) {
+					allClassIdList.add(allClassCountList.get(m).getClassId());
+				}
+				map.clear();
+				map.put("allClassIdList", allClassIdList);
+				if(!subjectCode.equals("0")) {
+					map.put("subjectCode", subjectCode);
+				}
+				if(null!=teacherName&&!teacherName.equals("")) {
+					//获取该老师所带班级的集合
+					Map<String, Object> map01 = new HashMap<String, Object>();
+					map01.put("teacherName", teacherName);
+					MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+					List<teacherClass> teacherClassList =teacherClassService.getListByMap(map01);
+					List<Integer> teacherClassListTemp=new ArrayList<Integer>();
+					for(int m=0;m<teacherClassList.size();m++) {
+						teacherClassListTemp.add(teacherClassList.get(m).getClassId());
+					}
+					map.put("teacherClassIdList", teacherClassListTemp);
+				}
+				MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+				List<Order> OrderList01 = orderService.getListByMap(map);//获取选定条件下的有订单的所有班级的所有订单（只获取付费类型且已付费状态的订单order_status=1 and type_id=4）
+				List<Integer> haveOrderClassIdList=new ArrayList<Integer>();//选定的所有有订单的班级ID集合
+				for(int m=0;m<OrderList01.size();m++) {
+					haveOrderClassIdList.add(OrderList01.get(m).getClassId());
+				}
+				if(haveOrderClassIdList.size()>0) {//选定条件下的所有班级有订单
+					model.put("haveOrder", 0);//选定条件下的所有班级有订单
+					map.clear();
+					map.put("haveOrderClassIdList", haveOrderClassIdList);
+					MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+					List<Class> haveOrderClassList = classService.getListByMap(map);//选定的所有有订单的班级集合
+					List<Class> haveOrderClassList001 =new ArrayList<Class>();
+					if(haveOrderClassList.size()>0) {
+						for(int i=0;i<haveOrderClassList.size();i++) {
+							MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+							Class c=new Class();
+							//获取区域名
+							Area a=areaService.getAreaBySchoolId(haveOrderClassList.get(i).getSchoolId());
+							c.setAreaName(a.getAreaname());
+							//获取学校名
+							School s=schoolService.selectById(haveOrderClassList.get(i).getSchoolId());
+							c.setSchoolName(s.getSchoolName());     
+							//获取年级名
+							Grade g=gradeService.selectById(haveOrderClassList.get(i).getSchoolGradeId());
+							c.setGradeName(g.getGradeName());
+							//获取班级名
+							c.setClassId(haveOrderClassList.get(i).getClassId());
+							c.setClassName(haveOrderClassList.get(i).getClassName());
+							//获取该班级的订单中的已订购的科目集合
+							MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+							map.clear();
+							map.put("classId", haveOrderClassList.get(i).getClassId());
+							List<String> OrderSubjectIdList =orderService.getListByMap01(map);
+							List<UcSubject> SubjectList=new ArrayList<UcSubject>();
+							if(OrderSubjectIdList.size()>0) {
+								for(int j=0;j<OrderSubjectIdList.size();j++) {
+									UcSubject usj=new UcSubject();
+									usj.setSubjectCode(OrderSubjectIdList.get(j));
+									//获取指导老师的姓名
+									map.clear();
+									map.put("classId", haveOrderClassList.get(i).getClassId());
+									map.put("subjectCode", Integer.valueOf(OrderSubjectIdList.get(j)));
+									MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源，对应数据库tms_els_test
+									List<SysUser> SysUserList=sysUserService.selectTeacherList(map);
+									if(SysUserList.size()>0) {
+										usj.setTeacherName(SysUserList.get(0).getUserName());
+									}
+									//获取科目名
+									UcSubject uuu=ucSubjectService.selectById(OrderSubjectIdList.get(j));
+									usj.setSubjectName(uuu.getSubjectName());
+									map.clear();
+									map.put("classId", haveOrderClassList.get(i).getClassId());
+									map.put("subjectCode", OrderSubjectIdList.get(j));
+									MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+									List<Order> OrderListTemp =orderService.getListByMap(map);
+									usj.setPeopleSum(OrderListTemp.size());
+									int moneyTemp=0;
+									for(int k=0;k<OrderListTemp.size();k++) {
+										if(OrderListTemp.get(k).getPrice()==null) {
+											moneyTemp+=0;
+										}else {
+											moneyTemp+=OrderListTemp.get(k).getPrice();
+										}
+									}
+									usj.setMoneySum(moneyTemp);
+									SubjectList.add(usj);
+								}
+							}
+							c.setSubList(SubjectList);
+							haveOrderClassList001.add(c);
+						}
+						model.put("haveOrderClassList001", haveOrderClassList001);
+					}
+				}else {//选定条件下的所有班级都没有订单
+					model.put("haveOrder", 1);
+				}
+			}else {//选定条件下没有班级
+				model.put("haveClass", 1);
+			}
+		}
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源，对应数据库db_assistant
+		return "areaSaleCount/saleCount";
+	}
+	
+	
+	/**
+	 * 跳转到销量订单页面
+	 */
+	@RequestMapping(value="/saleOrder.action")
+	public String saleOrder(HttpServletRequest request,ModelMap model){
+	
+		
+		
+		return "areaSaleCount/saleOrder";
+	}
+	
+	
+	
+}

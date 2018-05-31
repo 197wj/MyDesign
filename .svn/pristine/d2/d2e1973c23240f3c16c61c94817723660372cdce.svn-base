@@ -1,0 +1,23 @@
+package com.zhiliao.service.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.SchCount;
+
+public interface SchCountService {
+	
+	public List<SchCount> getCountInfo(Map<String, Object> map);
+	
+	public int getGrantCount(Map<String, Object> map);//获取试卷发放数
+	
+	public List<SchCount> getCityScore(Map<String , Object> map);//获取市级成绩
+	
+	public List<SchCount> getScoreInfo(Map<String, Object> map);
+	
+	public List<SchCount> getCityRank(Map<String, Object> map);//获取全市班级的平均分进行排名
+	
+	public List<SchCount> getAvgInfo(Map<String, Object> map);//获取学校的平均分(折线图)
+	
+	public List<SchCount> getRateGrade(Map<String, Object> map);//获取年级的提交率(柱状图)
+}

@@ -1,0 +1,286 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>订单管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> ${schoolName} <span class="c-gray en">&gt;</span> ${gradeName}${className}订单详情 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="text-c">
+		<!-- <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'logmin\')||\'%y-%M-%d\'}' })" id="logmin" class="input-text Wdate" style="width:120px;"> -->
+		<input type="text" class="input-text" style="width:250px" placeholder="姓名/学号" id="userNo" name="" onkeydown="keydownEvent()">
+		<input type="hidden" id="classIdImport" value="${classId}" >
+		<input type="hidden" id="subjectCodeImport" value="${subjectCode}" >
+		<button type="button" class="btn btn-success radius" id="seach" name=""><i class="Hui-iconfont">&#xe665;</i> 搜订单</button>
+	</div>
+	<!-- <span><a href="javascript:;" onclick="member_add('添加订单','../order/orderAddView.action','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加订单</a></span>  <span><a href="javascript:;" onclick="member_add('添加推广订单','../order/orderAddView.action','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加推广订单</a></span> --> </div>
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-hover table-bg table-sort">
+			<thead>
+				<tr class="text-c">
+					<th width="25"><input type="checkbox" name="" value=""></th>
+					<th width="20">ID</th>
+					<th width="40">学生姓名</th>
+					<th width="110">学号</th>
+					<th width="80">学校</th>
+					<th width="50">年级</th>
+					<th width="50">班级</th>
+					<th width="50">套餐名称</th>
+					<th width="50">教师姓名</th>
+					<th width="80">教师手机号</th>
+					<th width="40">订单类型</th>
+					<th width="100">创建时间</th>
+					<th width="50" style="display:none;">操作</th>
+				</tr>
+			</thead>
+			<tbody id="orderList">
+			</tbody>
+		</table>
+		<!-- 分页 -->
+		<div style="width:70%;white-spacing:nowrap;margin:0 auto;"> 
+			<div id="kkpager"></div> 
+		</div>
+	</div>
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+
+<script type="text/javascript">
+var classId=$("#classIdImport").val();
+var subject=$("#subjectCodeImport").val();
+//alert(classId+" + "+subject);
+
+	$(function(){
+		var userNo = $("#userNo").val().trim();
+		loadOrder(1,20,userNo,classId,subject);
+	})
+	function loadOrder(page,rows,userNo,classId,subject){
+		alert(classId+" + "+subject);
+		$.ajax({
+			url:'../order/getOrderByPage.action',
+			type:'get',
+			data:{'page':page,'rows':rows,'userNo':userNo,'classId':classId,'subject':subject},
+			dataType:'json',
+			success:function(obj){
+				var data = obj.rows;
+				var count = obj.total;
+				$("#orderList").empty();
+				$("#count").html(count);
+				kkpagerHtml(count,rows,page,userNo,classId,subject);
+				if(data!=null){
+					for(var i = 0;i<data.length;i++){
+						orderListHtml(data[i]);
+					}
+				}
+			}
+		});
+	}
+	//回车按钮
+	function keydownEvent() {
+	     var e = window.event || arguments.callee.caller.arguments[0];
+	     if (e && e.keyCode == 13 ) {
+	     	document.getElementById("seach").click();
+	     }
+	};
+	/**
+	 * 点击搜索,
+	 */
+	 $("#seach").click(function(){
+		var userNo = $("#userNo").val().trim();
+		loadOrder(1,20,userNo,classId,subject);
+	 });
+	
+	 /**
+	  * 学科列表Html
+	  */
+	 function orderListHtml(info){
+		 var meal = info.meal;
+		 var type = info.userType;
+	 	 var html='';
+	 	 html+='<tr class="text-c">';
+	 	 html+='<td><input type="checkbox" value="'+info.orderId+'" name="del"></td>';
+	 	 html+='<td style="display:none">'+info.orderId+'</td>';
+	 	 html+='<td>'+info.orderId+'</td>';
+	 	 html+='<td>'+info.userName+'</td>';
+	 	 html+='<td>'+info.userNo+'</td>';
+	 	 html+='<td>'+info.schoolName+'</td>';
+	 	 html+='<td>'+info.gradeName+'</td>';
+	 	 html+='<td>'+info.className+'</td>';
+	 	 html+='<td>'+meal.mealName+'</td>';
+	 	 html+='<td>'+info.teacherName+'</td>';
+	 	 html+='<td>'+info.teacherTel+'</td>';
+	 	 html+='<td>'+type.typeName+'</td>';
+	 	 html+='<td>'+formatterDateTime(info.addTime)+'</td>';
+	 	 
+	 	 html+='<td class="td-manage" style="display:none;" >';
+	 	 if(info.isEffect=='2'){
+	 		 html+='<a title="编辑" href="javascript:;" onclick="member_edit(&#39;订单编辑&#39;,&#39;../order/orderUpdateView.action?orderId='+info.orderId+'&#39;,&#39;id&#39;,&#39;800&#39;,&#39;400&#39;)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> ';
+	 		 html+='<a style="text-decoration:none" onClick="product_start(this,'+info.orderId+')" href="javascript:;" title="生效"><i class="Hui-iconfont">&#xe603;</i></a>';
+	 	 }else if(info.isEffect=='1'){
+	 		html+='<a style="text-decoration:none" onClick="product_stop(this,&#39;'+info.orderId+'&#39;)" href="javascript:;" title="失效"><i class="Hui-iconfont">&#xe6de;</i></a>';
+	 	 }else if(info.isEffect=='0'){
+	 		 html+='<a style="text-decoration:none" onClick="product_start(this,'+info.orderId+')" href="javascript:;" title="生效"><i class="Hui-iconfont">&#xe603;</i></a>';
+	 	 }
+	 	 html+='</td></tr>';
+	 	 $("#orderList").append(html);
+	 }
+	 /**
+	  * kkpager分页工具
+	  */
+	 function kkpagerHtml(sum,rows,current,userNo,classId,subject){
+	     var totalPage = Math.ceil(sum/rows);//总页数总数据条数/每页显示数 向上取整  
+	     if(current == 0){  
+	        current = 1;  
+	     }  
+	     //初始化函数  
+	     kkpager.generPageHtml({  
+	         pno : current, //当前页数  
+	         total : totalPage,//总页数  
+	         totalRecords : sum, //总数据条数  
+	         mode:'click', //这里设置为click模式  
+	         isShowTotalRecords:true,
+	         //点击页码的函数，这里发送ajax请求后台  
+	         click:function(n){
+	        	 loadOrder(n,rows,userNo,classId,subject);
+	         	this.selectPage(n); //手动条用selectPage进行页码选中切换 
+	         	return false;
+	        },   
+	 	},true);  
+	 }
+	 /**
+	  * 将时间long类型转换为String类型
+	  */
+	  function formatterDateTime(val){
+	     var date = new Date(val);
+	     var y = date.getFullYear();  
+	     var m = date.getMonth() + 1;  
+	     m = m < 10 ? ('0' + m) : m;  
+	     var d = date.getDate();  
+	     d = d < 10 ? ('0' + d) : d;  
+	     var h = date.getHours();  
+	     h = h < 10 ? ('0' + h) : h;  
+	     
+	     var minute = date.getMinutes();  
+	     minute = minute < 10 ? ('0' + minute) : minute; 
+	     var second = date.getSeconds();
+	     second = second < 10 ? ('0' + second) : second; 
+	     return y + '-' + m + '-' + d+' '+ h+':'+minute+':'+second;  
+	 }
+	
+</script>
+
+
+
+
+<script type="text/javascript">
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-查看*/
+function member_show(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-编辑*/
+function member_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*产品-下架*/
+function product_stop(obj,id){
+	layer.confirm('确认要失效吗？',function(index){
+		updatePro(id,"0");
+	});
+}
+
+/*产品-发布*/
+function product_start(obj,id){
+	layer.confirm('确认要生效吗？',function(index){
+		updatePro(id,"1");
+	});
+}
+
+function updatePro(id,effect){
+	$.ajax({
+		url: '../order/updateOrder.action',
+		type: 'POST',
+		data:{'orderId':id,'isEffect':effect},
+		dataType: 'json',
+		traditional:true,
+		success: function(obj){
+			if(obj.status==true){
+				if(effect=='1'){
+					layer.msg("已生效",{icon:6,time:1000},function(){
+						window.location.href="../order/orderView.action";
+					});
+				}else{
+					layer.msg("已失效",{icon:5,time:1000},function(){
+						window.location.href="../order/orderView.action";
+					});
+				}
+			}else{
+				
+			}
+		}
+	})
+}
+
+
+
+/*用户-删除*/
+function member_del(obj,id){
+	delList(id);
+}
+
+/**
+ * 批量删除
+ */
+ $("#delAll").click(function(){
+	 var id = document.getElementsByName("del");
+	 var ids = [];
+	 for (var i=0;i<id.length;i++) {
+		 if (id[i].checked == true) {
+			 ids.push(id[i].value);
+		 };
+	 }
+	 //调用删除方法
+	 delList(ids);
+ });
+
+/**
+ * 批量删除和单个删除
+ */
+function delList(ids){
+	if (ids == "") {
+		layer.msg("至少选中一条信息",{icon:7,time:1000});
+	} else {
+		layer.confirm('删除产品信息，确认要删除吗',function(index){
+			$.ajax({
+				url: '../product/deleteProList.action',
+				type: 'POST',
+				data:{'ids':ids},
+				dataType: 'json',
+				traditional:true,
+				success: function(data){
+					if(data.status==true){
+						layer.msg(data.msg,{icon:1,time:1000},function(){
+							window.location.href="../product/productView.action";
+						});
+					}else{
+						layer.msg(data.msg,{icon:2,time:1000});
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.alert("系统出错",{icon:2},function(){
+						window.location.href="../product/productView.action";
+					});
+				}
+		     });
+		});
+	}
+}
+</script> 
+</body>
+</html>

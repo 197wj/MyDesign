@@ -1,0 +1,296 @@
+package com.zhiliao.util;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+
+/**
+ * 
+ * 
+ * @author 毕伟谦
+ *
+ */
+public class SendPostandGet {
+
+    /**
+     * 设置超时时间
+     * 
+     * @param url
+     * @param paramContent
+     * @param codetype
+     * @param timeout
+     *            超时时间
+     * @return
+     * @throws IOException 
+     */
+    public static StringBuffer submitPostTimeOutFiend(String url, String paramContent, String codetype, int timeout) {
+        StringBuffer responseMessage = null;
+        java.net.URLConnection connection = null;
+        java.net.URL reqUrl = null;
+        OutputStreamWriter reqOut = null;
+        InputStream in = null;
+        BufferedReader br = null;
+        String param = paramContent;
+        responseMessage = new StringBuffer();
+        try {
+            reqUrl = new java.net.URL(url);
+            connection = reqUrl.openConnection();
+            connection.setConnectTimeout(timeout);
+            connection.setReadTimeout(timeout);
+            connection.setDoOutput(true);
+            reqOut = new OutputStreamWriter(connection.getOutputStream());
+            reqOut.write(param);
+            reqOut.flush();
+            int charCount = -1;
+            in = connection.getInputStream();
+            br = new BufferedReader(new InputStreamReader(in, codetype));
+            while ((charCount = br.read()) != -1) {
+                responseMessage.append((char) charCount);
+            }
+        }
+        catch (Exception e) {
+        }
+        try {
+            if (in != null) {
+                in.close();
+            }
+            if (reqOut != null) {
+                reqOut.close();
+            }
+        }
+        catch (Exception e) {
+            System.out.println("paramContent=" + paramContent + "|err=" + e);
+        }
+        return responseMessage;
+
+    }
+
+    /**
+     * 设置超时时间
+     * 异常抛出 cd
+     * @param url
+     * @param paramContent
+     * @param codetype
+     * @param timeout
+     *            超时时间
+     * @return
+     * @throws IOException 
+     */
+    public static StringBuffer submitPostTimeOutFiendOperate(String url, String paramContent, String codetype,
+            int timeout) throws IOException {
+        StringBuffer responseMessage = null;
+        java.net.URLConnection connection = null;
+        java.net.URL reqUrl = null;
+        OutputStreamWriter reqOut = null;
+        InputStream in = null;
+        BufferedReader br = null;
+        String param = paramContent;
+        responseMessage = new StringBuffer();
+        reqUrl = new java.net.URL(url);
+        connection = reqUrl.openConnection();
+        connection.setConnectTimeout(timeout);
+        connection.setReadTimeout(timeout);
+        connection.setDoOutput(true);
+        reqOut = new OutputStreamWriter(connection.getOutputStream());
+        reqOut.write(param);
+        reqOut.flush();
+        int charCount = -1;
+        in = connection.getInputStream();
+        br = new BufferedReader(new InputStreamReader(in, codetype));
+        while ((charCount = br.read()) != -1) {
+            responseMessage.append((char) charCount);
+        }
+        try {
+            in.close();
+            reqOut.close();
+        }
+        catch (Exception e) {
+            System.out.println("paramContent=" + paramContent + "|err=" + e);
+        }
+        return responseMessage;
+
+    }
+
+    /**
+     * 设置超时时间
+     * 
+     * @param url
+     * @param paramContent
+     * @param codetype
+     * @param timeout
+     *            超时时间
+     * @return
+     */
+    public static StringBuffer submitPostTimeOut(String url, String paramContent, String codetype, int timeout) {
+        StringBuffer responseMessage = null;
+        java.net.URLConnection connection = null;
+        java.net.URL reqUrl = null;
+        OutputStreamWriter reqOut = null;
+        InputStream in = null;
+        BufferedReader br = null;
+        String param = paramContent;
+        try {
+            responseMessage = new StringBuffer();
+            reqUrl = new java.net.URL(url);
+            connection = reqUrl.openConnection();
+            connection.setConnectTimeout(timeout);
+            connection.setDoOutput(true);
+            reqOut = new OutputStreamWriter(connection.getOutputStream());
+            reqOut.write(param);
+            reqOut.flush();
+            int charCount = -1;
+            in = connection.getInputStream();
+            br = new BufferedReader(new InputStreamReader(in, codetype));
+            while ((charCount = br.read()) != -1) {
+                responseMessage.append((char) charCount);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("url=" + url + "?" + paramContent + "\n e=" + ex);
+        }
+        finally {
+            try {
+                in.close();
+                reqOut.close();
+            }
+            catch (Exception e) {
+                System.out.println("paramContent=" + paramContent + "|err=" + e);
+            }
+        }
+        return responseMessage;
+
+    }
+
+    /**
+     * java.net实现 HTTP POST方法提交
+     * 
+     * @param url
+     * @param paramContent
+     * @return
+     */
+    public static StringBuffer submitPost(String url, String paramContent, String codetype) {
+        StringBuffer responseMessage = null;
+        java.net.URLConnection connection = null;
+        java.net.URL reqUrl = null;
+        OutputStreamWriter reqOut = null;
+        InputStream in = null;
+        BufferedReader br = null;
+        try {
+            String param = paramContent;
+            responseMessage = new StringBuffer();
+            reqUrl = new java.net.URL(url);
+            connection = reqUrl.openConnection();
+            connection.setDoOutput(true);
+            reqOut = new OutputStreamWriter(connection.getOutputStream());
+            reqOut.write(param);
+            reqOut.flush();
+            int charCount = -1;
+            in = connection.getInputStream();
+
+            br = new BufferedReader(new InputStreamReader(in, codetype));
+            while ((charCount = br.read()) != -1) {
+                responseMessage.append((char) charCount);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("url=" + url + "?" + paramContent + "\n e=" + ex);
+        }
+        finally {
+            try {
+                br.close();
+                in.close();
+                reqOut.close();
+            }
+            catch (Exception e) {
+                System.out.println("paramContent=" + paramContent + "|err=" + e);
+            }
+        }
+        return responseMessage;
+    }
+
+    /**
+     * java.net实现 HTTP或HTTPs GET方法提交
+     * 
+     * @param strUrl
+     *            提交的地址及参数 code 编码格式
+     * @return 返回的response信息
+     */
+    public static String submitGet(String strUrl, String code) {
+        URLConnection connection = null;
+        BufferedReader reader = null;
+        String str = null;
+        try {
+            URL url = new URL(strUrl);
+            connection = url.openConnection();
+            connection.setDoInput(true);
+            connection.setDoOutput(false);
+            connection.setRequestProperty("Content-Type", "application/json");
+            // 取得输入流，并使用Reader读取
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), code));
+            String lines;
+            StringBuffer linebuff = new StringBuffer("");
+            while ((lines = reader.readLine()) != null) {
+                linebuff.append(lines);
+            }
+            str = linebuff.toString();
+        }
+        catch (Exception e) {
+            //            ExceptionUtil.writelogByException("测试数据", e);
+        }
+        finally {
+            try {
+                reader.close();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return str;
+    }
+
+    /**
+     * java.net实现 HTTP或HTTPs GET方法提交
+     * 
+     * @param strUrl
+     *            提交的地址及参数
+     * @return 返回的response信息
+     */
+    public static String submitGet(String strUrl) {
+        URLConnection connection = null;
+        BufferedReader reader = null;
+        String str = null;
+        try {
+            URL url = new URL(strUrl);
+            connection = url.openConnection();
+            connection.setDoInput(true);
+            connection.setDoOutput(false);
+            // 取得输入流，并使用Reader读取
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String lines;
+            StringBuffer linebuff = new StringBuffer("");
+            while ((lines = reader.readLine()) != null) {
+                linebuff.append(lines);
+            }
+            str = linebuff.toString();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                reader.close();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return str;
+    }
+
+}

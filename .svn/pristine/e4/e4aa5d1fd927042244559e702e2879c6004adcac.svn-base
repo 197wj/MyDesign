@@ -1,0 +1,20 @@
+package com.zhiliao.dao.param;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.param.SysParam;
+
+public interface SysParamMapper {
+    public int deleteById(Integer paramId);
+
+    public int insert(SysParam record);
+
+    public SysParam selectById(Integer paramId);
+
+    public int updateById(SysParam record);
+    
+    public int deleteParamList(List<Integer> list);
+    
+    public List<SysParam> selectList(Map<String, Object> map);
+}

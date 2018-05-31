@@ -1,0 +1,13 @@
+package com.zhiliao.dao.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.TeaCount;
+
+public interface TeaCountMapper {
+
+	public List<TeaCount> getCountInfo(Map<String, Object> map);
+	
+	public List<TeaCount> getScoreInfo(Map<String, Object> map);
+}

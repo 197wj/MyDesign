@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.contrast.ContrastMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.user.SysUser">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="user_type_code" jdbcType="VARCHAR" property="userTypeCode" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="office_id" jdbcType="BIGINT" property="officeId" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+    <result column="user_telephone" jdbcType="VARCHAR" property="userTelephone" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
+    <result column="user_photo" jdbcType="VARCHAR" property="userPhoto" />
+    <result column="user_nickname" jdbcType="VARCHAR" property="userNickname" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_sex" jdbcType="VARCHAR" property="userSex" />
+    <result column="user_idcard" jdbcType="VARCHAR" property="userIdcard" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="bind_email" jdbcType="VARCHAR" property="bindEmail" />
+    <result column="delete_mark" jdbcType="INTEGER" property="deleteMark" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_id" jdbcType="INTEGER" property="createId" />
+    <result column="create_name" jdbcType="VARCHAR" property="createName" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="modity_id" jdbcType="INTEGER" property="modityId" />
+    <result column="user_isonline" jdbcType="INTEGER" property="userIsonline" />
+    <result column="user_city" jdbcType="VARCHAR" property="userCity" />
+    <result column="pwd_question" jdbcType="VARCHAR" property="pwdQuestion" />
+    <result column="pwd_question_answer" jdbcType="VARCHAR" property="pwdQuestionAnswer" />
+    <result column="sys_theme" jdbcType="VARCHAR" property="sysTheme" />
+    <result column="user_birthday" jdbcType="VARCHAR" property="userBirthday" />
+    <result column="user_age" jdbcType="VARCHAR" property="userAge" />
+    <result column="space_url" jdbcType="VARCHAR" property="spaceUrl" />
+    <result column="user_signature" jdbcType="VARCHAR" property="userSignature" />
+    <result column="is_lock" jdbcType="INTEGER" property="isLock" />
+    <result column="user_type" jdbcType="VARCHAR" property="userType" />
+    <result column="user_status" jdbcType="VARCHAR" property="userStatus" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="is_member" jdbcType="CHAR" property="isMember" />
+    <collection property="orders" resultMap="orders" />
+    <collection property="school" resultMap="school"/>
+    <collection property="grade" resultMap="grade"/>
+    <collection property="sysClass" resultMap="sysClass"/>
+    <collection property="exams" resultMap="exams"></collection>
+  </resultMap>
+  <!-- 历史试卷信息 -->
+  <resultMap id="exams" type="com.zhiliao.model.php.Examhistory">
+    <id column="ehid" jdbcType="INTEGER" property="ehid" />
+    <result column="ehexamid" jdbcType="INTEGER" property="ehexamid" />
+    <result column="ehexam" jdbcType="VARCHAR" property="ehexam" />
+    <result column="ehtype" jdbcType="INTEGER" property="ehtype" />
+    <result column="ehbasicid" jdbcType="INTEGER" property="ehbasicid" />
+    <result column="ehtime" jdbcType="INTEGER" property="ehtime" />
+    <result column="ehscore" jdbcType="REAL" property="ehscore" />
+    <result column="ehuserid" jdbcType="INTEGER" property="ehuserid" />
+    <result column="ehusername" jdbcType="VARCHAR" property="ehusername" />
+    <result column="ehstarttime" jdbcType="INTEGER" property="ehstarttime" />
+    <result column="ehendtime" jdbcType="INTEGER" property="ehendtime" />
+    <result column="ehkeyword" jdbcType="VARCHAR" property="ehkeyword" />
+    <result column="ehstatus" jdbcType="INTEGER" property="ehstatus" />
+    <result column="ehzhou" jdbcType="INTEGER" property="ehzhou" />
+    <result column="ehdecide" jdbcType="INTEGER" property="ehdecide" />
+    <result column="ehopenid" jdbcType="VARCHAR" property="ehopenid" />
+    <result column="ehstate" jdbcType="INTEGER" property="ehstate" />
+    <result column="ehgradeid" jdbcType="INTEGER" property="ehgradeid" />
+    <result column="ehclassid" jdbcType="INTEGER" property="ehclassid" />
+    <result column="ehsubject" jdbcType="VARCHAR" property="ehsubject" />
+    <result column="ehrank" jdbcType="INTEGER" property="ehrank" />
+    <result column="ehschoolid" jdbcType="INTEGER" property="ehschoolid" />
+  </resultMap>
+  <!-- 订单 -->
+  <resultMap id="orders" type="com.zhiliao.model.order.OrderVo">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_no" jdbcType="VARCHAR" property="userNo" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="schoolCode" jdbcType="INTEGER" property="schoolCode" />
+    <result column="school_name" jdbcType="VARCHAR" property="schoolName" />
+    <result column="schoolname" jdbcType="VARCHAR" property="schoolname" />
+    <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
+    <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
+    <result column="gradename" jdbcType="VARCHAR" property="gradename" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="classCode" jdbcType="INTEGER" property="classCode" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="classname" jdbcType="VARCHAR" property="classname" />
+    <result column="subject_code" jdbcType="VARCHAR" property="subjectCode" />
+    <result column="subjectName" jdbcType="VARCHAR" property="subjectName" />
+    <result column="meal_id" jdbcType="INTEGER" property="mealId" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="typeName" jdbcType="VARCHAR" property="typeName" />
+    <result column="teacher_id" jdbcType="INTEGER" property="teacherId" />
+    <result column="teacher_name" jdbcType="VARCHAR" property="teacherName" />
+    <result column="teacher_tel" jdbcType="VARCHAR" property="teacherTel" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+    <result column="start" jdbcType="VARCHAR" property="start" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="price" jdbcType="REAL" property="price" />
+    <result column="is_effect" jdbcType="CHAR" property="isEffect" />
+    <result column="order_status" jdbcType="CHAR" property="orderStatus" />
+  </resultMap>
+  <!-- 学校属性 -->
+  <resultMap id="school" type="com.zhiliao.model.school.School">
+    <id column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="sec_id" jdbcType="INTEGER" property="secId" />
+    <result column="school_code" jdbcType="VARCHAR" property="schoolCode" />
+    <result column="school_name" jdbcType="VARCHAR" property="schoolName" />
+    <result column="school_shortname" jdbcType="VARCHAR" property="schoolShortname" />
+    <result column="school_abbname" jdbcType="VARCHAR" property="schoolAbbname" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="school_type" jdbcType="VARCHAR" property="schoolType" />
+    <result column="school_profile" jdbcType="VARCHAR" property="schoolProfile" />
+    <result column="is_recomm" jdbcType="INTEGER" property="isRecomm" />
+    <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
+    <result column="school_home" jdbcType="VARCHAR" property="schoolHome" />
+    <result column="school_section_id" jdbcType="INTEGER" property="schoolSectionId" />
+    <result column="school_photo" jdbcType="VARCHAR" property="schoolPhoto" />
+    <result column="school_sort" jdbcType="INTEGER" property="schoolSort" />
+    <result column="year_section" jdbcType="INTEGER" property="yearSection" />
+    <result column="school_kind" jdbcType="INTEGER" property="schoolKind" />
+    <result column="school_belong" jdbcType="INTEGER" property="schoolBelong" />
+    <result column="school_city" jdbcType="INTEGER" property="schoolCity" />
+    <result column="school_country" jdbcType="INTEGER" property="schoolCountry" />
+    <result column="shcool_attrType" jdbcType="INTEGER" property="shcoolAttrtype" />
+  </resultMap>
+  <!-- 年级属性 -->
+  <resultMap id="grade" type="com.zhiliao.model.school.Grade">
+    <id column="school_grade_id" jdbcType="INTEGER" property="schoolGradeId" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
+  </resultMap>
+  <!-- 班级属性 -->
+  <resultMap id="sysClass" type="com.zhiliao.model.school.Class">
+    <id column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+    <result column="school_grade_id" jdbcType="INTEGER" property="schoolGradeId" />
+    <result column="teacher_id" jdbcType="INTEGER" property="teacherId" />
+    <result column="teacher_name" jdbcType="VARCHAR" property="teacherName" />
+    <result column="enter_school_year" jdbcType="VARCHAR" property="enterSchoolYear" />
+    <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="short_Class_Name" jdbcType="VARCHAR" property="shortClassName" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="class_photo" jdbcType="VARCHAR" property="classPhoto" />
+    <result column="import_status" jdbcType="VARCHAR" property="importStatus" />
+  </resultMap>
+  
+  <!-- 分数的统计和人数的统计 -->
+  <resultMap id="examVo" type="com.zhiliao.model.php.ExamVo">
+    <result column="examId" jdbcType="INTEGER" property="examId" />
+    <result column="classId" jdbcType="INTEGER" property="classId" />
+    <result column="total" jdbcType="INTEGER" property="total" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+  </resultMap>
+  
+  <!-- 分页获取用户信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT DISTINCT(su.user_id),su.*, ord.school_id schoolCode,ord.school_name schoolname,
+	ord.grade_id,ord.grade_name gradename,ord.class_id classCode,ord.class_name classname,
+	sg.*
+	FROM sys_user su
+	LEFT JOIN db_assistant.tb_order ord ON ord.user_id = su.user_id
+	left join sys_school ss on ss.school_id = su.school_id
+    left join sys_class sc on sc.class_id = su.class_id
+    left outer join sys_grade sg on sc.school_grade_id = sg.school_grade_id
+	<where>
+		ord.class_id &lt;&gt; su.class_id 
+		and sg.school_id = ss.school_id
+		<if test="schoolId!=null">
+			AND su.school_id = #{schoolId,jdbcType=INTEGER}
+		</if>
+	</where> 
+	
+	ORDER BY su.class_id
+  </select>
+  
+  <!-- 分页获取用户数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT count(DISTINCT(su.user_id))
+	FROM sys_user su
+	LEFT JOIN db_assistant.tb_order ord ON ord.user_id = su.user_id
+	left join sys_school ss on ss.school_id = su.school_id
+    left join sys_class sc on sc.class_id = su.class_id
+    left join sys_grade sg on sc.school_grade_id = sg.school_grade_id
+	<where>
+		ord.class_id &lt;&gt; su.class_id 
+		and sg.school_id = ss.school_id
+		<if test="schoolId!=null">
+			AND su.school_id = #{schoolId,jdbcType=INTEGER}
+		</if>
+	</where>
+	ORDER BY su.class_id
+  </select>
+  
+  
+  <!-- 根据用户id修改订单信息 -->
+  <update id="updateByUserId" parameterType="com.zhiliao.model.order.Order">
+    update tb_order
+    <set>
+      <if test="userNo != null">
+        user_no = #{userNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolId != null">
+        school_id = #{schoolId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolName != null">
+        school_name = #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeId != null">
+        grade_id = #{gradeId,jdbcType=INTEGER},
+      </if>
+      <if test="gradeName != null">
+        grade_name = #{gradeName,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectCode != null">
+        subject_code = #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="className != null">
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="mealId != null">
+        meal_id = #{mealId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null">
+        teacher_id = #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherName != null">
+        teacher_name = #{teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherTel != null">
+        teacher_tel = #{teacherTel,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=REAL},
+      </if>
+      <if test="isEffect != null">
+        is_effect = #{isEffect,jdbcType=CHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 获取异常试卷的信息 -->
+  <select id="selectExList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT DISTINCT(su.user_id),su.*,exa.*,sg.*
+	FROM sys_user su
+	LEFT JOIN qy_phpems.x2_examhistory exa ON exa.ehuserid = su.user_id
+	left join sys_school ss on ss.school_id = su.school_id
+    left join sys_class sc on sc.class_id = su.class_id
+    left outer join sys_grade sg on sc.school_grade_id = sg.school_grade_id
+	<where>
+		exa.ehclassid &lt;&gt; su.class_id 
+		and sg.school_id = ss.school_id
+		<if test="schoolId!=null">
+			AND su.school_id = #{schoolId,jdbcType=INTEGER}
+		</if>
+	</where> 
+	
+	ORDER BY su.class_id
+  </select>
+  
+  <!-- 获取异常试卷的数量 -->
+  <select id="selectExCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT count(DISTINCT(su.user_id))
+	FROM sys_user su
+	LEFT JOIN qy_phpems.x2_examhistory exa ON exa.ehuserid = su.user_id
+	left join sys_school ss on ss.school_id = su.school_id
+    left join sys_class sc on sc.class_id = su.class_id
+    left join sys_grade sg on sc.school_grade_id = sg.school_grade_id
+	<where>
+		exa.ehclassid &lt;&gt; su.class_id 
+		and sg.school_id = ss.school_id
+		<if test="schoolId!=null">
+			AND su.school_id = #{schoolId,jdbcType=INTEGER}
+		</if>
+	</where>
+	ORDER BY su.class_id
+  </select>
+  <!-- 根据用户id修改试卷信息 -->
+  <update id="updateByUser" parameterType="com.zhiliao.model.php.Examhistory">
+    update x2_examhistory
+    <set>
+      <if test="ehgradeid != null">
+        ehgradeid = #{ehgradeid,jdbcType=INTEGER},
+      </if>
+      <if test="ehclassid != null">
+        ehclassid = #{ehclassid,jdbcType=INTEGER},
+      </if>
+      <if test="ehsubject != null">
+        ehsubject = #{ehsubject,jdbcType=VARCHAR},
+      </if>
+      <if test="ehschoolid != null">
+        ehschoolid = #{ehschoolid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where  ehuserid = #{ehuserid,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 统计提交试卷的人数和提交试卷的总分数 -->
+  <select id="selectTotal" parameterType="java.util.Map" resultMap="examVo">
+  	SELECT ehexamid examId,ehclassid classId,count(ehid) total, sum(ehscore) score
+    FROM x2_examhistory 
+    <where>
+    	ehstate = 1
+    	<if test="schoolId!=null">
+    		and ehschoolid = #{schoolId,jdbcType=INTEGER}
+    	</if>
+    	<if test="gradeId!=null">
+    		and ehgradeid = #{gradeId,jdbcType=INTEGER}
+    	</if>
+    	<if test="classId!=null">
+    		and ehclassid = #{classId,jdbcType=INTEGER}
+    	</if>
+    	<if test="examId!=null">
+    		and ehexamid = #{examId,jdbcType=INTEGER}
+    	</if>
+    </where>
+    GROUP BY ehexamid,ehclassid
+  </select>
+  
+  <!-- 修改分数和学生数 -->
+  <update id="updateByClassId" parameterType="com.zhiliao.model.php.ExamVo">
+  	 update x2_examstatistics
+    <set>
+      <if test="total != null">
+        students = #{total,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        totalscore = #{score,jdbcType=INTEGER},
+      </if>
+    </set>
+    where  examid = #{examId,jdbcType=INTEGER}
+    	and classid = #{classId,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  
+</mapper>

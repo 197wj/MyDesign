@@ -1,0 +1,403 @@
+package com.zhiliao.controller.order;
+
+import java.io.Console;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.ConsoleHandler;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.aop.SysLog;
+import com.zhiliao.dao.order.OrderMapper;
+import com.zhiliao.model.common.Pagination;
+import com.zhiliao.model.order.Order;
+import com.zhiliao.model.product.Meal;
+import com.zhiliao.model.school.Class;
+import com.zhiliao.model.school.School;
+import com.zhiliao.model.school.SchoolGrade;
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.order.OrderService;
+import com.zhiliao.service.product.MealService;
+import com.zhiliao.service.school.ClassService;
+import com.zhiliao.service.school.SchoolGradeService;
+import com.zhiliao.service.school.SchoolService;
+import com.zhiliao.service.user.SysUserService;
+import com.zhiliao.util.GetOrderNum;
+import com.zhiliao.util.SendPostandGet;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+/**
+ * 订单控制层
+ * @author 毕伟谦
+ *
+ */
+@Controller
+@RequestMapping(value="/order")
+public class OrderController {
+
+	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
+	private MealService mealService;
+	
+	@Autowired
+	private SchoolService schoolService;
+	
+	@Autowired
+	private ClassService classService;
+	
+	@Autowired
+	private SchoolGradeService gradeService;
+	
+	@Autowired
+	private SysUserService sysUserService;
+	/**
+	 * 跳转到订单列表页
+	 * @return
+	 */
+	@RequestMapping(value="/orderView.action")
+	public String orderView(){
+		return "order/order-list";
+	}
+	
+	/**
+	 * 跳转到订单的增加页面
+	 * @return
+	 */
+	@RequestMapping(value="/orderAddView.action")
+	public String orderAddView(HttpServletRequest request,
+							   @RequestParam(value="ids")String ids,
+							   @RequestParam(value="schoolId")Integer schoolId,
+							   @RequestParam(value="gradeId")Integer gradeId,
+							   @RequestParam(value="classId")Integer classId){
+		request.setAttribute("ids", ids);
+		request.setAttribute("schoolId", schoolId);
+		request.setAttribute("gradeId", gradeId);
+		request.setAttribute("classId", classId);
+		return "order/order-add";
+	}
+	
+	/**
+	 * 跳转到订单修改页面
+	 * @return
+	 */
+	@RequestMapping(value="/orderUpdateView.action")
+	public String orderUpdateView(HttpServletRequest request,
+								  @RequestParam(value="orderId",required=true)String orderId){
+		Order order = this.orderService.selectById(orderId);
+		request.setAttribute("data", order);
+		return "order/order-update";
+	}
+	
+	/**
+	 * 分页获取订单
+	 * @return
+	 */
+	@RequestMapping(value="/getOrderByPage.action")
+	@ResponseBody
+	public Map<String, Object> getOrderByPage(@RequestParam(value = "page",defaultValue = "1") Integer page,
+            								  @RequestParam(value = "rows",defaultValue = "20") Integer rows,
+            								  @RequestParam(value = "schoolId",required = false) Integer schoolId,
+            								  @RequestParam(value = "classId",required = false) Integer classId,
+            								  @RequestParam(value = "subject",required = false) Integer subject,
+            								  @RequestParam(value = "userNo",required=false)String userNo,
+            								  @RequestParam(value = "userId",required=false)String userId){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		try {
+			List<Map<String, Object>> resultList = null;
+			int totalRecords = 0;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("schoolId", schoolId);
+			map.put("userNo", userNo); 
+			map.put("userId", userId);
+			map.put("subject", subject);
+			map.put("classId", classId);
+			
+			
+			
+			//调用service方法,进行数据的查询
+			Pagination<Map<String, Object>> pagination;
+			MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+			pagination = this.orderService.getPagingDatas(map, page, rows, "selectCount","selectList",OrderMapper.class);
+			resultList = pagination.getPageList();//返回数据
+			totalRecords = pagination.getTotalRecords();//返回行数	
+			if(totalRecords>0){
+				resultMap.put("rows", resultList);
+				resultMap.put("total", totalRecords);
+				resultMap.put("status", true);
+				resultMap.put("msg", "获取成功");
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "没有获取到数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 学生调班时将订单修改到调班后的班级中
+	 * @Title: updataClass 
+	 * @param @param schoolId
+	 * @param @param gradeId
+	 * @param @param classId
+	 * @param @param userId 
+	 * @return void
+	 */
+	@RequestMapping("/updataClass.action")
+	@ResponseBody
+	public void updataClass(@RequestParam(value="schoolId",required=true)Integer schoolId,
+						    @RequestParam(value="gradeId",required=false)Integer gradeId,
+						    @RequestParam(value="classId",required=true)Integer classId,
+						    @RequestParam(value="userId",required=true)Integer userId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		School school = this.schoolService.selectById(schoolId);//获取学校信息
+		
+		Class sysClass = this.classService.selectById(classId);//获取班级信息
+		
+		map.put("schoolId", schoolId);
+		map.put("schoolGrade", sysClass.getSchoolGradeId());
+		SchoolGrade grade = this.gradeService.getGrade(map);
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		
+		String areaId = school.getAreaId();
+		
+		
+		/**********************************修改订单信息*******************************************/
+		Order order = new Order();
+		order.setSchoolId(schoolId);
+		order.setSchoolName(school.getSchoolName());
+		order.setGradeId(Integer.parseInt(grade.getGradeId()));
+		order.setGradeName(grade.getGradeName());
+		order.setClassId(classId);
+		order.setClassName(sysClass.getClassName());
+		order.setUserId(userId);
+		this.orderService.updateById(order);
+		/*********************************修改试卷信息*****************************************/
+		String url ="http://192.168.1.241/hw_zzq_app/index.php/Home/Port/AdjustClass";//本地测试
+//		//String url ="http://192.168.1.123:9090/assistant/order/updataClass.action";//沁阳
+//		//String url ="http://192.168.1.123:9090/assistant/order/updataClass.action";//濮阳
+		//?ageaId=?&userId=?&schoolId=?&gradeId=?classId=?
+		String param = "schoolId="+schoolId+"&userId="+userId+"&classId="+classId+"&gradeId="+grade.getGradeId()+"&areaId="+areaId;
+		SendPostandGet.submitPost(url, param, "utf-8");
+		
+
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 增加订单信息
+	 * @param request
+	 * @param param
+	 * @return
+	 */
+	@SysLog(operType="增加免费订单",operObject="订单",operPath="order/addOrder.action")
+	@RequestMapping(value="/addOrder.action")
+	@ResponseBody
+	public Map<String, Object> addOrder(HttpServletRequest request,Order order){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		order.setAddTime(new Date());
+		order.setOrderId(GetOrderNum.getRandomFileName());
+		int rows = this.orderService.insert(order);
+		if (rows > 0) {
+			resultMap.put("status", true);
+			resultMap.put("msg", "增加成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "增加失败");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 修改订单信息
+	 * @param request
+	 * @param param
+	 * @return
+	 */
+	@RequestMapping(value="/updateOrder.action")
+	@ResponseBody
+	public Map<String, Object> updateOrder(HttpServletRequest request,Order order){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		int rows = this.orderService.updateById(order);
+		if (rows > 0) {
+			MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+			Order order2 = this.orderService.selectById(order.getOrderId());
+			SysUser sysUser = new SysUser();
+			sysUser.setUserId(Long.valueOf(order2.getUserId().toString()));
+			if("1".equals(order.getIsEffect())){
+				sysUser.setTypeId(order2.getTypeId());
+				MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+				this.sysUserService.updateById(sysUser);
+				MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+			}
+			if("0".equals(order.getIsEffect())){
+				sysUser.setTypeId(0);
+				MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+				this.sysUserService.updateById(sysUser);
+				MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+			}
+			resultMap.put("status", true);
+			resultMap.put("msg", "修改成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "修改失败");
+		}
+		return resultMap;
+	}
+	
+	/**
+	 * 批量开通增加订单
+	 * @param request
+	 * @param order
+	 * @return
+	 */
+	@SysLog(operType="批量增加订单",operObject="订单",operPath="order/addListOrder.action")
+	@RequestMapping(value="/addListOrder.action")
+	@ResponseBody
+	public Map<String, Object> addListOrder(HttpServletRequest request,
+											@RequestParam("ids") String ids,
+											@RequestParam(value="isMember",required=true) String isMember,
+											Order order){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		//获取开通的套餐
+		Meal meal = this.mealService.selectById(order.getMealId());//获取订单的科目id
+		List<Integer> list = new ArrayList<Integer>();
+		List<Integer> idList = new ArrayList<Integer>();
+		String[] str = ids.split(",");
+		for (String id : str) {
+            list.add(Integer.parseInt(id));
+        }
+		MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+		List<SysUser> users = this.sysUserService.selectByIds(list);//获取学生信息
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (users.size()>0) {
+			int rows = 0;
+			int sum = users.size();
+			for(SysUser user:users){
+				
+				map.clear();
+				map.put("userId", user.getUserId());
+				map.put("subject", meal.getSubject());
+				int count = this.orderService.selectByMap(map);//判断订单表里面是否含有该人的该科订单
+				if (count>0) {
+					sum--;
+					continue;
+				}else {
+					idList.add(Integer.parseInt(user.getUserId().toString()));
+					Order order2 = new Order();
+					order2.setSchoolId(order.getSchoolId());
+					order2.setGradeId(order.getGradeId());
+					order2.setIsEffect(order.getIsEffect());
+					order2.setMealId(order.getMealId());
+					order2.setPrice(order.getPrice());
+					order2.setTypeId(order.getTypeId());
+					//Map<String, Object> map = new HashMap<String, Object>();
+					order2.setSubjectCode(meal.getSubject());//设置订单的科目id
+					order2.setOrderId(GetOrderNum.getRandomFileName());
+					order2.setAddTime(new Date());
+					order2.setEndTime(order.getEndTime());
+					order2.setUserId(Integer.valueOf(user.getUserId().toString()));
+					if(null==order.getClassId()){
+						order2.setClassId(user.getSysClass().getClassId());
+					}else {
+						order2.setClassId(order.getClassId());
+					}
+					map.clear();
+					map.put("classId", user.getSysClass().getClassId());
+					map.put("subjectCode", meal.getSubject());
+					MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+					List<SysUser> teas = this.sysUserService.selectTeacherList(map);//获取教师信息
+					MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+					for (SysUser teacher :teas) {//设置教师信息
+						order2.setTeacherId(teacher.getUserId().intValue());
+						order2.setTeacherName(teacher.getUserName());
+						order2.setTeacherTel(teacher.getUserAccount());
+					}
+					
+					order2.setClassName(user.getSysClass().getClassName());
+					order2.setGradeName(user.getGrade().getGradeName());
+					order2.setIsEffect("1");
+					order2.setOrderStatus("0");//设置付费状态(试用状态,付费时改为1)
+					order2.setSchoolName(user.getSchool().getSchoolName());
+					order2.setUserName(user.getUserName());
+					order2.setUserNo(user.getUserAccount());
+					rows +=this.orderService.insert(order2);
+				}
+				
+				
+			}
+			if (rows>0) {
+				if (rows == sum) {
+					//Map<String, Object> map = new HashMap<String, Object>();
+					map.clear();
+					map.put("typeId", order.getTypeId());
+					map.put("isMember", isMember);
+					map.put("list", idList);
+					MultipleDataSource.setDataSourceKey("ViceDataSource");//设置为副数据源
+					int count = this.sysUserService.updateByIds(map);
+					MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为副数据源
+					if(count == idList.size()){
+						resultMap.put("status", true);
+						resultMap.put("msg", "成功开通");
+					}
+				}else {
+					resultMap.put("status", false);
+					resultMap.put("msg", "成功失败");
+				}
+			}else {
+				resultMap.put("status", false);
+				resultMap.put("msg", "订单已经存在!!");
+			}
+			
+		}
+		return resultMap;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 获取所有订单
+	 * @return
+	 */
+	@RequestMapping(value="/getProList.action")
+	@ResponseBody
+	public Map<String, Object> getProList(@RequestParam(value="userId",required=false)Integer userId ){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+//		map.put("gradeCode", gradeCode);
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		List<Order> list = this.orderService.selectList(map);
+		if (list.size()>0) {
+			resultMap.put("data", list);
+			resultMap.put("status", true);
+			resultMap.put("msg", "获取成功");
+		}else {
+			resultMap.put("status", false);
+			resultMap.put("msg", "没有获取到数据");
+		}
+		return resultMap;
+	}
+	
+}

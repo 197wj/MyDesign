@@ -1,0 +1,39 @@
+package com.zhiliao.service.php.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.php.PhpCountMapper;
+import com.zhiliao.model.php.SchCount;
+import com.zhiliao.service.php.PhpExamService;
+@Service
+public class PhpExamServiceImpl implements PhpExamService {
+
+	@Autowired
+	private PhpCountMapper countMapper;
+	
+	@Override
+	public List<SchCount> getAvgInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getAvgInfo(map);
+		return list;
+	}
+	
+	@Override
+	public List<SchCount> getAvgClass(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getAvgClass(map);
+		return list;
+	}
+	
+	@Override
+	public List<SchCount> getRateSchool(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SchCount> list = this.countMapper.getRateSchool(map);
+		return list;
+	}
+
+}

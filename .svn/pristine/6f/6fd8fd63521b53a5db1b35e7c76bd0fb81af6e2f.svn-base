@@ -1,0 +1,173 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>销量结算页面</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页<span class="c-gray en">&gt;</span> 系统统计  <span class="c-gray en">&gt;</span> 销售统计 <span class="c-gray en">&gt;</span> 销量结算 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" id="yanshicontent" >
+	<div class="text-c">
+		<form class="Huiform" method="get" action="${path}/manage/assessment-count-manage" target="_self" id="pageForm">
+			<input type="hidden" id="mark" value="${mark}" name="mark">
+			<!-- 区域 -->
+			<span class="select-box inline radius" id="xianSelect" >
+			<select id="areaSelect" class="select">
+				<option value="0">-请选择区域-</option>
+				<c:forEach items="${AreaList}" var="area" varStatus="index">
+					<option value="${area.areaId}" id="${area.areaId}" class="${area.areaId}" 
+						<c:if test="${area.areaId==areaId}">selected="selected"</c:if>
+					>
+						${area.areaname}
+					</option>
+				</c:forEach>
+			</select>
+			</span>
+			<!-- 学校 -->
+			<span class="select-box inline radius" id="xiangSelect" >
+			<select id="schoolSelect"  class="select">
+				<option value="0">-请选择学校-</option>
+				<c:forEach items="${SchoolList}" var="school" varStatus="index">
+					<option value="${school.schoolId}" id="${school.schoolId}" class="${school.schoolId}" 
+						<c:if test="${school.schoolId==schoolId}">selected="selected"</c:if>
+					>
+						${school.schoolName}
+					</option>
+				</c:forEach>
+			</select>
+			</span>
+			<!-- 年级 -->
+			<span class="select-box inline radius">
+				<select id="gradeSelect" class="select">
+					<option value="0">-请选择年级-</option>
+					<c:forEach items="${GradeList}" var="grade" varStatus="index">
+						<option value="${grade.schoolGradeId}" id="${grade.schoolGradeId}" class="${grade.schoolGradeId}" 
+							<c:if test="${grade.schoolGradeId==schoolGradeId}">selected="selected"</c:if>
+						>
+							${grade.gradeName}
+						</option>
+					</c:forEach>
+				</select>
+			</span>
+			<!-- 班级 -->
+			<span class="select-box inline radius">
+				<select id="classSelect" class="select">
+					<option value="0">-请选择班级-</option>
+					<c:forEach items="${SchoolList}" var="school" varStatus="index">
+					<option value="${school.schoolId}" id="${school.schoolId}" class="${school.schoolId}" <c:if test="${school.schoolId==schoolId}">selected="selected"</c:if>>${school.schoolName}</option>
+				</c:forEach>
+				</select>
+			</span>
+			<!-- 科目 -->
+			<span class="select-box inline radius">
+				<select id="subjectSelect" class="select">
+					<option value="0">-请选择科目-</option>
+					<c:forEach items="${SchoolList}" var="school" varStatus="index">
+					<option value="${school.schoolId}" id="${school.schoolId}" class="${school.schoolId}" <c:if test="${school.schoolId==schoolId}">selected="selected"</c:if>>${school.schoolName}</option>
+				</c:forEach>
+				</select>
+			</span>
+			<input type="hidden" id="areaIdImport" value="${areaId}" name="areaId">
+			<input type="hidden" id="schoolIdImport" value="${schoolId}" name="schoolId">
+			<input type="hidden" id="schoolGradeIdImport" value="${schoolGradeId}" name="schoolGradeId">
+			<input type="hidden" id="classImport" value="${class}" name="class">
+			<input type="hidden" id="subjectImport" value="${subject}" name="subject">
+			<input type="text" class="input-text radius" style="width:100px" placeholder="教师姓名" id="teacherNameInput" name="teacherName" >
+			<button type="button" class="btn btn-success radius" onclick="getSearch()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+		</form>
+	</div>
+	<br>
+	<div id="contentShow">
+		<div class="div-table" >
+			<table  class="table table-border table-bordered table-hover table-bg mt-20 " >
+				<thead>
+					<tr class="text-c">
+						<th width="10%">区域</th>
+						<th width="10%">学校</th>
+						<th width="10%">年级</th>
+						<th width="10%">班级</th>
+						<th width="10%">科目</th>
+						<th width="10%">任课老师</th>
+						<th width="10%">订购人数</th>
+						<th width="10%">订购总额</th>
+						<th width="10%">查看详情</th>
+					</tr>
+				</thead>
+				<tbody >
+					<tr class="text-c tableContent " >
+						<td>1</td>
+						<td>2</td>
+						<td>3</td>
+						<td>4</td>
+						<td>5</td>
+						<td>6</td>
+						<td>7</td>
+						<td>8</td>
+						<td>9</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+<script type="text/javascript">
+var mark=$("#mark").val();
+//alert(mark);
+if(mark==0){
+	
+}else if(mark==1){
+	
+	var xianID=$("#xianorgIdImport").val();
+	var xiangID=$("#xiangorgIdImport").val();
+	var selectID=$("#selectorgIdImport").val();
+	var selectcycle=$("#assTypeImport").val();
+	var selectyear=$("#selectYear").val();
+	var cycleCode=$("#assTypeCodeImport").val();
+	var haveChildOrg=$("#haveChildOrg").val();
+	
+	$(".3").hide();
+	$("."+xianID).show();
+	
+	
+	if(selectcycle=='1'){
+		$("#yuedu").show();
+	}
+	
+	
+}
+
+
+
+//提交
+function getSearch(){
+	var xianId=$.trim($("#xian").find("option:selected").val());
+	
+	if(typeVal==0){
+		layer.msg('请先选择组织类型!',{icon:2,time:2000});
+		return false;
+	}else{
+		$("#assOrgTypeImport").val(typeVal);
+	}
+	
+	$("#selectYear").val(selectyear01);
+//	alert($("#xianorgIdImport").val()+" + "+$("#xiangorgIdImport").val()+" + "+$("#selectorgIdImport").val()+" + "+$("#assOrgTypeImport").val()+" + "+$("#assTypeImport").val()+" + "+$("#selectYear").val()+" + "+$("#assTypeCodeImport").val());
+	$("#pageForm").submit();
+};
+
+//回车按钮
+function keydownEvent() {
+     var e = window.event || arguments.callee.caller.arguments[0];
+     if (e && e.keyCode == 13 ) {
+    	 getSearch();
+     }
+};
+
+</script>
+</body>
+</html>

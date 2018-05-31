@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.order.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.order.Order">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_no" jdbcType="VARCHAR" property="userNo" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="school_name" jdbcType="VARCHAR" property="schoolName" />
+    <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
+    <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="subject_code" jdbcType="VARCHAR" property="subjectCode" />
+    <result column="meal_id" jdbcType="INTEGER" property="mealId" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="typeName" jdbcType="VARCHAR" property="typeName" />
+    <result column="teacher_id" jdbcType="INTEGER" property="teacherId" />
+    <result column="teacher_name" jdbcType="VARCHAR" property="teacherName" />
+    <result column="teacher_tel" jdbcType="VARCHAR" property="teacherTel" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+    <result column="start" jdbcType="VARCHAR" property="start" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
+    <result column="end" jdbcType="VARCHAR" property="end" />
+    <result column="price" jdbcType="REAL" property="price" />
+    <result column="is_effect" jdbcType="CHAR" property="isEffect" />
+    <result column="order_status" jdbcType="CHAR" property="orderStatus" />
+    <collection property="meal" resultMap="meal"/>
+    <collection property="userType" resultMap="userType"/>
+  </resultMap>
+  <!-- 套餐属性 -->
+  <resultMap id="meal" type="com.zhiliao.model.product.Meal">
+    <id column="meal_id" jdbcType="INTEGER" property="mealId" />
+    <result column="meal_name" jdbcType="VARCHAR" property="mealName" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="meal_price" jdbcType="REAL" property="mealPrice" />
+    <result column="discount" jdbcType="REAL" property="discount" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
+    <result column="week" jdbcType="VARCHAR" property="week" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <!-- 订单类型 -->
+  <resultMap id="userType" type="com.zhiliao.model.user.UserType">
+    <id column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="is_delete" jdbcType="CHAR" property="isDelete" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, user_id, user_no, user_name, school_id, school_name, grade_id, grade_name, pay_type,
+    class_id, class_name, meal_id, type_id, teacher_id, teacher_name, teacher_tel, add_time,price,
+    order_status,subject_code
+  </sql>
+  
+  <!-- 分页获取订单信息 -->
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select ord.*,meal.*,ty.*,DATE_FORMAT(ord.add_time,'%Y-%c-%d') start,
+  	ty.type_name typeName
+  	from tb_order ord 
+  	left join tb_meal meal on meal.meal_id = ord.meal_id
+  	left join user_type ty on ty.type_id = ord. type_id
+  	<where>
+  		<if test="isEffect !=null">
+  			and ord.is_effect = #{isEffect,jdbcType=INTEGER}
+  		</if>
+  		<if test="userId !=null">
+  			and user_id = #{userId,jdbcType=INTEGER}
+  		</if>
+  		<if test="schoolId !=null">
+  			and school_id = #{schoolId,jdbcType=INTEGER}
+  		</if>
+  		<if test="gradeId!=null">
+  			and ord.grade_id = #{gradeId,jdbcType=INTEGER}
+  		</if>
+  		<if test="classId!=null">
+  			and ord.class_id = #{classId,jdbcType=INTEGER}
+  		</if>
+  		<if test="subject!=null">
+  			and meal.subject = #{subject,jdbcType=VARCHAR}
+  		</if>
+  		<if test="typeName!=null">
+  			and ty.type_name like concat('%',#{typeName,jdbcType=VARCHAR},'%')
+  		</if>
+  		<if test="userNo!=null">
+    		and (ord.user_name like concat('%',#{userNo,jdbcType=VARCHAR},'%')
+    		or ord.user_no like concat('%',#{userNo,jdbcType=VARCHAR},'%'))
+    	</if>
+  	</where>
+  	order by ord.add_time
+  </select>
+  
+  <!-- 分页获取订单数量 -->
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(order_id)
+  	from tb_order ord 
+  	left join tb_meal meal on meal.meal_id = ord.meal_id
+  	left join user_type ty on ty.type_id = ord. type_id
+  	<where>
+  		<if test="userId !=null">
+  			and user_id = #{userId,jdbcType=INTEGER}
+  		</if>
+  		<if test="schoolId !=null">
+  			and school_id = #{schoolId,jdbcType=INTEGER}
+  		</if>
+  		<if test="gradeId!=null">
+  			and ord.grade_id = #{gradeId,jdbcType=INTEGER}
+  		</if>
+  		<if test="classId!=null">
+  			and ord.class_id = #{classId,jdbcType=INTEGER}
+  		</if>
+  		<if test="subject!=null">
+  			and meal.subject = #{subject,jdbcType=VARCHAR}
+  		</if>
+  		<if test="typeName!=null">
+  			and ty.type_name like concat('%',#{typeName,jdbcType=VARCHAR},'%')
+  		</if>
+  		<if test="userNo!=null">
+    		and (ord.user_name like concat('%',#{userNo,jdbcType=VARCHAR},'%')
+    		or ord.user_no like concat('%',#{userNo,jdbcType=VARCHAR},'%'))
+    	</if>
+  	</where>
+  	order by ord.add_time
+  </select>
+  
+  <!-- 根据用户id和科目id获取订单信息 -->
+  <select id="selectByMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select
+  	 count(order_id)
+  	 from tb_order
+  	 <where>
+  	 	is_effect = '1'
+  	 	<if test="userId !=null">
+  			and user_id = #{userId,jdbcType=INTEGER}
+  		</if>
+  		<if test="subject!=null">
+  			and subject_code = #{subject,jdbcType=VARCHAR}
+  		</if>
+  	 </where>
+  </select>
+  
+  <!-- 根据学校id获取订单数量 -->
+  <select id="getOrderCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT count(user_id)
+	FROM tb_order ord
+	LEFT JOIN tms_els_test.sys_school ss ON ss.school_id = ord.school_id
+	<where>
+		ord.school_id <![CDATA[ <> ]]>176
+		and ord.school_id <![CDATA[ <> ]]>166
+		and ord.school_id <![CDATA[ <> ]]>160
+		<if test="schoolId!=null">
+			and ord.school_id = #{schoolId,jdbcType=INTEGER}
+		</if>
+		<if test="gradeId!=null">
+			and ord.grade_id = #{gradeId,jdbcType=INTEGER}
+		</if>
+		<if test="areaId!=null">
+			AND ss.area_id = #{areaId,jdbcType=VARCHAR}
+		</if>
+		<if test="classId!=null">
+			and ord.class_id = #{classId,jdbcType=INTEGER}
+		</if>
+		<if test="subject!=null">
+			and subject_code = #{subject,jdbcType=INTEGER}
+		</if>
+	</where> 
+  </select>
+  
+  
+  <!-- 根据id查询订单信息 -->
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <!-- 增加订单 -->
+  <insert id="insert" parameterType="com.zhiliao.model.order.Order">
+    insert into tb_order (order_id, user_id, user_no, 
+      user_name, school_id, school_name, 
+      grade_id, grade_name, class_id, 
+      class_name, meal_id, type_id,subject_code, 
+      teacher_id, teacher_name, teacher_tel, 
+      add_time, price,is_effect,pay_type,order_status,end_time)
+    values (#{orderId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userNo,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{schoolId,jdbcType=INTEGER}, #{schoolName,jdbcType=VARCHAR}, 
+      #{gradeId,jdbcType=INTEGER}, #{gradeName,jdbcType=VARCHAR}, #{classId,jdbcType=INTEGER}, 
+      #{className,jdbcType=VARCHAR}, #{mealId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{subjectCode,jdbcType=INTEGER},
+      #{teacherId,jdbcType=INTEGER}, #{teacherName,jdbcType=VARCHAR}, #{teacherTel,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{price,jdbcType=REAL}, #{isEffect,jdbcType=CHAR},
+      #{payType,jdbcType=VARCHAR},#{orderStatus,jdbcType=CHAR},#{endTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 根据id修改订单信息 -->
+  <update id="updateById" parameterType="com.zhiliao.model.order.Order">
+    update tb_order
+    <set>
+      <if test="userNo != null">
+        user_no = #{userNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolId != null">
+        school_id = #{schoolId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolName != null">
+        school_name = #{schoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeId != null">
+        grade_id = #{gradeId,jdbcType=INTEGER},
+      </if>
+      <if test="gradeName != null">
+        grade_name = #{gradeName,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectCode != null">
+        subject_code = #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="className != null">
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="mealId != null">
+        meal_id = #{mealId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null">
+        teacher_id = #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherName != null">
+        teacher_name = #{teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherTel != null">
+        teacher_tel = #{teacherTel,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=REAL},
+      </if>
+      <if test="isEffect != null">
+        is_effect = #{isEffect,jdbcType=CHAR},
+      </if>
+    </set>
+    <where>
+    	<if test="orderId!=null">
+    		and order_id = #{orderId,jdbcType=VARCHAR}
+    	</if>
+    	<if test="userId != null">
+        	and user_id = #{userId,jdbcType=INTEGER}
+        </if>
+    </where> 
+  </update>
+  <!-- 付款修改 -->
+  <update id="payOrder" parameterType="com.zhiliao.model.order.Order">
+  	update tb_order
+    <set>
+    	 <if test="orderStatus != null">
+	        order_status = #{orderStatus,jdbcType=CHAR},
+	      </if>
+	      <if test="payType!=null">
+	       pay_type = #{payType,jdbcType=VARCHAR}
+	      </if>
+    </set>
+    where order_id like concat(#{orderId,jdbcType=VARCHAR},'%')
+  </update>
+  
+  <!-- 根据map获取集合yuanhuawei -->
+  <select id="getListByMap" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_order
+    where 1=1 
+    <if test="schoolId != null and schoolId != ''">
+    	and school_id = #{schoolId}
+    </if>
+    <if test="gradeId != null and gradeId != ''">
+    	and grade_id = #{gradeId}
+    </if>
+    <if test="classId != null and classId != ''">
+    	and class_id = #{classId}
+    </if>
+    <if test="subjectCode != null and subjectCode != ''">
+    	and subject_code = #{subjectCode}
+    </if>
+    <if test="teacherName != null and teacherName != ''">
+    	and class_id in(select class_id from teacher_class where teacher_id in (select user_id from sys_user where user_name like CONCAT('%',#{teacherName},'%')))               
+    </if>
+    <if test="allClassIdList != null">
+    	and class_id in
+    	<foreach collection="allClassIdList" index="index" item="classId" open="(" separator="," close=")">  
+            #{classId}  
+        </foreach> 
+    </if>
+    <if test="teacherClassIdList != null">
+    	and class_id in
+    	<foreach collection="teacherClassIdList" index="index" item="classId" open="(" separator="," close=")">  
+            #{classId}  
+        </foreach> 
+    </if>
+  </select>
+  
+   <!-- 根据map获取集合yuanhuawei -->
+  <select id="getListByMap01" parameterType="map" resultType="java.lang.String">
+    select 
+    distinct subject_code
+    from tb_order
+    where 1=1
+    <if test="classId != null and classId != ''">
+    	and class_id = #{classId}
+    </if>
+  </select>
+  
+  
+</mapper>

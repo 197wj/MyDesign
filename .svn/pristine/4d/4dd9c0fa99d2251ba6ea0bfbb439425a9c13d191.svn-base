@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.sys.InvoiceMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.sys.Invoice">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="phone" jdbcType="INTEGER" property="phone" />
+    <result column="link_phone" jdbcType="VARCHAR" property="linkPhone" />
+    <result column="link_man" jdbcType="CHAR" property="linkMan" />
+    <result column="raised" jdbcType="VARCHAR" property="raised" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="invoice_status" jdbcType="INTEGER" property="invoiceStatus" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="area_id" jdbcType="INTEGER" property="areaId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, phone, link_phone, link_man, raised, number, code, address, remarks, status, 
+    invoice_status,add_time,area_id
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from x2_invoice
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from x2_invoice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhiliao.model.sys.Invoice">
+    update x2_invoice
+    <set>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=INTEGER},
+      </if>
+      <if test="linkPhone != null">
+        link_phone = #{linkPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="linkMan != null">
+        link_man = #{linkMan,jdbcType=CHAR},
+      </if>
+      <if test="raised != null">
+        raised = #{raised,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        number = #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceStatus != null">
+        invoice_status = #{invoiceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="areaId != null">
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据map获取集合yuanhuawei -->
+  <select id="getListByMap" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from x2_invoice
+    where status=1 
+    <if test="areaId != null and areaId != ''">
+    	and area_id=#{areaId}
+    </if>
+    <if test="invoiceStatus != null and invoiceStatus != ''">
+    	and invoice_status=#{invoiceStatus}
+    </if>
+    <if test="content != null and content != ''">
+    	and (link_phone like CONCAT('%',#{content},'%') or id like CONCAT('%',#{content},'%')) 
+    </if>
+    
+    
+    
+    
+   
+  </select>
+  
+  
+
+</mapper>

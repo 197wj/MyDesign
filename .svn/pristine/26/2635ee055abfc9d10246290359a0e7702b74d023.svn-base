@@ -1,0 +1,172 @@
+package com.zhiliao.controller.php;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zhiliao.model.php.SchCount;
+import com.zhiliao.service.php.SchCountService;
+import com.zhiliao.util.dbdriver.MultipleDataSource;
+
+@Controller
+@RequestMapping("schCount")
+public class schCountController {
+
+	@Autowired
+	private SchCountService countService;
+	
+	/**
+	 * 跳转到学校统计页面
+	 * @return
+	 */
+	@RequestMapping("/schoolCount.action")
+	public String schCountView(HttpServletRequest request,
+							   @RequestParam(value="schoolId",required=false)Integer schoolId,
+							   @RequestParam(value="gradeId",required=false)Integer gradeId){
+		request.getSession().setAttribute("schoolId", schoolId);
+		request.getSession().setAttribute("gradeId", gradeId);
+		return "count/schoolCount";
+	}
+	
+	
+	
+	@RequestMapping("/getCountInfo.action")
+	@ResponseBody
+	public Map<String, Object> getCountInfo(@RequestParam(value="schoolId",required = true)Integer schoolId,
+											@RequestParam(value="gradeId",required = false)Integer gradeId,
+											@RequestParam(value="week",required = false)Integer week){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		map.put("week", week);
+		List<SchCount> list = this.countService.getCountInfo(map);//综合数量
+		for(SchCount count:list){
+			map.clear();
+			map.put("number", count.getWeek());
+			map.put("classId", count.getClassId());
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		map.clear();
+		List<SchCount> cityList = this.countService.getCityScore(map);
+		
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		//设置城市平均分
+		for(SchCount schCount:list){
+			for(SchCount city:cityList){
+				if(schCount.getWeek()==city.getWeek() && schCount.getGradeId()==city.getGradeId()){
+					float cityAvg = 0;
+					if (city.getReferCount()!=0) {
+						cityAvg = (float)(city.getTotalScore()/city.getReferCount());
+					}
+					schCount.setCityAvg(cityAvg);
+					continue;
+				}
+			}
+		}
+		
+		resultMap.put("status", true);
+		resultMap.put("data", list);
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 获取英语和数学的提交人数
+	 * @param schoolId
+	 * @param gradeId
+	 * @return
+	 */
+	@RequestMapping("/getScoreInfo.action")
+	@ResponseBody
+	public Map<String, Object> getScoreInfo(@RequestParam(value="schoolId",required = false)Integer schoolId,
+											@RequestParam(value="gradeId",required = false)Integer gradeId,
+											@RequestParam(value="week",required = false)Integer week){
+		Map<String,Object> resultMap = new LinkedHashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		MultipleDataSource.setDataSourceKey("PHPDataSource");//设置为副数据源
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		map.put("subject", 11);
+		map.put("week", week);
+		List<SchCount> mathList = this.countService.getScoreInfo(map);//获取数学人数和总分的统计
+		map.clear();
+		map.put("subject", 11);
+		map.put("number", week);
+		List<SchCount> mathCity = this.countService.getCityScore(map);//获取数学市级成绩
+		for(SchCount count:mathList){
+			map.clear();
+			map.put("examId", count.getExamId());
+			map.put("classId", count.getClassId());
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		
+		map.clear();
+		map.put("schoolId", schoolId);
+		map.put("gradeId", gradeId);
+		map.put("subject", 12);
+		map.put("week", week);
+		List<SchCount> engList = this.countService.getScoreInfo(map);//获取英语人数和总分的统计
+		map.clear();
+		map.put("subject", 12);
+		map.put("number", week);
+		List<SchCount> engCity = this.countService.getCityScore(map);//获取数学市级成绩
+		for(SchCount count:engList){
+			map.clear();
+			map.put("examId", count.getExamId());
+			map.put("classId", count.getClassId());
+			int rows = this.countService.getGrantCount(map);
+			count.setGrantCount(rows);
+		}
+		MultipleDataSource.setDataSourceKey("MasterDataSource");//设置为主数据源
+		
+		//设置城市数学平均分
+		for(SchCount schCount:mathList){
+			for(SchCount city:mathCity){
+				if(schCount.getWeek()==city.getWeek() && schCount.getGradeId()==city.getGradeId()){
+					float cityAvg = 0;
+					if (city.getReferCount()!=0) {
+						cityAvg = (float)(city.getTotalScore()/city.getReferCount());
+					}
+					schCount.setCityAvg(cityAvg);
+					continue;
+				}
+			}
+		}
+		//设置城市英语平均分
+		for(SchCount schCount:engList){
+			for(SchCount city:engCity){
+				if(schCount.getWeek()==city.getWeek() && schCount.getGradeId()==city.getGradeId()){
+					float cityAvg = 0;
+					if (city.getReferCount()!=0) {
+						cityAvg = (float)(city.getTotalScore()/city.getReferCount());
+					}
+					schCount.setCityAvg(cityAvg);
+					continue;
+				}
+			}
+		}
+		
+		resultMap.put("status", true);
+		resultMap.put("math", mathList);
+		resultMap.put("eng", engList);
+		
+		return resultMap;
+	}
+	
+	
+}

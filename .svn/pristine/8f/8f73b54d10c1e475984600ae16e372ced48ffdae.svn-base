@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.php.PhpKnowMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.php.PhpKnows">
+    <result column="knowId" jdbcType="INTEGER" property="knowId" />
+    <result column="konwName" jdbcType="VARCHAR" property="konwName" />
+  </resultMap>
+  <resultMap id="Section" type="com.zhiliao.model.php.PhpSection">
+    <result column="sectionId" jdbcType="INTEGER" property="sectionId" />
+    <result column="sectionName" jdbcType="VARCHAR" property="sectionName" />
+  </resultMap>
+  
+ 
+  <!-- 根据年级,科目获取知识点信息 -->
+  <select id="getKnow" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	SELECT x2.subjectid konwId,x2.`subject` konwName
+	FROM x2_subject x2
+	WHERE x2.gradeid = #{gradeSub}
+	order by x2.subjectid
+  </select>
+  
+  <!-- 获取二级知识点 -->
+  <select id="getSecKnow" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	SELECT x2.sectionid konwId,x2.section konwName
+	FROM x2_sections x2
+	WHERE x2.sectionsubjectid = #{knowId}
+  </select>
+  
+  <!-- 获取二级知识点(英语) -->
+  <select id="getSecSection" parameterType="java.lang.String" resultMap="Section">
+  	SELECT x2.sectionid sectionId,x2.section sectionName
+	FROM x2_sections x2
+	WHERE x2.sectionsubjectid = #{knowId}
+  </select>
+  
+  <!-- 获取三级知识点 -->
+  <select id="getThiKnow" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	SELECT x2.knowsid konwId,x2.knows konwName
+	FROM x2_knows x2 
+	WHERE x2.knowssectionid = #{knowId}
+  </select>
+  
+  
+  
+</mapper>

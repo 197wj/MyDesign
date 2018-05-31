@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiliao.dao.count.WelCountMapper">
+  <resultMap id="BaseResultMap" type="com.zhiliao.model.count.WelCount">
+    <result column="schCount" jdbcType="INTEGER" property="schCount" />
+    <result column="telCount" jdbcType="INTEGER" property="telCount" />
+    <result column="claCount" jdbcType="INTEGER" property="claCount" />
+    <result column="stuCount" jdbcType="INTEGER" property="stuCount" />
+    <result column="subCount" jdbcType="INTEGER" property="subCount" />
+    <result column="refCount" jdbcType="INTEGER" property="refCount" />
+    <result column="ordCount" jdbcType="INTEGER" property="ordCount" />
+    <result column="consum" jdbcType="FLOAT" property="consum" />
+  </resultMap>
+  <!-- 统计开通班级的数量 -->
+  <select id="selectClaCount" parameterType="java.util.Map" resultType="integer">
+  	SELECT COUNT(class_id)
+	FROM sys_class sc
+	LEFT JOIN sys_school ss ON ss.school_id = sc.school_id
+	LEFT JOIN sys_grade sg ON sc.school_grade_id = sg.school_grade_id
+	LEFT JOIN uc_grade ug ON ug.grade_code = sg.grade_code
+	<where>
+		ss.is_open = 1
+		AND ug.is_open = 1
+		AND ss.school_name NOT LIKE '%测试%'
+		<if test="areaId!=null">
+			AND ss.area_id = #{areaId} 
+		</if>
+	</where>
+  </select>
+  
+ 
+  <!-- 获取学校的数量(开通和未开通的数量) -->
+  <select id="selectSchCount" parameterType="java.util.Map" resultType="integer">
+  	SELECT COUNT(school_id)
+	FROM sys_school
+	<where>
+		is_open = 1
+		AND school_name NOT LIKE '%测试%'
+		<if test="areaId!=null">
+			AND ss.area_id = #{areaId} 
+		</if>
+	</where>
+  </select>
+  
+  <!-- 获取使用教师的数量 -->
+  <select id="getTelCount" parameterType="java.util.Map" resultType="integer">
+  	SELECT COUNT(user_id)
+	FROM sys_user su
+	LEFT JOIN teacher_class tc ON su.user_id = tc.teacher_id
+	LEFT JOIN sys_class sc ON sc.class_id = tc.class_id
+	LEFT JOIN sys_school ss ON ss.school_id = sc.school_id
+	LEFT JOIN sys_grade sg ON sc.school_grade_id = sg.school_grade_id
+	LEFT JOIN uc_grade ug ON ug.grade_code = sg.grade_code
+	<where>
+		su.delete_mark = 0
+		AND ss.is_open = 1
+		AND ug.is_open = 1
+		AND ss.school_name NOT LIKE '%测试%'
+		<if test="areaId!=null">
+			AND ss.area_id = #{areaId} 
+		</if>
+	</where>
+  </select>
+ 
+  <!-- 获取学生数量 -->
+  <select id="getStuCount" parameterType="java.util.Map" resultType="integer">
+  	SELECT COUNT(user_id)
+	FROM sys_user su
+	LEFT JOIN sys_userrole sur ON sur.userid = su.user_id
+	LEFT JOIN sys_class sc ON sc.class_id = su.class_id
+	LEFT JOIN sys_school ss ON ss.school_id = sc.school_id
+	LEFT JOIN sys_grade sg ON sc.school_grade_id = sg.school_grade_id
+	LEFT JOIN uc_grade ug ON ug.grade_code = sg.grade_code
+	<where>
+		ss.is_open = 1
+		AND su.delete_mark = 0
+		AND sur.ROLEID = 1
+		AND ug.is_open = 1
+		AND ss.school_name NOT LIKE '%测试%'
+		<if test="areaId!=null">
+			AND ss.area_id = #{areaId} 
+		</if>
+	</where>
+  </select>
+  
+  
+  
+
+</mapper>

@@ -1,0 +1,31 @@
+package com.zhiliao.service.sys.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.sys.InvoiceMapper;
+import com.zhiliao.model.sys.Invoice;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.sys.InvoiceService;
+@Service
+public class InvoiceServiceImpl extends BaseServiceImpl<Invoice, Map<String, Object>> implements InvoiceService{
+	@Autowired
+	private InvoiceMapper InvoiceMapper;
+	
+	
+	@Override
+	public List<Invoice> getListByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return InvoiceMapper.getListByMap( map);
+	}
+
+	@Override
+	public void update(Invoice v) {
+		// TODO Auto-generated method stub
+		InvoiceMapper.updateByPrimaryKeySelective(v);
+	}
+
+}

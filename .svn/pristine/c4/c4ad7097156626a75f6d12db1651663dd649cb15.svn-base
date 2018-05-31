@@ -1,0 +1,31 @@
+package com.zhiliao.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("useCount")
+public class UseCountController {
+
+	@RequestMapping("/useCountView.action")
+	public String useCountView(){		
+		return"count/useCount";
+	}
+	
+	@RequestMapping("/usCountView1.action")
+	public String usCountView1(){		
+		return"count/useCount1";
+	}
+	@RequestMapping("/usCountView1_1.action")
+	public String usCountView1_1(){		
+		return"count/useCount1_1";
+	}
+	@RequestMapping("/usCountView2_1.action")
+	public String usCountView2_1(){		
+		return"count/useCount2_1";
+	}
+	@RequestMapping("/usCountView3_1.action")
+	public String usCountView3_1(){		
+		return"count/useCount3_1";
+	}
+}

@@ -1,0 +1,12 @@
+package com.zhiliao.dao.log;
+
+import com.zhiliao.model.log.Log;
+
+public interface LogMapper {
+    
+    public int insert(Log record);
+
+    public Log selectById(Integer logId);
+
+    public int updateById(Log record);
+}

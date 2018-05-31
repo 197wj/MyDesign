@@ -1,0 +1,22 @@
+package com.zhiliao.dao.product;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.product.Meal;
+
+public interface MealMapper {
+    public int deleteById(Integer mealId);
+
+    public int insert(Meal record);
+
+    public Meal selectById(Integer mealId);
+
+    public int updateById(Meal record);
+
+    public int deleteMealList(List<Integer> list);
+    
+    public List<Meal> selectList(Map<String, Object>map);
+    
+    public List<Meal> selectListByIds(Map<String, Object> map);
+}

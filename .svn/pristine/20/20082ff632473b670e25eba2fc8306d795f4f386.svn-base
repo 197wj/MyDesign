@@ -1,0 +1,41 @@
+package com.zhiliao.service.php;
+
+import java.util.List;
+
+import com.zhiliao.model.php.PhpKnows;
+import com.zhiliao.model.php.PhpSection;
+
+public interface PhpKnowService {
+
+	/**
+	 * 获取知识点
+	 * @Title: getKnow 
+	 * @param @param gradeSub
+	 * @return List<PhpKnows>
+	 */
+	public List<PhpKnows> getKnow(String gradeSub);
+	
+	/**
+	 * 获取二级知识点
+	 * @Title: getSecKnow 
+	 * @param @param knowId
+	 * @return List<PhpKnows>
+	 */
+	public List<PhpKnows> getSecKnow(String knowId);
+	
+	/**
+	 * 获取三级知识点
+	 * @Title: getThiKnow 
+	 * @param @param knowId
+	 * @return List<PhpKnows>
+	 */
+	public List<PhpKnows> getThiKnow(String knowId);
+	
+	/**
+	 * 获取二级知识点(英语使用)
+	 * @Title: getSecSection 
+	 * @param @param knowId
+	 * @return List<PhpSection>
+	 */
+	public List<PhpSection> getSecSection(String knowId);
+}

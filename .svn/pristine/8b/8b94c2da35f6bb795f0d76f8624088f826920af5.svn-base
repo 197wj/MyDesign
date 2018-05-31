@@ -1,0 +1,93 @@
+package com.zhiliao.model.count;
+
+public class WelCount {
+
+	private Integer schCount;//学校数
+	
+	private Integer telCount;//教师数
+	
+	private Integer claCount;//班级数
+	
+	private Integer stuCount;//学生数
+	
+	private Integer subCount;//题目数
+	
+	private Integer refCount;//提交数
+	
+	private Integer ordCount;//订单数
+	
+	private Float consum;//人均消费
+
+	public Integer getSchCount() {
+		return schCount;
+	}
+
+	public void setSchCount(Integer schCount) {
+		this.schCount = schCount;
+	}
+
+	public Integer getTelCount() {
+		return telCount;
+	}
+
+	public void setTelCount(Integer telCount) {
+		this.telCount = telCount;
+	}
+
+	public Integer getClaCount() {
+		return claCount;
+	}
+
+	public void setClaCount(Integer claCount) {
+		this.claCount = claCount;
+	}
+
+	public Integer getStuCount() {
+		return stuCount;
+	}
+
+	public void setStuCount(Integer stuCount) {
+		this.stuCount = stuCount;
+	}
+
+	public Integer getSubCount() {
+		return subCount;
+	}
+
+	public void setSubCount(Integer subCount) {
+		this.subCount = subCount;
+	}
+
+	public Integer getRefCount() {
+		return refCount;
+	}
+
+	public void setRefCount(Integer refCount) {
+		this.refCount = refCount;
+	}
+
+	public Integer getOrdCount() {
+		return ordCount;
+	}
+
+	public void setOrdCount(Integer ordCount) {
+		this.ordCount = ordCount;
+	}
+
+	public Float getConsum() {
+		return consum;
+	}
+
+	public void setConsum(Float consum) {
+		this.consum = consum;
+	}
+
+	@Override
+	public String toString() {
+		return "WelCount [schCount=" + schCount + ", telCount=" + telCount
+				+ ", claCount=" + claCount + ", stuCount=" + stuCount
+				+ ", subCount=" + subCount + ", refCount=" + refCount
+				+ ", ordCount=" + ordCount + ", consum=" + consum + "]";
+	}
+
+}

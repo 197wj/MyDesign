@@ -1,0 +1,60 @@
+﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<%@ include file="../common/_meta.jsp" %>
+<title>学校开通管理</title>
+</head>
+<body>
+<div class="page-container">
+	<div class="text-c">
+		<input type="text" class="input-text" style="width:250px" placeholder="输入学校Id" id="schoolId" name="" onkeydown="keydownEvent()">
+		<button type="button" class="btn btn-success radius" id="seach" name=""><i class="Hui-iconfont">&#xe665;</i> 搜学校</button>
+	</div>
+	<div>
+		
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<%@ include file="../common/_footer.jsp" %>
+
+<script type="text/javascript">
+//回车按钮
+function keydownEvent() {
+     var e = window.event || arguments.callee.caller.arguments[0];
+     if (e && e.keyCode == 13 ) {
+     	document.getElementById("seach").click();
+     }
+};
+/**
+ * 点击搜索,
+ */
+ $("#seach").click(function(){
+	var schoolId = $("#schoolId").val().trim();
+	$.ajax({
+		url:'../school/getSchoolById.action',
+		type:'get',
+		data:{'schoolId':schoolId},
+		dataType:'json',
+		success:function(obj){
+			var data = obj.data;
+			$("#count").html(count);
+			kkpagerHtml(count,rows,page,gradeName);
+			if(data!=null){
+				for(var i = 0;i<data.length;i++){
+					schoolTypeListHtml(data[i]);
+				}
+			}
+		}
+	})
+ });
+</script>
+
+
+
+
+<script type="text/javascript">
+
+</script> 
+</body>
+</html>

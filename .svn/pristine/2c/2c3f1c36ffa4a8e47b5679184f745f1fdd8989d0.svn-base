@@ -1,0 +1,20 @@
+package com.zhiliao.service.sys;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.sys.MoneySet;
+import com.zhiliao.service.BaseService;
+
+public interface MoneySetService extends BaseService<MoneySet, Map<String, Object>> {
+
+	int deleteById(Integer id);
+
+    int insert(MoneySet record);
+
+    MoneySet selectById(Integer id);
+
+    int updateById(MoneySet record);
+    
+    List<MoneySet> selectList(Map<String, Object> map);
+}

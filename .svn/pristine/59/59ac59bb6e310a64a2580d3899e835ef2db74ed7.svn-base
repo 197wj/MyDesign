@@ -1,0 +1,439 @@
+package com.zhiliao.model.user;
+
+import java.util.Date;
+
+import com.zhiliao.model.school.Class;
+import com.zhiliao.model.school.Grade;
+import com.zhiliao.model.school.School;
+
+public class SysUser {
+    private Long userId;
+
+    private String userTypeCode;
+
+    private Integer classId;
+
+    private Integer schoolId;
+
+    private Long officeId;
+
+    private String areaId;
+
+    private String userCode;
+
+    private String userTelephone;
+
+    private String userAccount;
+
+    private String userPwd;
+
+    private String userPhoto;
+
+    private String userNickname;
+
+    private String userName;
+
+    private String userSex;
+
+    private String userIdcard;
+
+    private String title;
+
+    private String email;
+
+    private String bindEmail;
+
+    private Integer deleteMark;
+
+    private Date createDate;
+
+    private Integer createId;
+
+    private String createName;
+
+    private Date modifyDate;
+
+    private Integer modityId;
+
+    private Integer userIsonline;
+
+    private String userCity;
+
+    private String pwdQuestion;
+
+    private String pwdQuestionAnswer;
+
+    private String sysTheme;
+
+    private String userBirthday;
+
+    private String userAge;
+
+    private String spaceUrl;
+
+    private String userSignature;
+
+    private Integer isLock;
+
+    private String userType;
+
+    private String userStatus;
+
+    private Integer typeId;
+
+    private String isMember;
+    
+    private School school;
+    
+    private Grade grade;
+    
+    private Class sysClass;
+    
+    private UserType type;
+    
+    private SysRole role;
+
+    public SysRole getRole() {
+		return role;
+	}
+
+	public void setRole(SysRole role) {
+		this.role = role;
+	}
+
+	public School getSchool() {
+		return school;
+	}
+
+	public void setSchool(School school) {
+		this.school = school;
+	}
+
+	public Grade getGrade() {
+		return grade;
+	}
+
+	public void setGrade(Grade grade) {
+		this.grade = grade;
+	}
+
+	public Class getSysClass() {
+		return sysClass;
+	}
+
+	public void setSysClass(Class sysClass) {
+		this.sysClass = sysClass;
+	}
+
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
+	}
+
+	public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserTypeCode() {
+        return userTypeCode;
+    }
+
+    public void setUserTypeCode(String userTypeCode) {
+        this.userTypeCode = userTypeCode == null ? null : userTypeCode.trim();
+    }
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public Long getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(Long officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId == null ? null : areaId.trim();
+    }
+
+    public String getUserCode() {
+        return userCode;
+    }
+
+    public void setUserCode(String userCode) {
+        this.userCode = userCode == null ? null : userCode.trim();
+    }
+
+    public String getUserTelephone() {
+        return userTelephone;
+    }
+
+    public void setUserTelephone(String userTelephone) {
+        this.userTelephone = userTelephone == null ? null : userTelephone.trim();
+    }
+
+    public String getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount == null ? null : userAccount.trim();
+    }
+
+    public String getUserPwd() {
+        return userPwd;
+    }
+
+    public void setUserPwd(String userPwd) {
+        this.userPwd = userPwd == null ? null : userPwd.trim();
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto == null ? null : userPhoto.trim();
+    }
+
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname == null ? null : userNickname.trim();
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
+    }
+
+    public String getUserSex() {
+        return userSex;
+    }
+
+    public void setUserSex(String userSex) {
+        this.userSex = userSex == null ? null : userSex.trim();
+    }
+
+    public String getUserIdcard() {
+        return userIdcard;
+    }
+
+    public void setUserIdcard(String userIdcard) {
+        this.userIdcard = userIdcard == null ? null : userIdcard.trim();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    public String getBindEmail() {
+        return bindEmail;
+    }
+
+    public void setBindEmail(String bindEmail) {
+        this.bindEmail = bindEmail == null ? null : bindEmail.trim();
+    }
+
+    public Integer getDeleteMark() {
+        return deleteMark;
+    }
+
+    public void setDeleteMark(Integer deleteMark) {
+        this.deleteMark = deleteMark;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Integer getCreateId() {
+        return createId;
+    }
+
+    public void setCreateId(Integer createId) {
+        this.createId = createId;
+    }
+
+    public String getCreateName() {
+        return createName;
+    }
+
+    public void setCreateName(String createName) {
+        this.createName = createName == null ? null : createName.trim();
+    }
+
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
+    public Integer getModityId() {
+        return modityId;
+    }
+
+    public void setModityId(Integer modityId) {
+        this.modityId = modityId;
+    }
+
+    public Integer getUserIsonline() {
+        return userIsonline;
+    }
+
+    public void setUserIsonline(Integer userIsonline) {
+        this.userIsonline = userIsonline;
+    }
+
+    public String getUserCity() {
+        return userCity;
+    }
+
+    public void setUserCity(String userCity) {
+        this.userCity = userCity == null ? null : userCity.trim();
+    }
+
+    public String getPwdQuestion() {
+        return pwdQuestion;
+    }
+
+    public void setPwdQuestion(String pwdQuestion) {
+        this.pwdQuestion = pwdQuestion == null ? null : pwdQuestion.trim();
+    }
+
+    public String getPwdQuestionAnswer() {
+        return pwdQuestionAnswer;
+    }
+
+    public void setPwdQuestionAnswer(String pwdQuestionAnswer) {
+        this.pwdQuestionAnswer = pwdQuestionAnswer == null ? null : pwdQuestionAnswer.trim();
+    }
+
+    public String getSysTheme() {
+        return sysTheme;
+    }
+
+    public void setSysTheme(String sysTheme) {
+        this.sysTheme = sysTheme == null ? null : sysTheme.trim();
+    }
+
+    public String getUserBirthday() {
+        return userBirthday;
+    }
+
+    public void setUserBirthday(String userBirthday) {
+        this.userBirthday = userBirthday == null ? null : userBirthday.trim();
+    }
+
+    public String getUserAge() {
+        return userAge;
+    }
+
+    public void setUserAge(String userAge) {
+        this.userAge = userAge == null ? null : userAge.trim();
+    }
+
+    public String getSpaceUrl() {
+        return spaceUrl;
+    }
+
+    public void setSpaceUrl(String spaceUrl) {
+        this.spaceUrl = spaceUrl == null ? null : spaceUrl.trim();
+    }
+
+    public String getUserSignature() {
+        return userSignature;
+    }
+
+    public void setUserSignature(String userSignature) {
+        this.userSignature = userSignature == null ? null : userSignature.trim();
+    }
+
+    public Integer getIsLock() {
+        return isLock;
+    }
+
+    public void setIsLock(Integer isLock) {
+        this.isLock = isLock;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType == null ? null : userType.trim();
+    }
+
+    public String getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(String userStatus) {
+        this.userStatus = userStatus == null ? null : userStatus.trim();
+    }
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getIsMember() {
+        return isMember;
+    }
+
+    public void setIsMember(String isMember) {
+        this.isMember = isMember == null ? null : isMember.trim();
+    }
+}

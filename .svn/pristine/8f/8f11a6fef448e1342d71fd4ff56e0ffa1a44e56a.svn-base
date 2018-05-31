@@ -1,0 +1,22 @@
+package com.zhiliao.service.log;
+
+import java.util.Map;
+
+import com.zhiliao.model.log.Log;
+import com.zhiliao.service.BaseService;
+
+/**
+ * 
+ * 日志的Service层
+ * @author 毕伟谦
+ *
+ */
+
+public interface LogService extends BaseService<Log, Map<String, Object>> {
+
+	public int insert(Log record);
+
+    public Log selectById(Integer logId);
+
+    public int updateById(Log record);
+}

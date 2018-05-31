@@ -1,0 +1,76 @@
+package com.zhiliao.service.contrast.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zhiliao.dao.contrast.ContrastMapper;
+import com.zhiliao.dao.php.ExamsMapper;
+import com.zhiliao.model.order.Order;
+import com.zhiliao.model.php.ExamVo;
+import com.zhiliao.model.php.Examhistory;
+import com.zhiliao.model.php.Exams;
+import com.zhiliao.model.user.SysUser;
+import com.zhiliao.service.BaseServiceImpl;
+import com.zhiliao.service.contrast.ContrastService;
+@Service
+public class ContrastServiceImpl extends BaseServiceImpl<SysUser, Map<String, Object>> implements ContrastService {
+
+	@Autowired
+	private ContrastMapper contrastMapper;
+	
+	@Autowired
+	private ExamsMapper  examsMapper;
+	
+	
+	@Override
+	public List<SysUser> selectList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<SysUser> list = this.contrastMapper.selectList(map);
+		return list;
+	}
+	
+	@Override
+	public int updateByUserId(Order order) {
+		// TODO Auto-generated method stub
+		int rows = this.contrastMapper.updateByUserId(order);
+		return rows;
+	}
+	
+	@Override
+	public int updateByUser(Examhistory examhistory) {
+		// TODO Auto-generated method stub
+		int rows = this.contrastMapper.updateByUser(examhistory);
+		return rows;
+	}
+	
+	@Override
+	public List<ExamVo> selectTotal(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<ExamVo> list = this.contrastMapper.selectTotal(map);
+		return list;
+	}
+	
+	@Override
+	public int updateByClassId(ExamVo examVo) {
+		// TODO Auto-generated method stub
+		int rows = this.contrastMapper.updateByClassId(examVo);
+		return rows;
+	}
+	
+	@Override
+	public List<Exams> selectByGrade(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<Exams> list = this.examsMapper.selectByGrade(map);
+		return list;
+	}
+	
+	@Override
+	public Exams selectById(Integer examid) {
+		// TODO Auto-generated method stub
+		Exams exams = this.examsMapper.selectById(examid);
+		return exams;
+	}
+}

@@ -1,0 +1,46 @@
+package com.zhiliao.service.sys;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.sys.CommentType;
+import com.zhiliao.service.BaseService;
+
+public interface TypeService extends BaseService<CommentType, Map<String, Object>> {
+	
+	/**
+	 * 批量删除意见反馈类型
+	 * @Title: deleteList 
+	 * @param @param list
+	 * @return int
+	 */
+    public int deleteList(List<Integer> list);
+
+    /**
+     * 增加意见反馈类型
+     * @Title: insert 
+     * @Description: TODO(这里用一句话描述这个方法的作用) 
+     * @param @param record
+     * @param @return 
+     * @return int
+     */
+    public int insert(CommentType record);
+
+    /**
+     * 根据id获取意见反馈类型
+     * @Title: selectById 
+     * @param @param typeId
+     * @return CommentType
+     */
+    public CommentType selectById(Integer typeId);
+
+    /**
+     * 根据id修改意见反馈类型
+     * @Title: updateById 
+     * @Description: TODO(这里用一句话描述这个方法的作用) 
+     * @param @param record
+     * @param @return 
+     * @return int
+     */
+    public int updateById(CommentType record);
+}

@@ -1,0 +1,13 @@
+package com.zhiliao.service.php;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zhiliao.model.php.PlatCount;
+
+public interface PlatCountService {
+	
+	public List<PlatCount> getCountInfo(Map<String, Object> map);
+	
+	public int getGrantCount(Map<String, Object> map);//获取学校发放试卷数
+}
