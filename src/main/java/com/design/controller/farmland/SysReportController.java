@@ -8,13 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -46,6 +43,8 @@ public class SysReportController {
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+
 		List<SysReportVO> vo = reportService.dayReportFarmland(map);
 		
 		List<String> listTime = new ArrayList<String>();
@@ -55,7 +54,7 @@ public class SysReportController {
 		
 		for (SysReportVO vo1 : vo) {
 			
-			listTime.add(vo1.getTestTime());
+			listTime.add(vo1.getTestTime().replaceAll("-", ""));
 			listFm.add(vo1.getAvgFarmlandMoisture());
 			listAt.add(vo1.getAvgAirTemp());
 			listAm.add(vo1.getAvgAirMoisture());
@@ -87,14 +86,14 @@ public class SysReportController {
 		
 		List<SysReportVO> vo = reportService.monthReportFarmland(map);
 		
-		List<String> listTime = new ArrayList<String>();
+		List<String > listTime = new ArrayList<String>();
 		List<Double> listFm = new ArrayList<Double>();
 		List<Double> listAt = new ArrayList<Double>();
 		List<Double> listAm = new ArrayList<Double>();
 		
 		for (SysReportVO vo1 : vo) {
 			
-			listTime.add(vo1.getTestTime());
+			listTime.add(vo1.getTestTime().replaceAll("-", ""));
 			listFm.add(vo1.getAvgFarmlandMoisture());
 			listAt.add(vo1.getAvgAirTemp());
 			listAm.add(vo1.getAvgAirMoisture());
@@ -133,7 +132,7 @@ public class SysReportController {
 		
 		for (SysReportVO vo1 : vo) {
 			
-			listTime.add(vo1.getYearMonth());
+			listTime.add(vo1.getYearMonth().replaceAll("-", ""));
 			listFm.add(vo1.getAvgFarmlandMoisture());
 			listAt.add(vo1.getAvgAirTemp());
 			listAm.add(vo1.getAvgAirMoisture());

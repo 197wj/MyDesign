@@ -1,8 +1,5 @@
 package com.design.model.vo;
 
-import java.time.YearMonth;
-import java.util.Date;
-
 public class SysReportVO {
 
 	private Integer farmlandId;

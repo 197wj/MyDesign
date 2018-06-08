@@ -61,7 +61,6 @@
 	</bean>
 	
 	<mvc:interceptors>
-    
         <mvc:interceptor>
             <mvc:mapping path="/user/admin_*"/>
             <mvc:mapping path="/log/admin_*"/>
@@ -69,7 +68,6 @@
             <mvc:mapping path="/crop/admin_*"/>
             <bean class="com.design.filter.AdminFilter"></bean>
         </mvc:interceptor>
-    
      </mvc:interceptors>
 	
 

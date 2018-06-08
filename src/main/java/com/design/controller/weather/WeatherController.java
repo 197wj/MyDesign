@@ -34,7 +34,6 @@ public class WeatherController {
 				Document conDoc = Jsoup.parse(e.toString());
 				// 地点
 				Elements cru = conDoc.getElementsByClass("crumbs fl");
-				
 				// 未来七日的天气状态
 				Elements sky = content.select("li[class^=sky skyid lv]");
 				
@@ -50,7 +49,6 @@ public class WeatherController {
 					
 					weatherList.add(vo);
 				}
-
 				map.put("city", cru.text());
 				map.put("weather", weatherList);
 			}

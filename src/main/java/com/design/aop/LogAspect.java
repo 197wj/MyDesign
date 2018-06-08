@@ -60,7 +60,6 @@ public class LogAspect {
             if(joinPoint.getArgs() == null){//没有参数  
                 return;  
             }  
-              
             Map<String, String> map = getSysLog(joinPoint);
             //获取操作类型
             String operType = map.get("operType");
@@ -68,15 +67,10 @@ public class LogAspect {
             String operObject = map.get("operObject"); 
             //获取操作路径
             String operPath = map.get("operPath"); 
-            
-              
             //远程主机ip地址
             String ipAddress = request.getRemoteAddr();
-              
             //创建日志对象  
             SysLog log = new SysLog();
-            
-            
             log.setUserId(Integer.valueOf(user.getId().toString()));
             log.setUserName(user.getName());
             log.setOperType(operType);
@@ -86,7 +80,6 @@ public class LogAspect {
             log.setAddTime(new Date());
             logService.insert(log);
 		}
-    	
     }  
     
     /**

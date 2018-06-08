@@ -90,7 +90,7 @@
 		function getWeather(){
 			var cityId = $("#cityId").val();
 			$.ajax({
-				url:'../getWeather.action',
+				url:'http://localhost:9090/FarmlandInformation/getWeather.action',
 				type:'get',
 				data:{'cityId':cityId},
 				dataType:'json',

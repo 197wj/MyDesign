@@ -67,7 +67,6 @@ function dayChart(farmlandId,startTime,endTime){
 		data:{'farmlandId':farmlandId,'startTime':startTime,'endTime':endTime},
 		dataType:'json',
 		success:function(data){
-			alert(data);
 			charHtml(data.listTime,data.listFm,data.listAt,data.listAm)
 			
 		}
@@ -78,7 +77,6 @@ function dayChart(farmlandId,startTime,endTime){
 function charHtml(listTime, listFm,listAt, listAm){
 	
 	alert(listTime);
-	
 	chart = Highcharts.chart('container', {
 		chart: {
 				zoomType: 'xy'
@@ -90,8 +88,9 @@ function charHtml(listTime, listFm,listAt, listAm){
 				text: '数据来源: com.jdbc.mysql.Driver'
 		},
 		xAxis: [{
-				categories: eval("[" + listTime + "]"),
-				crosshair: true
+			title: {text: '时间'},
+			type:String,
+			categories: eval("[" + listTime + "]")
 		}],
 		yAxis: [{
 				labels: {
